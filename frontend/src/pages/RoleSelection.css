@@ -1,0 +1,54 @@
+/* src/pages/RoleSelection.css */
+
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Container principal, ocupa toda a tela */
+  .role-selection-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #3A7BD5, #00d2ff);
+    color: #fff;
+  }
+  
+  /* Título principal */
+  .role-selection-container h1 {
+    margin-bottom: 30px;
+    font-size: 2rem;
+  }
+  
+  /* Container para os botões */
+  .role-buttons {
+    display: flex;
+    gap: 20px;
+  }
+  
+  /* Estilos dos botões */
+  .role-buttons button {
+    background-color: #fff;
+    color: #3A7BD5;
+    border: none;
+    padding: 14px 28px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  /* Hover nos botões */
+  .role-buttons button:hover {
+    background-color: #f3f3f3;
+  }
+  

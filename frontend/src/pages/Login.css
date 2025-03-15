@@ -1,0 +1,147 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+  }
+  
+  .login-split-container {
+    display: flex;
+    min-height: 100vh; /* ocupa a tela toda */
+  }
+  
+  /* Parte esquerda: área do formulário */
+  .login-left {
+    background-color: #1c1c1c; /* tom escuro */
+    color: #fff;
+    flex: 1; /* ocupa metade (ou mais) */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  /* Conteúdo organizado */
+  .login-left-content {
+    max-width: 300px;
+    width: 100%;
+  }
+  
+  .logo-area h2 {
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+  }
+  
+  /* Título e texto */
+  .login-left-content h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  
+  .login-left-content p {
+    margin-bottom: 20px;
+    color: #bbb; /* tom cinza claro */
+  }
+  
+  /* Formulário */
+  .login-form .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .login-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+  
+  .login-form input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #333;
+    background-color: #2c2c2c; /* cor de fundo do input */
+    color: #fff;
+  }
+  
+  /* Opções de login (lembrar senha, link forgot password) */
+  .login-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .login-options label {
+    margin-left: 5px;
+    font-size: 0.9rem;
+  }
+  
+  .forgot-link {
+    font-size: 0.9rem;
+    color: #3498db;
+    text-decoration: none;
+  }
+  
+  .forgot-link:hover {
+    text-decoration: underline;
+  }
+  
+  /* Botão sign in */
+  .btn-signin {
+    width: 100%;
+    padding: 12px;
+    border-radius: 4px;
+    background-color: #3498db;
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .btn-signin:hover {
+    background-color: #2980b9;
+  }
+  
+  /* Parte direita: imagem */
+  .login-right {
+    flex: 0; /* ocupa a outra metade */
+    background: url('https://via.placeholder.com/1000x1000') center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: relative;
+  }
+  
+  /* Ajuste se quiser um overlay escuro sobre a imagem */
+  .login-right::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.4); /* leve overlay */
+  }
+  
+  .login-footer {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+  }
+  
+  .register-link {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  
+  .register-link:hover {
+    text-decoration: underline;
+  }
+  

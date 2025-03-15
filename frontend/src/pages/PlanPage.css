@@ -1,0 +1,65 @@
+/* PlanPage.css */
+
+.planpage-container {
+    display: flex;
+    min-height: 100vh;
+  }
+  
+  .planpage-left {
+    background-color: #1c1c1c; 
+    color: #fff;
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  
+  .planpage-left-content {
+    max-width: 600px;
+    width: 100%;
+  }
+  
+  .planpage-right {
+    flex: 0; 
+    background: url('https://via.placeholder.com/800x1000') center center;
+    background-size: cover;
+    position: relative;
+  }
+  
+  .planpage-right::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: rgba(0,0,0,0.4);
+  }
+  
+  /* Form e inputs */
+  .plan-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+  .plan-form select,
+  .plan-form textarea {
+    width: 100%;
+    background-color: #2c2c2c;
+    border: 1px solid #333;
+    color: #fff;
+    border-radius: 4px;
+    padding: 8px;
+    margin-bottom: 15px;
+  }
+  
+  .plan-form button {
+    background-color: #3498db;
+    border: none;
+    padding: 10px 18px;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .plan-form button:hover {
+    background-color: #2980b9;
+  }
+  

@@ -1,0 +1,180 @@
+/* Dashboard.css */
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+/* Container estilo "split" */
+.dashboard-split-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Lado esquerdo: fundo escuro (#1c1c1c), texto branco */
+.dashboard-left {
+  background-color: #1c1c1c; /* igual ao Login */
+  color: #fff;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Conteúdo interno do lado esquerdo */
+.dashboard-left-content {
+  max-width: 600px;
+  width: 100%;
+  /* Se quiser, text-align: left ou center */
+}
+
+/* Header com hamburger, título, logout button */
+.dash-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.dash-header h2 {
+  margin: 0;
+  font-size: 1.6rem;
+  flex: 1;
+  text-align: center;
+}
+
+/* Botão de logout */
+.logout-button {
+  background-color: #e74c3c;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.logout-button:hover {
+  background-color: #c0392b;
+}
+
+/* Seções / Botões */
+.add-athlete-section,
+.plan-details {
+  margin-bottom: 20px;
+  gap: 10px;
+  
+}
+
+.days-list {
+  display: flex;       /* IMPORTANTE */
+  flex-wrap: wrap;
+  gap: 10px;           /* espaçamento horizontal e vertical */
+  margin-bottom: 20px;
+}
+.add-athlete-btn,
+.day-button {
+  background-color: #2c2c2c; /* input cor igual ao login (cinza-escuro) */
+  border: 1px solid #333;
+  color: #fff;
+  padding: 10px;
+  cursor: pointer;
+  transition: background 0.3s;
+  border-radius: 4px;
+}
+
+.add-athlete-btn:hover,
+.day-button:hover {
+  background-color: #444;
+}
+
+/* Se quisermos um estado "active" para day-button */
+.day-button.active {
+  background-color: #3498db;
+  color: #fff;
+}
+
+/* plan-details ou form no lado esquerdo */
+.plan-details {
+  background-color: #2c2c2c; 
+  border: 1px solid #333;
+  padding: 10px;
+  border-radius: 4px;
+  min-height: 120px;
+  color: #fff;
+}
+
+/* Lista de atletas (Coach) */
+.athlete-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.athlete-item {
+  margin: 8px 0;
+  cursor: pointer;
+  padding: 6px;
+  transition: background-color 0.2s;
+  background-color: #2c2c2c;
+  border: 1px solid #333;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+.athlete-item:hover {
+  background-color: #444;
+}
+
+/* Mensagens de erro ou info */
+.error-message {
+  color: #e74c3c;
+  font-weight: 600;
+}
+
+/* Lado direito: imagem (overlay) */
+.dashboard-right {
+  flex: 0; 
+  background: url('https://via.placeholder.com/1000x1000') center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.dashboard-right::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+}
+
+/* Fases do plano (respeitar quebras de linha) */
+.phase-box {
+  white-space: pre-wrap;
+  background-color: #3a3a3a;
+  border: 1px solid #555;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 1rem;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+/* base */
+.status-btn{
+  background:#2c2c2c;
+  border:1px solid #555;
+  color:#fff;
+  padding:6px 12px;
+  border-radius:4px;
+  cursor:pointer;
+  transition:background .2s;
+}
+
+/* activo */
+.status-btn.on.completed{ background:#2ecc71; }   /* verde   */
+.status-btn.on.missed   { background:#e74c3c; }   /* vermelho*/

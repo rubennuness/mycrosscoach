@@ -1,0 +1,138 @@
+/* Register.css */
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+/* Estrutura estilo "split" */
+.register-split-container {
+  display: flex;
+  min-height: 100vh; /* ocupa a tela toda */
+}
+
+/* Lado esquerdo: formulário */
+.register-left {
+  background-color: #1c1c1c; /* mesmo tom escuro do Login */
+  color: #fff;
+  flex: 1; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Conteúdo do lado esquerdo */
+.register-left-content {
+  max-width: 300px;
+  width: 100%;
+}
+
+.register-left-content h2 {
+  font-size: 1.8rem;
+  margin-bottom: 30px;
+}
+
+/* Texto secundário */
+.register-left-content p {
+  margin-bottom: 20px;
+  color: #bbb;
+}
+
+/* Mensagem de erro global */
+.error-message {
+  color: #e74c3c;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+/* Formulário */
+.register-form .form-group {
+  margin-bottom: 15px;
+}
+
+.register-form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.register-form input,
+.register-form select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #333;
+  background-color: #2c2c2c; 
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+/* Erros de campo */
+.field-error {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 5px;
+}
+
+/* Botão de registar */
+.btn-register {
+  width: 100%;
+  padding: 12px;
+  border-radius: 4px;
+  background-color: #2ecc71; /* tom verde */
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin-top: 10px;
+}
+.btn-register:hover {
+  background-color: #27ae60;
+}
+
+/* Rodapé do registo */
+.register-footer {
+  margin-top: 20px;
+  font-size: 0.9rem;
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+}
+
+/* Link para login */
+.login-link {
+  color: #3498db;
+  text-decoration: none;
+  font-weight: 600;
+}
+.login-link:hover {
+  text-decoration: underline;
+}
+
+/* Lado direito: imagem ou cor */
+.register-right {
+  flex: 0; 
+  background: url('https://via.placeholder.com/1000x1000') center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+/* (Opcional) overlay */
+.register-right::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.4); /* leve overlay */
+}

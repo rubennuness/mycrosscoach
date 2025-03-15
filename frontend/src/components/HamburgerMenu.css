@@ -1,0 +1,53 @@
+/* src/components/HamburgerMenu.css */
+
+/* Container do menu (posicionado no canto superior esquerdo) */
+.hamburger-menu-container {
+  position: relative; /* para o dropdown ficar absoluto relativo a este container */
+}
+
+/* Ícone das 3 linhas */
+.hamburger-icon {
+  width: 30px;
+  height: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+/* Cada linha do “hambúrguer” */
+.hamburger-icon span {
+  display: block;
+  height: 3px;
+  background-color: #fff; /* Linhas em branco => visíveis no fundo escuro */
+  border-radius: 2px;
+}
+
+/* Dropdown que surge ao clicar */
+.hamburger-dropdown {
+  position: absolute;
+  top: 28px; /* logo abaixo do ícone */
+  left: 0;
+  /* Se quiser, use um fundo escuro e texto claro para manter o tema */
+  background-color: #2c2c2c;
+  border: 1px solid #444;
+  width: 140px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+.hamburger-dropdown ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  color: #fff; /* texto claro */
+}
+
+.hamburger-dropdown li {
+  padding: 10px;
+  border-bottom: 1px solid #333;
+  cursor: pointer;
+}
+
+.hamburger-dropdown li:hover {
+  background-color: #444; /* realce no hover */
+}
