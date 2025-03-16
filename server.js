@@ -35,7 +35,11 @@ app.get('/api/training/week/:athleteId', async (req, res) => {
 
     // Seleciona unindo plan + phases
     const [rows] = await pool.query(`
-      SELECT p.day_of_week, ph.title, ph.phase_text, ph.phase_order
+    SELECT p.day_of_week,
+              ph.id           AS phase_id,       -- ①  devolvemos o id
+               ph.title        AS phase_title,    --    e o título
+                 ph.phase_text,
+                 ph.phase_order
         FROM plans p
         JOIN plan_phases ph ON ph.plan_id = p.id
        WHERE p.athlete_id = ?
@@ -44,7 +48,7 @@ app.get('/api/training/week/:athleteId', async (req, res) => {
 
     // Agrupa
     rows.forEach(row => {
-      plansObj[row.day_of_week].push({title : row.title, text  : row.phase_text});
+      plansObj[row.day_of_week].push({id    : row.phase_id, title : row.title, text  : row.phase_text});
     });
 
     return res.json({

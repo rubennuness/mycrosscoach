@@ -80,9 +80,12 @@ function DashboardCoach() {
   };
 
   // 5) Ao clicar num atleta
-  const handleAthleteClick = (athleteId) => {
-    navigate(`/plan/${athleteId}`);
-  };
+  const handleAthleteClick = (athleteId, athleteName) => {
+      // enviamos no “state” da rota
+      navigate(`/plan/${athleteId}`, {
+        state: { athleteName }          // ← novo
+      });
+    };
 
   return (
     <div className="dashboard-split-container">
@@ -131,7 +134,7 @@ function DashboardCoach() {
               <li
                 key={ath.id}
                 className="athlete-item"
-                onClick={() => handleAthleteClick(ath.id)}
+                onClick={() => handleAthleteClick(ath.id, ath.name)}
               >
                 {ath.name} - {ath.email}
               </li>

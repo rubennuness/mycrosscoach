@@ -50,7 +50,7 @@ function DashboardAthlete() {
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({
           athlete_id : athleteId,
-          plan_phase_id : phasesArray[idx]?.id,   // precisa vir do backend, vê nota abaixo
+          plan_phase_id : phasesArray[idx].id,   // precisa vir do backend, vê nota abaixo
           status
         })
       }).catch(console.error);
@@ -90,18 +90,20 @@ function DashboardAthlete() {
            const key   = `${selectedDay}-${idx}`;
            const stat  = phaseStatus[key];        // completed | missed | undefined
            return (
-             <div key={idx} className="phase-box">
-              <strong>{phaseObj.title}</strong>
-               <pre style={{whiteSpace:'pre-wrap',marginTop:6}}>{phaseObj.text}</pre>
+            <div key={idx} className="phase-box">
+                          <strong>{phaseObj.title || `Fase ${idx+1}`}</strong>
+                          <pre style={{whiteSpace:'pre-wrap',marginTop:6}}>
+                             {phaseObj.text}
+                           </pre>
 
                <div style={{marginTop:8}}>
                  <button
-                   className={`status-btn ${stat==='completed'?'on':''}`}
+                   className={`status-btn ${stat==='completed' ? 'on completed' : ''}`}
                    onClick={()=>markPhase(idx,'completed')}
                  >Completed</button>
 
                  <button
-                   className={`status-btn ${stat==='missed'?'on':''}`}
+                   className={`status-btn ${stat==='missed' ? 'on missed' : ''}`}
                    onClick={()=>markPhase(idx,'missed')}
                    style={{marginLeft:8}}
                  >Missed</button>

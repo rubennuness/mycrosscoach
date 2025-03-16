@@ -63,3 +63,22 @@
     background-color: #2980b9;
   }
   
+  .badge{
+    display:inline-block;
+    padding:4px 10px;
+    border-radius:4px;
+    font-size:0.8rem;
+    font-weight:600;
+    color:#fff;          /* texto branco */
+    margin-left:8px;     /* leve afastamento do texto da fase */
+  }
+  
+  /* verde = concluído */
+  .badge.completed{
+    background:#27ae60;  /* tom verde - igual ao botão register */
+  }
+  
+  /* vermelho = falhou */
+  .badge.missed{
+    background:#e74c3c;  /* mesmo vermelho do botão logout */
+  }
