@@ -178,3 +178,13 @@ body {
 /* estado activo */
 .status-btn.on.completed{ background:#2ecc71; } /* verde  */
 .status-btn.on.missed   { background:#e74c3c; } /* vermelho */
+
+
+.comment-box{
+  background:#2c2c2c;
+  color:#fff;
+  border:1px solid #444;
+  border-radius:4px;
+  padding:6px;
+  resize:vertical;
+}

@@ -128,7 +128,13 @@ function PlanPage() {
                           style={{ marginTop:6 }}>
                       {phase.status === 'completed' ? 'Concluído' : 'Falhou'}
                     </span>
-                  )}
+                    )}
+                     {phase.comment && (
+                             <div className="comment-from-athlete" style={{marginTop:6, fontStyle:'italic'}}>
+                               “{phase.comment}”
+                             </div>
+                          )}
+                  
                 </div>
               ))}
 

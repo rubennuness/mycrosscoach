@@ -82,20 +82,22 @@ router.get('/day/:athleteId/:dayOfWeek', async (req, res) => {
     const planId = planRows[0].id;
 
     // 2) Buscar phases do plano
-     const [phaseRows] = await pool.query(`
-   SELECT
-     ph.id                             AS plan_phase_id,
-     ph.phase_order,
-     COALESCE(ph.title, CONCAT('Fase ',ph.phase_order)) AS title,
-     ph.phase_text                     AS text,
-     COALESCE(pp.status,'pending')     AS status
-   FROM plan_phases ph
-   LEFT JOIN phase_progress pp
-          ON pp.plan_phase_id = ph.id
-         AND pp.athlete_id    = ?
-   WHERE ph.plan_id = ?
-   ORDER BY ph.phase_order
- `, [athleteId, planId]);             // NEW (passa athleteId)
+      const [phaseRows] = await pool.query(`
+        SELECT
+            ph.id                             AS plan_phase_id,
+            ph.phase_order,
+            COALESCE(ph.title,
+                     CONCAT('Fase ',ph.phase_order)) AS title,
+            ph.phase_text                     AS text,
+            COALESCE(pp.status  ,'pending')   AS status,
+            COALESCE(pp.comment ,'')          AS comment
+        FROM plan_phases ph
+        LEFT JOIN phase_progress pp
+               ON pp.plan_phase_id = ph.id
+              AND pp.athlete_id    = ?
+        WHERE ph.plan_id = ?
+        ORDER BY ph.phase_order
+      `, [athleteId, planId]);            // NEW (passa athleteId)
 
  const phases = phaseRows;     
     return res.json({ phases });

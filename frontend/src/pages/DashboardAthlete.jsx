@@ -38,6 +38,7 @@ function DashboardAthlete() {
 
   /* Guarda localmente o estado  (phaseIdx→ 'completed' | 'missed' | null)  */
  const [phaseStatus,setPhaseStatus] = useState({});    // { 'Segunda-0':'completed', ... }
+ const [phaseComment,setPhaseComment] = useState({});
 
    const markPhase = (idx,status)=>{
       if(!selectedDay) return;
@@ -51,7 +52,8 @@ function DashboardAthlete() {
         body:JSON.stringify({
           athlete_id : athleteId,
           plan_phase_id : phasesArray[idx].id,   // precisa vir do backend, vê nota abaixo
-          status
+          status,
+          comment : phaseComment[key] || ''
         })
       }).catch(console.error);
     };
@@ -108,6 +110,17 @@ function DashboardAthlete() {
                    style={{marginLeft:8}}
                  >Missed</button>
                </div>
+               <textarea
+                             placeholder="Comentário (opcional)"
+                             value={phaseComment[key] || ''}
+                             onChange={e=>{
+                               const txt = e.target.value;
+                               setPhaseComment(prev=>({...prev,[key]:txt}));
+                             }}
+                             className="comment-box"                /* usa CSS já sugerido */
+                             rows={2}
+                             style={{width:'100%',marginTop:8}}
+                          />
              </div>
            );
          })}
