@@ -18,7 +18,9 @@ function Home() {
             {/* Botão para Login (caso o usuário já tenha conta) */}
             <Link to="/login" className="hero-button">Login</Link>
             {/* Botão para página de assinatura (caso queira assinar direto) */}
-            <Link to="/subscribe" className="hero-button hero-button-secondary">Assinar Agora</Link>
+            <Link to="/register"  className="hero-button hero-button-secondary">
+            Registar
+            </Link>
           </div>
         </div>
       </header>

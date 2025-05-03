@@ -21,12 +21,11 @@ router.post('/:athleteId', async (req, res) => {
     if (existingPlan.length > 0) {
       // Sobrescreve => apaga as phases antigas
       planId = existingPlan[0].id;
-      await pool.query(
-        `INSERT INTO phase_progress (plan_id, phase_order, status)
-           VALUES (?, ?, ?)
-         ON DUPLICATE KEY UPDATE status = VALUES(status)`,
-        [planId, phase_order, status]
-      );
+           // 1.a) apaga as fases antigas (sobrescrever)
+     await pool.query(
+       'DELETE FROM plan_phases WHERE plan_id = ?',
+       [planId]
+     );
     } else {
       // Cria nova row em "plans"
       const [insert] = await pool.query(`
