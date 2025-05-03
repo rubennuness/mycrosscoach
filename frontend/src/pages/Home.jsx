@@ -85,7 +85,7 @@ function Home() {
         <div className="about-content">
           <h2>Sobre o MyCrossCoach</h2>
           <p>
-            Nós unimos coaches especializados e atletas em uma plataforma única, 
+           Nós unimos coaches especializados e atletas em uma plataforma única, 
             potencializando resultados através de um acompanhamento personalizado 
             e uma comunidade engajada.
           </p>
