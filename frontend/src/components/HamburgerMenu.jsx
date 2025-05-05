@@ -1,31 +1,27 @@
 // src/components/HamburgerMenu.jsx
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './HamburgerMenu.css';
 
 function HamburgerMenu() {
-  const [open, setOpen] = useState(false);
-
-  const toggleMenu = () => {
-    setOpen(!open);
-  };
+  const [open,setOpen]   = useState(false);
+  const navigate          = useNavigate();
+  const role              = JSON.parse(localStorage.getItem('user'))?.role;
 
   return (
     <div className="hamburger-menu-container">
-      {/* Ícone das 3 linhas */}
-      <div className="hamburger-icon" onClick={toggleMenu}>
-        <span></span>
-        <span></span>
-        <span></span>
+      <div className="hamburger-icon" onClick={()=>setOpen(!open)}>
+        <span/><span/><span/>
       </div>
 
-      {/* Dropdown exibido somente se “open” for true */}
       {open && (
         <div className="hamburger-dropdown">
-          <ul>
-            <li>Opção 1</li>
-            <li>Opção 2</li>
-            <li>Opção 3</li>
-            {/* Acrescente aqui mais itens conforme necessidade */}
+          <ul onClick={()=>setOpen(false)}>
+            {/* opções comuns … */}
+            {role==='athlete' && (
+              <li onClick={()=>navigate('/timers')}>Timers</li>
+            )}
+            {/* podes acrescentar mais itens */}
           </ul>
         </div>
       )}

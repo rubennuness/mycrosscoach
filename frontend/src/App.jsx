@@ -8,6 +8,7 @@ import DashboardCoach from './pages/DashboardCoach';
 import Subscribe from './pages/Subscribe';
 import PrivateRoute from './components/PrivateRoute';
 import PlanPage from './pages/PlanPage';
+import Timers from './pages/Timers';
 
 function App() {
   return (
@@ -42,6 +43,15 @@ function App() {
         <Route path="/plan/:athleteId" element={<PlanPage />} />
 
         <Route path="/subscribe" element={<Subscribe />} />
+
+        <Route
+  path="/timers"
+  element={
+    <PrivateRoute>
+      <Timers />        {/* qualquer atleta logado */}
+    </PrivateRoute>
+  }
+/>
 
         {/* fallback */}
         <Route path="*" element={<Home />} />

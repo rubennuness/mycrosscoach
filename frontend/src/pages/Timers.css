@@ -1,0 +1,46 @@
+/* Timers.css – paleta igual ao Login */
+.timers-container{
+    background:#1c1c1c;
+    color:#fff;
+    min-height:100vh;
+    padding:40px 20px;
+    text-align:center;
+    font-family:Arial,sans-serif;
+  }
+  .mode-tabs{
+    display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:20px 0;
+  }
+  .tab{
+    padding:10px 18px;border:none;border-radius:4px;
+    background:#2c2c2c;color:#fff;cursor:pointer;
+  }
+  .tab.active{background:#3498db;}
+  .config label{display:inline-block;margin:6px 10px;font-size:.9rem;}
+  .config input{width:60px;padding:4px;border-radius:4px;border:1px solid #555;
+                background:#2c2c2c;color:#fff;margin-left:4px;}
+  .timer-display{
+    font-size:4rem;font-weight:bold;margin:30px 0 10px;letter-spacing:2px;
+  }
+  .timer-display .round{display:block;font-size:1rem;margin-top:8px;color:#bbb;}
+  .controls .btn{
+    padding:12px 24px;border:none;border-radius:4px;font-weight:600;
+    background:#3498db;color:#fff;cursor:pointer;
+  }
+  .controls .btn.stop{background:#e74c3c;}
+  .controls .btn:hover{opacity:.9;}
+  
+  /* ao fim do ficheiro */
+  .btn.secondary {
+    background:#555;
+  }
+  .btn.secondary:hover{opacity:.9;}
+
+  .btn.stop {
+    background:#e74c3c;
+  }
+
+  /* depois das regras de .timer-display … */
+.timer-display.paused{
+    background:#555;
+    color:#fff;
+  }
