@@ -13,7 +13,7 @@ function Login() {
     setErrorMsg(''); // limpa mensagens de erro anteriores
 
     try {
-      const response = await fetch('http://192.168.56.105:3000/auth/login', {
+      const response = await fetch('/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
