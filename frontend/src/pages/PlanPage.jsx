@@ -79,7 +79,7 @@ function PlanPage() {
         <div className="planpage-left-content">
           {/* ►--- título agora mostra o NOME, fallback #id ---◄ */}
           <h1 style={{ marginBottom: 20 }}>
-            Editar Plano de&nbsp;
+            Plano de&nbsp;
             <span style={{ color:'#3498db' }}>
               {athleteName || `#${athleteId}`}
             </span>
