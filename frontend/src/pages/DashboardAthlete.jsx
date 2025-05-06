@@ -5,6 +5,17 @@ import { format } from 'date-fns';
 import HamburgerMenu from '../components/HamburgerMenu';
 import './Dashboard.css';
 
+/* Mapeia o nome PT-BR → primeira letra EN  */
+const dayInitial = {
+  'Domingo': 'S',  // Sunday
+  'Segunda': 'M',  // Monday
+  'Terça'  : 'T',  // Tuesday
+  'Quarta' : 'W',  // Wednesday
+  'Quinta' : 'T',  // Thursday
+  'Sexta'  : 'F',  // Friday
+  'Sábado' : 'S'   // Saturday
+};
+
 function DashboardAthlete() {
   const navigate                     = useNavigate();
   const [daysOfWeek,   setDaysOfWeek]    = useState([]);
@@ -107,11 +118,11 @@ function DashboardAthlete() {
     navigate('/login');
   };
     /* ---------- util: devolve a Date para “Segunda”, “Terça”… ---------- */
-  const getDateForDay = (dayName) => {
-    const map = {
-      'S' : 7, 'M' : 1, 'T' : 2, 'W' : 3,
-      'T'  : 4, 'F'   : 5, 'S' : 6
-    };
+      const getDateForDay = (dayName) => {
+          const map = {
+            'Domingo': 0, 'Segunda': 1, 'Terça': 2,
+            'Quarta' : 3, 'Quinta' : 4, 'Sexta': 5, 'Sábado': 6
+          };
     const today   = new Date();
     const todayIdx= today.getDay();            // 0-Dom … 6-Sáb
     const target  = map[dayName];
@@ -146,7 +157,7 @@ function DashboardAthlete() {
 
       return (
         <button
-          key={day}
+          key={dayInitial[day] || day.charAt(0)}
           className={`day-button ${selectedDay === day ? 'active' : ''}`}
           onClick={() => {
             setSelectedDay(day);

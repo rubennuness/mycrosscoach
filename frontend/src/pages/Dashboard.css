@@ -78,14 +78,14 @@ body {
   margin-bottom: 20px;
 }
 .add-athlete-btn,
-.day-button {
-  background-color: #2c2c2c; /* input cor igual ao login (cinza-escuro) */
-  border: 1px solid #333;
-  color: #fff;
-  padding: 10px;
-  cursor: pointer;
-  transition: background 0.3s;
-  border-radius: 4px;
+.day-button{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
 }
 
 .add-athlete-btn:hover,
@@ -94,9 +94,9 @@ body {
 }
 
 /* Se quisermos um estado "active" para day-button */
-.day-button.active {
-  background-color: #3498db;
-  color: #fff;
+.day-button.active{
+  background:#3498db;
+  color:#fff;
 }
 
 /* plan-details ou form no lado esquerdo */
