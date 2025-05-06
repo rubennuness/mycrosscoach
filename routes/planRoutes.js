@@ -83,7 +83,7 @@ router.get('/day/:athleteId/:dayOfWeek', async (req, res) => {
     // 2) Buscar phases do plano
       const [phaseRows] = await pool.query(`
         SELECT
-            ph.id                             AS plan_phase_id,
+            ph.id                             AS id,
             ph.phase_order,
             COALESCE(ph.title,
                      CONCAT('Fase ',ph.phase_order)) AS title,
