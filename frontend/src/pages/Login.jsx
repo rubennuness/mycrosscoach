@@ -14,7 +14,7 @@ function Login() {
     setErrorMsg(''); // limpa mensagens de erro anteriores
 
     try {
-      const response = await fetch('${API}/auth/login', {
+      const response = await fetch('https://mycrosscoach-production.up.railway.app/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
