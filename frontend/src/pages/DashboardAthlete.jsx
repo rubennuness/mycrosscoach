@@ -131,7 +131,7 @@ function DashboardAthlete() {
             <HamburgerMenu />
             <h2>
               {/* mostra data se já escolheu um dia; senão o texto antigo */}
-              { headerDate || 'Meu Plano de Treino (Atleta)' }
+              { headerDate || 'Meu Plano de Treino' }
             </h2>
             <button className="logout-button" onClick={handleLogout}>
               Logout
@@ -140,19 +140,28 @@ function DashboardAthlete() {
 
           {/* botões dos dias */}
           <div className="days-list">
-            {daysOfWeek.map(day => (
-              <button
-                key={day}
-                className={`day-button ${selectedDay === day ? 'active' : ''}`}
-                onClick={() => {
-                                    setSelectedDay(day);
-                                    const dt = getDateForDay(day);
-                                    setHeaderDate(format(dt, 'MMM dd yyyy'));   /* ex. May 14 2025 */
-                                  }}
-              >
-                {day}
-              </button>
-            ))}
+          {daysOfWeek.map(day => {
+      /* ① já existe pelo menos 1 fase neste dia? */
+      const hasPlan = (trainingPlans[day] || []).length > 0;
+
+      return (
+        <button
+          key={day}
+          className={`day-button ${selectedDay === day ? 'active' : ''}`}
+          onClick={() => {
+            setSelectedDay(day);
+            const dt = getDateForDay(day);
+            setHeaderDate(format(dt, 'MMM dd yyyy'));
+          }}
+        >
+          {day}
+          {/* ● = tem treino | ○ = vazio */}
+          <span className={`day-indicator ${hasPlan ? 'on' : 'off'}`}>
+            {hasPlan ? '●' : '○'}
+          </span>
+        </button>
+      );
+    })}
           </div>
 
           {/* detalhes */}

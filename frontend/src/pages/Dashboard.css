@@ -226,3 +226,13 @@ body {
   color:#fff;
   pointer-events:none;        /* clicável passa “through” */
 }
+
+/* Indicador visual nos botões de dia ------------------------ */
+.day-indicator{
+  font-size:.75rem;       /* ligeiramente menor que o texto */
+  margin-left:4px;        /* pequeno espaço depois do nome */
+  vertical-align:middle;
+}
+
+.day-indicator.on  { color:#2ecc71; }  /* verde = tem plano */
+.day-indicator.off { color:#888; }     /* cinza = vazio    */
