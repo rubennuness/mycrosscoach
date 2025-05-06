@@ -19,7 +19,11 @@ function HamburgerMenu() {
           <ul onClick={()=>setOpen(false)}>
             {/* opções comuns … */}
             {role==='athlete' && (
-              <li onClick={()=>navigate('/timers')}>Timers</li>
+              <>
+                              <li onClick={()=>navigate('/timers')}>Timers</li>
+                              <li onClick={()=>navigate('/calendar')}>Calendar</li>
+                            </>
+              
             )}
             {/* podes acrescentar mais itens */}
           </ul>

@@ -9,6 +9,7 @@ import Subscribe from './pages/Subscribe';
 import PrivateRoute from './components/PrivateRoute';
 import PlanPage from './pages/PlanPage';
 import Timers from './pages/Timers';
+import CalendarPage from './pages/CalendarPage';
 
 function App() {
   return (
@@ -52,6 +53,15 @@ function App() {
     </PrivateRoute>
   }
 />
+ {/* Calendário (histórico de treinos) */}
+         <Route
+          path="/calendar"
+          element={
+            <PrivateRoute>
+              <CalendarPage />
+            </PrivateRoute>
+          }
+        />
 
         {/* fallback */}
         <Route path="*" element={<Home />} />
