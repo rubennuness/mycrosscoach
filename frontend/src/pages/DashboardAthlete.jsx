@@ -165,7 +165,7 @@ function DashboardAthlete() {
             setHeaderDate(format(dt, 'MMM dd yyyy'));
           }}
         >
-          {day}
+          {dayInitial[day] || day.charAt(0)}
           {/* ● = tem treino | ○ = vazio */}
           <span className={`day-indicator ${hasPlan ? 'on' : 'off'}`}>
             {hasPlan ? '●' : '○'}
