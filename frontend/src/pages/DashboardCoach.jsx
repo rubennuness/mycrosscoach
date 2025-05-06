@@ -17,7 +17,7 @@ function DashboardCoach() {
   // 1) No “useEffect”, chamamos GET /api/coach/athletes ao montar a página:
   useEffect(() => {
     const token = localStorage.getItem('token');
-    fetch('http://192.168.56.105:3000/api/coach/athletes', {
+    fetch('/api/coach/athletes', {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -51,7 +51,7 @@ function DashboardCoach() {
     const token = localStorage.getItem('token');
     const newAthlete = { name: newAthleteName, email: newAthleteEmail };
 
-    fetch('http://192.168.56.105:3000/api/coach/athletes', {
+    fetch('/api/coach/athletes', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -7,7 +7,7 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
-
+  const API = `${window.location.protocol}//${window.location.hostname}:3000`;
   const handleLogin = async (e) => {
     e.preventDefault();
     setErrorMsg(''); // limpa mensagens de erro anteriores

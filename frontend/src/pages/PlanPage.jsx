@@ -22,7 +22,7 @@ function PlanPage() {
   useEffect(() => {
     if (athleteName || !athleteId) return;              // já temos → sai
 
-    fetch(`http://192.168.56.105:3000/api/users/${athleteId}`)
+    fetch(`/api/users/${athleteId}`)
       .then(r => r.ok ? r.json() : { name:'' })
       .then(data => setAthleteName(data.name ?? ''))
       .catch(()  => setAthleteName(''));
@@ -33,7 +33,7 @@ function PlanPage() {
   useEffect(() => {
     if (!athleteId || !selectedDay) return;
 
-    fetch(`http://192.168.56.105:3000/api/plans/day/${athleteId}/${selectedDay}`)
+    fetch(`/api/plans/day/${athleteId}/${selectedDay}`)
       .then(res => res.json())
       .then(data => {
         if (data.phases) {
@@ -56,7 +56,7 @@ function PlanPage() {
     e.preventDefault();
     const planData = { day_of_week: selectedDay, phases };
 
-    fetch(`http://192.168.56.105:3000/api/plans/${athleteId}`, {
+    fetch(`/api/plans/${athleteId}`, {
       method : 'POST',
       headers: { 'Content-Type': 'application/json' },
       body   : JSON.stringify(planData)

@@ -21,7 +21,7 @@ function Register() {
     try {
       setServerError('');
 
-      const response = await fetch('http://192.168.56.105:3000/auth/register', {
+      const response = await fetch('/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
