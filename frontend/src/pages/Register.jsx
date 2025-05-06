@@ -21,7 +21,7 @@ function Register() {
     try {
       setServerError('');
 
-      const response = await fetch('/auth/register', {
+      const response = await fetch('https://mycrosscoach-production.up.railway.app/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

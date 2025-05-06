@@ -51,7 +51,7 @@ function DashboardCoach() {
     const token = localStorage.getItem('token');
     const newAthlete = { name: newAthleteName, email: newAthleteEmail };
 
-    fetch('/api/coach/athletes', {
+    fetch('https://mycrosscoach-production.up.railway.app/api/coach/athletes', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

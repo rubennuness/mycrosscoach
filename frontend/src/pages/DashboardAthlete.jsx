@@ -199,7 +199,7 @@ function DashboardAthlete() {
                             onBlur={() => {
                               const sNow = phaseStatus[key];
                               if (!sNow || !ph?.id) return;
-                              fetch('/api/progress', {
+                              fetch('https://mycrosscoach-production.up.railway.app/api/progress', {
                                 method : 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body   : JSON.stringify({
