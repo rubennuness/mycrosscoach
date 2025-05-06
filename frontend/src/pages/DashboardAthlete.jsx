@@ -109,8 +109,8 @@ function DashboardAthlete() {
     /* ---------- util: devolve a Date para “Segunda”, “Terça”… ---------- */
   const getDateForDay = (dayName) => {
     const map = {
-      'Domingo' : 6, 'Segunda' : 0, 'Terça' : 1, 'Quarta' : 2,
-      'Quinta'  : 3, 'Sexta'   : 4, 'Sábado' : 5
+      'Domingo' : 7, 'Segunda' : 1, 'Terça' : 2, 'Quarta' : 3,
+      'Quinta'  : 4, 'Sexta'   : 5, 'Sábado' : 6
     };
     const today   = new Date();
     const todayIdx= today.getDay();            // 0-Dom … 6-Sáb
