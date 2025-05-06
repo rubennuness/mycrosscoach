@@ -1,6 +1,7 @@
 // src/pages/PlanPage.jsx
 import React, { useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import BackButton from "../components/BackButton";
 import Toast from '../components/Toast';
 import './PlanPage.css';
 
@@ -73,6 +74,7 @@ function PlanPage() {
 
   return (
     <div className="planpage-container">
+      <BackButton />                                   {/* ⬅️ NOVO */}
       <div className="planpage-left">
         <div className="planpage-left-content">
           {/* ►--- título agora mostra o NOME, fallback #id ---◄ */}

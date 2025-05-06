@@ -1,16 +1,20 @@
-.back-button {
-    background-color: #ccc;
-    color: #333;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background 0.3s;
-    margin-bottom: 20px;
-  }
-  
-  .back-button:hover {
-    background-color: #bbb;
-  }
-  
+/* src/components/BackButton.css */
+.back-arrow{
+  position:absolute;          /* fica sempre no canto */
+  top:20px;
+  left:20px;
+  background:#2c2c2c;         /* mesma paleta dark */
+  border:none;
+  border-radius:50%;
+  width:40px;
+  height:40px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:background .2s;
+  z-index:100;
+}
+.back-arrow:hover{
+  background:#3498db;
+}

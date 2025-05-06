@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import BackButton from "../components/BackButton";   // ⬅️ novo import
 import './Register.css';
 
 function Register() {
@@ -48,6 +49,7 @@ function Register() {
   return (
     <div className="register-split-container">
       {/* Lado esquerdo: formulário */}
+      <BackButton />                                   {/* ⬅️ NOVO */}
       <div className="register-left">
         <div className="register-left-content">
           <h2>MyCrossCoach</h2>

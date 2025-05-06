@@ -1,5 +1,6 @@
 // src/pages/Timers.jsx
 import React, { useState, useEffect, useRef } from 'react';
+import BackButton from '../components/BackButton';
 import './Timers.css';
 
 const fmt = (t)=>String(t).padStart(2,'0');
@@ -191,6 +192,7 @@ useEffect(()=>{
   /* ---------- UI ---------- */
   return(
     <div className="timers-container">
+      <BackButton />                                   {/* ⬅️ NOVO */}
       <h1>Timers de Treino</h1>
 
       {/* tabs */}

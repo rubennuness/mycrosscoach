@@ -7,6 +7,7 @@ import './Subscribe.css';
 function Subscribe() {
   return (
     <div className="subscribe-container">
+      <BackButton />                                   {/* ⬅️ NOVO */}
       <div className="subscribe-content">
         <h1>Assinatura Mensal</h1>
         <p>

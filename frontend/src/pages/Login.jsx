@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; // ADICIONAMOS useNavigate
+import BackButton from "../components/BackButton";   // ⬅️ novo import
 import './Login.css';
 
 function Login() {
@@ -47,6 +48,7 @@ function Login() {
 
   return (
     <div className="login-split-container">
+      <BackButton />                                   {/* ⬅️ NOVO */}
       {/* Esquerda: painel de login */}
       <div className="login-left">
         <div className="login-left-content">
