@@ -10,11 +10,11 @@ export default defineConfig({
     port: 5173,
     allowedHosts: ['renewed-charisma-production-0450.up.railway.app'],
 
-    /* --- PROXY PARA A API --- */
+    /* --- PROXY PARA A API --- 
     proxy: {
       '/api':  'http://$VITE_API_URL:3000',
       '/auth': 'http://$VITE_API_URL:3000',
       '/progress': 'http://$VITE_API_URL:3000'   // (acrescenta outros prefixos se existirem)
-    }
+    }*/
   }
 });
