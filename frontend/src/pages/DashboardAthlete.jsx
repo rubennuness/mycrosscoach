@@ -87,7 +87,7 @@ function DashboardAthlete() {
     const phase = phasesArray[idx];
     if (!phase?.id || !newStatus) return;
 
-    fetch('/api/progress', {
+    fetch('https://mycrosscoach-production.up.railway.app/api/progress', {
       method : 'POST',
       headers: { 'Content-Type': 'application/json' },
       body   : JSON.stringify({
