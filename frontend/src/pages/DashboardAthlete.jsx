@@ -20,7 +20,7 @@ function DashboardAthlete() {
   /* ▼ 1. CARREGA estrutura da semana (sem progresso) -------------------- */
   useEffect(() => {
     if (!athleteId) return;
-    fetch(`/api/training/week/${athleteId}`)
+    fetch(`https://mycrosscoach-production.up.railway.app/api/training/week/${athleteId}`)
       .then(r => r.json())
       .then(d => {
         setDaysOfWeek(d.daysOfWeek);
@@ -33,7 +33,7 @@ function DashboardAthlete() {
   useEffect(() => {
     if (!athleteId || !selectedDay) return;
 
-    fetch(`/api/plans/day/${athleteId}/${selectedDay}`)
+    fetch(`https://mycrosscoach-production.up.railway.app/api/plans/day/${athleteId}/${selectedDay}`)
       .then(r => r.json())
       .then(data => {
         if (!data.phases) return;

@@ -22,7 +22,7 @@ function PlanPage() {
   useEffect(() => {
     if (athleteName || !athleteId) return;              // já temos → sai
 
-    fetch(`/api/users/${athleteId}`)
+    fetch(`https://mycrosscoach-production.up.railway.app/api/users/${athleteId}`)
       .then(r => r.ok ? r.json() : { name:'' })
       .then(data => setAthleteName(data.name ?? ''))
       .catch(()  => setAthleteName(''));
@@ -33,7 +33,7 @@ function PlanPage() {
   useEffect(() => {
     if (!athleteId || !selectedDay) return;
 
-    fetch(`/api/plans/day/${athleteId}/${selectedDay}`)
+    fetch(`https://mycrosscoach-production.up.railway.app/api/plans/day/${athleteId}/${selectedDay}`)
       .then(res => res.json())
       .then(data => {
         if (data.phases) {
@@ -56,7 +56,7 @@ function PlanPage() {
     e.preventDefault();
     const planData = { day_of_week: selectedDay, phases };
 
-    fetch(`/api/plans/${athleteId}`, {
+    fetch(`https://mycrosscoach-production.up.railway.app/api/plans/${athleteId}`, {
       method : 'POST',
       headers: { 'Content-Type': 'application/json' },
       body   : JSON.stringify(planData)

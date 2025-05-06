@@ -17,7 +17,7 @@ function DashboardCoach() {
   // 1) No “useEffect”, chamamos GET /api/coach/athletes ao montar a página:
   useEffect(() => {
     const token = localStorage.getItem('token');
-    fetch('/api/coach/athletes', {
+    fetch('https://mycrosscoach-production.up.railway.app/api/coach/athletes', {
       headers: {
         Authorization: `Bearer ${token}`
       }
