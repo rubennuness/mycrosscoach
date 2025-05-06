@@ -1,58 +1,64 @@
 // routes/planRoutes.js
 const express = require('express');
-const router = express.Router();
-const pool = require('../db'); // Conexão MySQL
+const router  = express.Router();
+const pool    = require('../db');   // Conexão MySQL
 
-// POST /api/plans/:athleteId => cria ou sobrescreve plano de um dia
+/* ------------------------------------------------------------------ */
+/* 🔽 1. Helper  – devolve a 2.ª-feira (ISO) da semana em curso  🔽   */
+function mondayOfCurrentWeek () {
+  const d   = new Date();                // hoje (UTC)
+  const wd  = d.getUTCDay() || 7;        // 1-7  (Domingo = 7)
+  d.setUTCDate(d.getUTCDate() - wd + 1); // recua até à 2.ª-feira
+  d.setUTCHours(0,0,0,0);
+  return d.toISOString().slice(0,10);    // “YYYY-MM-DD”
+}
+/* ------------------------------------------------------------------ */
+
+
+/* POST /api/plans/:athleteId  – cria / sobrescreve plano de um dia */
 router.post('/:athleteId', async (req, res) => {
   try {
-    const { athleteId } = req.params;
-    const { day_of_week, phases } = req.body;
+    const { athleteId }          = req.params;
+    const { day_of_week, phases} = req.body;
 
-    // Verifica se já existe (athlete_id, day_of_week)
+    /* ---------- existe? ------------------------------------------------ */
     const [existingPlan] = await pool.query(`
       SELECT id FROM plans
-       WHERE athlete_id=? 
-         AND day_of_week=?
+       WHERE athlete_id = ? AND day_of_week = ?
       LIMIT 1
     `, [athleteId, day_of_week]);
 
     let planId;
     if (existingPlan.length > 0) {
-      // Sobrescreve => apaga as phases antigas
+      /* --- 1) sobrescreve: limpa phases antigas ----------------------- */
       planId = existingPlan[0].id;
-           // 1.a) apaga as fases antigas (sobrescrever)
-     await pool.query(
-       'DELETE FROM plan_phases WHERE plan_id = ?',
-       [planId]
-     );
+      await pool.query('DELETE FROM plan_phases WHERE plan_id = ?', [planId]);
     } else {
-      // Cria nova row em "plans"
+      /* --- 2) novo: agora inclui week_start_date ---------------------- */
+      const monday = mondayOfCurrentWeek();           // 🔸 NOVO
       const [insert] = await pool.query(`
-        INSERT INTO plans (athlete_id, day_of_week) 
-        VALUES (?, ?)
-      `, [athleteId, day_of_week]);
+        INSERT INTO plans (athlete_id, day_of_week, week_start_date)
+        VALUES (?, ?, ?)
+      `, [athleteId, day_of_week, monday]);           // 🔸 NOVO (3.º valor)
       planId = insert.insertId;
     }
 
-    // Inserir as phases
+    /* ---------- phases ------------------------------------------------- */
     for (let i = 0; i < phases.length; i++) {
       const { title, text } = phases[i];
       await pool.query(`
         INSERT INTO plan_phases (plan_id, phase_order, title, phase_text)
         VALUES (?, ?, ?, ?)
-       `, [
-        planId,
-        i + 1,
-        title || `Fase ${i + 1}`,  // fallback
-        text   || ''
-      ]);
+      `, [ planId, i + 1,
+           title || `Fase ${i+1}`,
+           text  || '' ]);
     }
 
     return res.status(201).json({
-      plan_id: planId,
-      message: `Plano salvo para user_id=${athleteId}, dia=${day_of_week}`
+      plan_id : planId,
+      message : `Plano salvo para user_id=${athleteId}, dia=${day_of_week}`
     });
+
   } catch (err) {
     console.error('Erro ao criar/atualizar plano:', err);
     return res.status(500).json({ error: 'Erro ao criar/atualizar plano' });
