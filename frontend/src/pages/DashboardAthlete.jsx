@@ -116,7 +116,7 @@ function DashboardAthlete() {
     const todayIdx= today.getDay();            // 0-Dom … 6-Sáb
     const target  = map[dayName];
     if (target == null) return today;
-    const diff    = (target - todayIdx + 7) % 7; // dias até chegar ao alvo
+    const diff    = target - todayIdx; // dias até chegar ao alvo
     const result  = new Date(today);
     result.setDate(today.getDate() + diff);
     return result;
