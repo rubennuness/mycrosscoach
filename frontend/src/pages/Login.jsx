@@ -7,13 +7,14 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
-  const API = `${window.location.protocol}//${window.location.hostname}:3000`;
+  //const API = `${window.location.protocol}//${window.location.hostname}:3000`;
+  const API = import.meta.env.VITE_API_URL;
   const handleLogin = async (e) => {
     e.preventDefault();
     setErrorMsg(''); // limpa mensagens de erro anteriores
 
     try {
-      const response = await fetch('/auth/login', {
+      const response = await fetch('${API}/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
