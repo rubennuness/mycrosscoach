@@ -1,20 +1,22 @@
 /* src/components/BackButton.css */
 .back-arrow{
-  position:absolute;          /* fica sempre no canto */
+  position:absolute;
   top:20px;
   left:20px;
-  background:#2c2c2c;         /* mesma paleta dark */
-  border:none;
-  border-radius:50%;
   width:40px;
   height:40px;
+  border:none;
+  border-radius:50%;
+  background:#2c2c2c;
+  color:#ffffff;              /* ← seta herdará esta cor */
   display:flex;
   align-items:center;
   justify-content:center;
   cursor:pointer;
-  transition:background .2s;
+  transition:background .2s, color .2s;
   z-index:100;
 }
 .back-arrow:hover{
   background:#3498db;
+  color:#fff;                 /* garante bom contraste no hover */
 }
