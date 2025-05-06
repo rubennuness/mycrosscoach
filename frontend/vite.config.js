@@ -12,9 +12,9 @@ export default defineConfig({
 
     /* --- PROXY PARA A API --- */
     proxy: {
-      '/api':  'http://localhost:3000',
-      '/auth': 'http://localhost:3000',
-      '/progress': 'http://localhost:3000'   // (acrescenta outros prefixos se existirem)
+      '/api':  'http://$VITE_API_URL:3000',
+      '/auth': 'http://$VITE_API_URL:3000',
+      '/progress': 'http://$VITE_API_URL:3000'   // (acrescenta outros prefixos se existirem)
     }
   }
 });
