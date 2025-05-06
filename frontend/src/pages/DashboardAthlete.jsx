@@ -160,9 +160,15 @@ function DashboardAthlete() {
           key={dayInitial[day] || day.charAt(0)}
           className={`day-button ${selectedDay === day ? 'active' : ''}`}
           onClick={() => {
-            setSelectedDay(day);
-            const dt = getDateForDay(day);
-            setHeaderDate(format(dt, 'MMM dd yyyy'));
+            /* se já estava aberto, volta a fechar (minimiza) */
+   if (selectedDay === day) {
+      setSelectedDay(null);      // “des-seleciona”
+      setHeaderDate('');         // limpa data no header
+    } else {
+      setSelectedDay(day);       // abre
+      const dt = getDateForDay(day);
+      setHeaderDate(format(dt, 'MMM dd yyyy'));
+    }
           }}
         >
           {dayInitial[day] || day.charAt(0)}
