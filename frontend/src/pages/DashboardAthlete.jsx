@@ -1,6 +1,7 @@
 // src/pages/DashboardAthlete.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { format } from 'date-fns';
 import HamburgerMenu from '../components/HamburgerMenu';
 import './Dashboard.css';
 
@@ -9,6 +10,7 @@ function DashboardAthlete() {
   const [daysOfWeek,   setDaysOfWeek]    = useState([]);
   const [trainingPlans,setTrainingPlans] = useState({});
   const [selectedDay,  setSelectedDay]   = useState(null);
+  const [headerDate,   setHeaderDate]    = useState('');
 
   /* progresso local */
   const [phaseStatus,  setPhaseStatus]   = useState({});  // ex.: "Segunda-0": 'completed'
@@ -104,6 +106,21 @@ function DashboardAthlete() {
     localStorage.removeItem('user');
     navigate('/login');
   };
+    /* ---------- util: devolve a Date para “Segunda”, “Terça”… ---------- */
+  const getDateForDay = (dayName) => {
+    const map = {
+      'Domingo' : 0, 'Segunda' : 1, 'Terça' : 2, 'Quarta' : 3,
+      'Quinta'  : 4, 'Sexta'   : 5, 'Sábado' : 6
+    };
+    const today   = new Date();
+    const todayIdx= today.getDay();            // 0-Dom … 6-Sáb
+    const target  = map[dayName];
+    if (target == null) return today;
+    const diff    = (target - todayIdx + 7) % 7; // dias até chegar ao alvo
+    const result  = new Date(today);
+    result.setDate(today.getDate() + diff);
+    return result;
+  };
 
   /* ---------- JSX original (inalterado) ---------- */
   return (
@@ -112,7 +129,10 @@ function DashboardAthlete() {
         <div className="dashboard-left-content">
           <div className="dash-header">
             <HamburgerMenu />
-            <h2>Meu Plano de Treino (Atleta)</h2>
+            <h2>
+              {/* mostra data se já escolheu um dia; senão o texto antigo */}
+              { headerDate || 'Meu Plano de Treino (Atleta)' }
+            </h2>
             <button className="logout-button" onClick={handleLogout}>
               Logout
             </button>
@@ -124,7 +144,11 @@ function DashboardAthlete() {
               <button
                 key={day}
                 className={`day-button ${selectedDay === day ? 'active' : ''}`}
-                onClick={() => setSelectedDay(day)}
+                onClick={() => {
+                                    setSelectedDay(day);
+                                    const dt = getDateForDay(day);
+                                    setHeaderDate(format(dt, 'MMM dd yyyy'));   /* ex. May 14 2025 */
+                                  }}
               >
                 {day}
               </button>
