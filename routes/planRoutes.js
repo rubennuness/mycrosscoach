@@ -144,4 +144,66 @@ router.get('/view/:planId', async (req, res) => {
   }
 });
 
+/* ────────────────────────────────────────────────────────────────────
+   GET /api/plans/by-date/:athleteId/:dateYMD
+   Devolve o plano (phases[]) do atleta para a data exacta escolhida
+   – Usa week_start_date (2.ª-feira da semana) + day_of_week (‘Segunda’, …)
+   – Se não houver treino nesse dia devolve phases:[]
+   ──────────────────────────────────────────────────────────────────── */
+
+router.get('/by-date/:athleteId/:dateYMD', async (req, res) => {
+  try {
+    const { athleteId, dateYMD } = req.params;        // YYYY-MM-DD
+
+    /* 1️⃣  calcula week_start_date (segunda-feira ISO)  */
+    const d     = new Date(dateYMD + 'T00:00:00Z');   // força UTC
+    const wd    = d.getUTCDay() || 7;                 // 1-7  (Dom=7)
+    d.setUTCDate(d.getUTCDate() - wd + 1);            // recua até 2.ª-feira
+    const monday = d.toISOString().slice(0, 10);      // “YYYY-MM-DD”
+
+    /* 2️⃣  converte a data para o nome do dia (‘Segunda’, …)            */
+    const ptDay = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado']
+                  [ new Date(dateYMD).getDay() ];
+
+    /* 3️⃣  procura o plano dessa semana + dia                           */
+    const [planRows] = await pool.query(`
+      SELECT id
+        FROM plans
+       WHERE athlete_id      = ?
+         AND week_start_date = ?
+         AND day_of_week     = ?
+      LIMIT 1
+    `, [athleteId, monday, ptDay]);
+
+    if (planRows.length === 0)
+      return res.json({ phases: [] });                 // nada nesse dia
+
+    const planId = planRows[0].id;
+
+    /* 4️⃣  devolve as phases já com estado / comentário (se existirem)  */
+    const [phaseRows] = await pool.query(`
+      SELECT
+          ph.id                            AS id,
+          ph.phase_order,
+          COALESCE(ph.title,
+                   CONCAT('Fase ',ph.phase_order)) AS title,
+          ph.phase_text                    AS text,
+          COALESCE(pp.status ,'pending')   AS status,
+          COALESCE(pp.comment,'')          AS comment
+      FROM plan_phases ph
+      LEFT JOIN phase_progress pp
+             ON pp.plan_phase_id = ph.id
+            AND pp.athlete_id    = ?
+      WHERE ph.plan_id = ?
+      ORDER BY ph.phase_order
+    `, [athleteId, planId]);
+
+    return res.json({ phases: phaseRows });
+
+  } catch (err) {
+    console.error('Erro ao obter plano por data:', err);
+    res.status(500).json({ error: 'Erro no servidor' });
+  }
+});
+
 module.exports = router;
