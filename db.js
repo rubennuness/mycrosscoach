@@ -11,7 +11,7 @@ if (process.env.MYSQL_URL) {
 /* 2️⃣  Fallback – campos individuais (útil em localhost)      */
 module.exports = mysql.createPool({
   host            : process.env.MYSQLHOST     || 'localhost',
-  user            : process.env.MYSQLUSER     || 'root',
+  user            : process.env.MYSQLUSER     || 'coach_user',
   password        : process.env.MYSQLPASSWORD || '123',
   database        : process.env.MYSQLDATABASE || 'coachdb',
   port            : process.env.MYSQLPORT     || 3306,
