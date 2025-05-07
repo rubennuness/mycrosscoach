@@ -161,17 +161,17 @@ router.get('/by-date/:athleteId/:dateYMD', async (req, res) => {
     const { athleteId, dateYMD } = req.params;        // YYYY-MM-DD
 
     /* 1️⃣  calcula week_start_date (segunda-feira ISO)  */
-    const d     = new Date(dateYMD + 'T00:00:00Z');   // força UTC
-    const wd    = d.getUTCDay() || 7;                 // 1-7  (Dom=7)
-    d.setUTCDate(d.getUTCDate() - wd + 1);            // recua até 2.ª-feira
-    const monday = d.toISOString().slice(0, 10);      // “YYYY-MM-DD”
+    const d   = new Date(dateYMD);          // local
+    const wd  = d.getDay() || 7;            // 1-7  (Dom = 7)
+    d.setDate(d.getDate() - wd + 1);        // recua até 2.ª
+    const monday = d.toISOString().slice(0,10);  // ainda devolve “YYYY-MM-DD”
 
     /* 2️⃣  converte a data para o nome do dia (‘Segunda’, …)            */
     const ptDay = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado']
                   [ new Date(dateYMD).getDay() ];
 
     /* 3️⃣  procura o plano dessa semana + dia                           */
-    const [planRows] = await pool.query(`
+    let [planRows] = await pool.query(`
       SELECT id
         FROM plans
        WHERE athlete_id  = ?
@@ -182,8 +182,21 @@ router.get('/by-date/:athleteId/:dateYMD', async (req, res) => {
       LIMIT 1
     `, [athleteId, ptDay, monday]);
 
-    if (planRows.length === 0)
-      return res.json({ phases: [] });                 // nada nesse dia
+    /* fallback: se não encontrou, tenta a semana MAIS RECENTE anterior   */
+    if (planRows.length === 0) {
+        [planRows] = await pool.query(`
+          SELECT id
+            FROM plans
+           WHERE athlete_id  = ?
+             AND day_of_week = ?
+             AND week_start_date <= ?
+           ORDER BY week_start_date DESC
+           LIMIT 1
+        `, [athleteId, ptDay, monday]);
+  
+        if (planRows.length === 0)
+          return res.json({ phases: [] });    // continua sem plano
+      }
 
     const planId = planRows[0].id;
 
