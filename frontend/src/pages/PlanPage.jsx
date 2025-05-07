@@ -35,9 +35,11 @@ function PlanPage() {
       .catch(()  => setAthleteName(''));
   }, [athleteId, athleteName]);
   /* ------------------------------------------- */
-
-  /* ②  Carrega as fases do dia -------------- */
-  useEffect(() => {
+  /* ②  Carrega as fases sempre que
+      • muda o dia OU
+      • muda a semana OU
+      • muda o atleta                                       */
+useEffect(() => {
     if (!athleteId || !selectedDay) return;
 
     fetch(`https://mycrosscoach-production.up.railway.app/api/plans/day/${athleteId}/${selectedDay}?week=${weekStart}`)
@@ -53,7 +55,7 @@ function PlanPage() {
         }
       })
       .catch(err => console.error(err));
-  }, [athleteId, selectedDay]);
+  }, [athleteId, selectedDay, weekStart]);
   /* ------------------------------------------- */
 
   const handleAddPhase = () =>
@@ -103,7 +105,10 @@ function PlanPage() {
               <input
                 type="date"
                 value={weekStart}
-                onChange={e => setWeekStart(e.target.value)}
+                onChange={e => {
+                      setWeekStart(e.target.value);          // muda a semana
+                      setPhases([{ title:'', text:'' }]);    // limpa enquanto carrega
+                    }}
                 style={{width:'180px',marginBottom:18}}
               />
               <label>Dia da semana:</label>
