@@ -3,7 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './BackButton.css';          // (mantém o teu css, se já existir)
 
-function BackButton({ label = 'Voltar', to = null }) {
+function BackButton({ label = '← Voltar', to = null }) {
   const navigate = useNavigate();
 
   const handleClick = () => {
