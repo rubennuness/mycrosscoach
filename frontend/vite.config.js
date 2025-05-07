@@ -9,6 +9,7 @@ export default defineConfig({
     host: '0.0.0.0',   // expõe o Vite na rede
     port: 5173,
     allowedHosts: ['renewed-charisma-production-0450.up.railway.app'],
+    allowedHosts: ['www.mycrosscoach.app'],
 
     /* --- PROXY PARA A API --- 
     proxy: {
