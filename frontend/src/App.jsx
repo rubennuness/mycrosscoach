@@ -11,6 +11,8 @@ import PlanPage from './pages/PlanPage';
 import Timers from './pages/Timers';
 import CalendarPage from './pages/CalendarPage';
 import VerifyEmail from './pages/VerifyEmail';
+import MetricsList from './pages/MetricsList';
+import MetricDetail from './pages/MetricDetail';
 
 function App() {
   return (
@@ -64,6 +66,8 @@ function App() {
           }
         />
 <Route path="/verify-email" element={<VerifyEmail/>} />
+<Route path="/metrics" element={<PrivateRoute><MetricsList/></PrivateRoute>} />
+<Route path="/metric/:metricId" element={<PrivateRoute><MetricDetail/></PrivateRoute>} />
         {/* fallback */}
         <Route path="*" element={<Home />} />
       </Routes>

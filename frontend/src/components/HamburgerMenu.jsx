@@ -22,6 +22,7 @@ function HamburgerMenu() {
               <>
                               <li onClick={()=>navigate('/timers')}>Timers</li>
                               <li onClick={()=>navigate('/calendar')}>Calendar</li>
+                              <li onClick={()=>navigate('/metrics')}>Metrics</li>
                             </>
               
             )}
