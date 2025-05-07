@@ -1,0 +1,112 @@
+/* -------------------- PALETA BASE ----------------------------------- */
+/* Se já declaraste estas variáveis em :root noutro ficheiro,              */
+/* podes remover esta secção ou garantir que não colide.                   */
+:root{
+    --dark-900:#1c1c1c;      /* fundo principal                          */
+    --dark-800:#2c2c2c;      /* cartões / listas                         */
+    --blue-500:#3498db;      /* cor de acento (botões)                   */
+    --blue-700:#2980b9;
+    --grey-400:#bbb;
+    --white:#fff;
+  }
+  
+  /* -------------------- CONTÂINER GERAL ------------------------------- */
+  .metrics-container{
+    min-height:100vh;
+    padding:40px 20px;
+    background:var(--dark-900);
+    color:var(--white);
+    font-family:Arial, sans-serif;
+    text-align:center;
+  }
+  
+  /* -------------------- BOTÃO PRINCIPAL ------------------------------- */
+  .btn-primary{
+    background:var(--blue-500);
+    color:var(--white);
+    border:none;
+    padding:12px 24px;
+    border-radius:6px;
+    cursor:pointer;
+    font-weight:600;
+    margin:20px 0;
+    transition:background .25s;
+  }
+  .btn-primary:hover{background:var(--blue-700)}
+  
+  /* -------------------- LISTA DE MÉTRICAS ----------------------------- */
+  .metric-list{
+    list-style:none;
+    padding:0;
+    margin:0 auto;
+    max-width:500px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .metric-list li{
+    background:var(--dark-800);
+    padding:14px 18px;
+    border:1px solid #333;
+    border-radius:6px;
+    cursor:pointer;
+    transition:background .25s;
+    font-size:1rem;
+    font-weight:600;
+  }
+  .metric-list li:hover{background:#323232}
+  
+  /* -------------------- GRÁFICO & DETALHE ----------------------------- */
+  .recharts-wrapper{
+    background:var(--dark-800);
+    border:1px solid #333;
+    border-radius:6px;
+    padding:10px;
+    margin:20px auto;
+  }
+  
+  /* -------------------- LISTA DE RESULTADOS --------------------------- */
+  .result-list{
+    list-style:none;
+    padding:0;
+    margin:0 auto 40px;
+    max-width:500px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .result-list li{
+    background:var(--dark-800);
+    border:1px solid #333;
+    border-radius:6px;
+    padding:10px 14px;
+    display:flex;
+    justify-content:space-between;
+    font-size:.95rem;
+    color:var(--grey-400);
+  }
+  .result-list li span:first-child{
+    font-weight:700;
+    color:var(--white);
+  }
+  
+  /* -------------------- HEADINGS -------------------------------------- */
+  .metrics-container h1,
+  .metrics-container h2,
+  .metrics-container h3{
+    margin-bottom:14px;
+    font-weight:700;
+  }
+  .metrics-container h1{font-size:2rem}
+  .metrics-container h2{font-size:1.5rem}
+  .metrics-container h3{font-size:1.2rem}
+  
+  /* -------------------- RESPONSIVE ------------------------------------ */
+  @media(max-width:480px){
+    .btn-primary{width:100%}
+    .metric-list li,
+    .result-list li{
+      font-size:.9rem;
+    }
+  }
+  
