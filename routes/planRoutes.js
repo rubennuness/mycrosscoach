@@ -19,7 +19,7 @@ function mondayOfCurrentWeek () {
 router.post('/:athleteId', async (req, res) => {
   try {
     const { athleteId }          = req.params;
-    const { day_of_week, phases} = req.body;
+    const { day_of_week, phases, week_start_date } = req.body;
 
     /* ---------- existe? ------------------------------------------------ */
     const [existingPlan] = await pool.query(`
@@ -35,7 +35,7 @@ router.post('/:athleteId', async (req, res) => {
       await pool.query('DELETE FROM plan_phases WHERE plan_id = ?', [planId]);
     } else {
       /* --- 2) novo: agora inclui week_start_date ---------------------- */
-      const monday = mondayOfCurrentWeek();           // 🔸 NOVO
+      const monday = week_start_date || mondayOfCurrentWeek();
       const [insert] = await pool.query(`
         INSERT INTO plans (athlete_id, day_of_week, week_start_date)
         VALUES (?, ?, ?)
@@ -70,15 +70,18 @@ router.post('/:athleteId', async (req, res) => {
 router.get('/day/:athleteId/:dayOfWeek', async (req, res) => {
   try {
     const { athleteId, dayOfWeek } = req.params;
+    const weekStart = req.query.week || null;
 
     // 1) Verifica se existe row em "plans" (athlete_id, day_of_week)
     const [planRows] = await pool.query(`
       SELECT id
         FROM plans
-       WHERE athlete_id=? 
-         AND day_of_week=?
+        WHERE athlete_id=? 
+                 AND day_of_week=?
+                 ${weekStart ? 'AND week_start_date = ?' : ''}
       LIMIT 1
-    `, [athleteId, dayOfWeek]);
+      `, weekStart ? [athleteId, dayOfWeek, weekStart]
+                   : [athleteId, dayOfWeek]);
     if (planRows.length === 0) {
       // Se não houver plano, devolve phases=[]
       return res.json({ phases: [] });

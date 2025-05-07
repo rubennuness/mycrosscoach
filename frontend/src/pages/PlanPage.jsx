@@ -16,6 +16,12 @@ function PlanPage() {
   /* --------------------------------- */
 
   const [selectedDay, setSelectedDay] = useState('Segunda');
+    /* ▼ NOVO  – segunda-feira da semana que estamos a planear */
+  const today      = new Date();                       // ajuda no default
+  const mondayIso  = new Date(today.setDate(
+                     today.getDate() - ((today.getDay()||7) - 1))
+                   ).toISOString().slice(0,10);        // YYYY-MM-DD
+  const [weekStart, setWeekStart]       = useState(mondayIso);
   const [phases, setPhases]           = useState([{ title: '', text: '' }]);
   const [toastMessage, setToastMessage] = useState('');
 
@@ -34,7 +40,7 @@ function PlanPage() {
   useEffect(() => {
     if (!athleteId || !selectedDay) return;
 
-    fetch(`https://mycrosscoach-production.up.railway.app/api/plans/day/${athleteId}/${selectedDay}`)
+    fetch(`https://mycrosscoach-production.up.railway.app/api/plans/day/${athleteId}/${selectedDay}?week=${weekStart}`)
       .then(res => res.json())
       .then(data => {
         if (data.phases) {
@@ -55,7 +61,11 @@ function PlanPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const planData = { day_of_week: selectedDay, phases };
+    const planData = {
+            day_of_week     : selectedDay,
+            week_start_date : weekStart,   /* NOVO */
+            phases
+          };
 
     fetch(`https://mycrosscoach-production.up.railway.app/api/plans/${athleteId}`, {
       method : 'POST',
@@ -87,6 +97,15 @@ function PlanPage() {
 
           <form onSubmit={handleSubmit} className="plan-form">
             <div>
+            <label style={{display:'block',marginBottom:6}}>
+                Semana (segunda-feira):
+              </label>
+              <input
+                type="date"
+                value={weekStart}
+                onChange={e => setWeekStart(e.target.value)}
+                style={{width:'180px',marginBottom:18}}
+              />
               <label>Dia da semana:</label>
               <select value={selectedDay}
                       onChange={(e) => setSelectedDay(e.target.value)}>
