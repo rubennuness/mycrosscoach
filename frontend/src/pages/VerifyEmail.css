@@ -1,0 +1,75 @@
+/* VerifyEmail.css  –  tema escuro / azul */
+
+.verify-container{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    padding:40px 20px;
+    background:#1c1c1c;          /* mesmo fundo das outras páginas */
+    color:#fff;
+    text-align:center;
+    font-family:Arial,sans-serif;
+  }
+  
+  .verify-container h1{
+    font-size:2.2rem;
+    margin-bottom:12px;
+  }
+  
+  .verify-container p{
+    margin-bottom:18px;
+    line-height:1.4;
+  }
+  
+  .verify-msg{
+    margin-bottom:16px;
+    font-weight:600;
+  }
+  
+  /* sucesso → verde | erro → vermelho (definido via classe) */
+  .verify-msg.success{ color:#27ae60; }
+  .verify-msg.error  { color:#e74c3c; }
+  
+  .verify-container form{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    width:100%;
+    max-width:280px;
+  }
+  
+  .verify-container input{
+    padding:10px 12px;
+    border-radius:4px;
+    border:1px solid #333;
+    background:#2c2c2c;
+    color:#fff;
+    text-align:center;
+    font-size:1rem;
+    letter-spacing:2px;          /* estilo “código” */
+  }
+  
+  .verify-container button{
+    padding:10px 18px;
+    border:none;
+    border-radius:4px;
+    background:#3498db;          /* azul padrão */
+    color:#fff;
+    font-weight:600;
+    cursor:pointer;
+  }
+  
+  .verify-container button:hover{
+    background:#2980b9;
+    opacity:.95;
+  }
+  
+  /* responsividade simples */
+  @media(max-width:480px){
+    .verify-container{
+      padding:60px 16px;
+    }
+  }
+  
