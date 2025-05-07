@@ -99,8 +99,8 @@ useEffect(() => {
 
           <form onSubmit={handleSubmit} className="plan-form">
             <div>
-            +<label style={{display:'block',marginBottom:6}}>
-  Escolha a <strong>Semana</strong> (2ª feira):
+            <label style={{display:'block',marginBottom:6}}>
+  Escolha a <strong>Semana</strong>:
 </label>
 <input
   type="date"
