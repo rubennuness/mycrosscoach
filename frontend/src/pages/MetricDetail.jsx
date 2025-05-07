@@ -23,7 +23,7 @@ export default function MetricDetail(){
   const addResult = async ()=>{
     const val   = parseFloat(prompt('Valor (kg, reps, etc.)'));
     if(isNaN(val)) return;
-    await fetch(`/api/metrics/result/${metricId}`,{
+    await fetch(`https://mycrosscoach-production.up.railway.app/api/metrics/result/${metricId}`,{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({value:val})
     });
