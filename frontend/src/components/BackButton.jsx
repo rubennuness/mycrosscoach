@@ -14,7 +14,7 @@ function BackButton({ label = 'Voltar', to = null }) {
   };
 
   return (
-    <button onClick={handleClick} className="back-button">
+    <button onClick={handleClick} className="back-arrow">
       {label}
     </button>
   );
