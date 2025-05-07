@@ -99,18 +99,30 @@ useEffect(() => {
 
           <form onSubmit={handleSubmit} className="plan-form">
             <div>
-            <label style={{display:'block',marginBottom:6}}>
-                Semana (segunda-feira):
-              </label>
-              <input
-                type="date"
-                value={weekStart}
-                onChange={e => {
-                      setWeekStart(e.target.value);          // muda a semana
-                      setPhases([{ title:'', text:'' }]);    // limpa enquanto carrega
-                    }}
-                style={{width:'180px',marginBottom:18}}
-              />
+            +<label style={{display:'block',marginBottom:6}}>
+  Escolha a <strong>Semana</strong> (2ª feira):
+</label>
+<input
+  type="date"
+  /*   só aceita segundas porque:
+      – min  = uma segunda-feira
+      – step = 7 dias                                       */
+  min={mondayIso}
+  step="7"
+  value={weekStart}
+  onChange={e => {
+    /* se por acaso o browser deixar escolher outro dia,
+       arredondamos ao Monday dessa semana                 */
+    const d   = new Date(e.target.value);
+    const wd  = d.getDay() || 7;          // 1-Dom … 7-Sáb
+    d.setDate(d.getDate() - wd + 1);      // recua até 2ª-feira
+    const monday = d.toISOString().slice(0,10);
+
+    setWeekStart(monday);                 // guarda segunda-feira
+    setPhases([{ title:'', text:'' }]);   // limpa enquanto carrega
+  }}
+  style={{width:'180px',marginBottom:18}}
+/>
               <label>Dia da semana:</label>
               <select value={selectedDay}
                       onChange={(e) => setSelectedDay(e.target.value)}>
