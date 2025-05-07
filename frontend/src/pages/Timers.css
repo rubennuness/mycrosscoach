@@ -44,3 +44,19 @@
     background:#555;
     color:#fff;
   }
+
+  /* ────────────────────────────────────────────────────────── */
+/*  MARGEM extra  - evita que o botão “Voltar” cubra o h1     */
+@media (max-width: 480px) {
+  .timers-container h1 {
+    margin-top: 70px;      /* tal como fizemos no Calendar */
+  }
+}
+
+/* garante posição consistente do botão em todas as páginas   */
+.back-button {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  z-index: 10;
+}
