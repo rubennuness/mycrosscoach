@@ -23,10 +23,12 @@ router.post('/:athleteId', async (req, res) => {
 
     /* ---------- existe? ------------------------------------------------ */
     const [existingPlan] = await pool.query(`
-      SELECT id FROM plans
-       WHERE athlete_id = ? AND day_of_week = ?
-      LIMIT 1
-    `, [athleteId, day_of_week]);
+    SELECT id FROM plans
+     WHERE athlete_id      = ?
+       AND day_of_week     = ?
+       AND week_start_date = ?
+    LIMIT 1
+  `, [athleteId, day_of_week, week_start_date]);
 
     let planId;
     if (existingPlan.length > 0) {
