@@ -9,10 +9,10 @@ function Home() {
       {/* Hero Section */}
       <header className="hero-section">
         <div className="hero-content">
-          <h1 className="hero-title">Melhore sua Performance com MyCrossCoach</h1>
+          <h1 className="hero-title">Melhora a tua Performance com MyCrossCoach</h1>
           <p className="hero-subtitle">
-            Tenha acesso a acompanhamento especializado do seu coach e 
-            compartilhe suas rotinas com atletas que têm o mesmo treinador.
+            Tem acesso a acompanhamento especializado do teu coach e 
+            partilha as tuas rotinas com atletas que têm o mesmo treinador.
           </p>
           <div className="hero-buttons">
             {/* Botão para Login (caso o usuário já tenha conta) */}
@@ -34,8 +34,8 @@ function Home() {
           <div className="feature-card free-feature">
             <h3>Acompanhamento Básico</h3>
             <p>
-              Interaja com seu coach e registre informações essenciais do seu treino
-              para ter um panorama geral do seu desenvolvimento.
+              Interaje com o teu coach e regista informações essenciais do teu treino
+              para teres um panorama geral do teu desenvolvimento.
             </p>
             <p className="badge-free">Grátis</p>
           </div>
@@ -44,8 +44,8 @@ function Home() {
           <div className="feature-card free-feature">
             <h3>Comunidade Geral</h3>
             <p>
-              Participe de discussões públicas com outros atletas, troque dicas 
-              e encontre motivação em grupo.
+              Participa em discussões públicas com outros atletas, troca dicas 
+              e encontra motivação em grupo.
             </p>
             <p className="badge-free">Grátis</p>
           </div>
@@ -54,8 +54,8 @@ function Home() {
           <div className="feature-card premium-feature">
             <h3>Registo de Alimentação</h3>
             <p>
-              Adicione o plano de alimentação indicado pela sua nutricionista e 
-              receba feedback direto do seu coach.
+              Adicione o plano de alimentação indicado pela tua nutricionista e 
+              recebe feedback da mesma ou do teu coach.
             </p>
             <p className="badge-premium">Premium</p>
           </div>
@@ -64,7 +64,7 @@ function Home() {
           <div className="feature-card premium-feature">
             <h3>Partilha de Exercícios</h3>
             <p>
-              Compartilhe seus treinos com colegas que tenham o mesmo coach e receba 
+              Partilha os teus treinos com colegas que tenham o mesmo coach e recebe 
               insights mais profundos para evoluir em conjunto.
             </p>
             <p className="badge-premium">Premium</p>
@@ -73,10 +73,10 @@ function Home() {
 
         {/* CTA para assinatura */}
         <div className="premium-callout">
-          <h3>Desbloqueie tudo com a Assinatura Mensal</h3>
+          <h3>Desbloqueia tudo com a Subscrição Mensal</h3>
           <p>
-            Tenha acesso completo às funcionalidades Premium e um acompanhamento ainda 
-            mais personalizado do seu coach.
+            Tem acesso completo às funcionalidades Premium e um acompanhamento ainda 
+            mais personalizado do teu coach.
           </p>
           <Link to="/subscribe" className="premium-button">Assinar Agora</Link>
         </div>
@@ -87,9 +87,9 @@ function Home() {
         <div className="about-content">
           <h2>Sobre o MyCrossCoach</h2>
           <p>
-           Nós unimos coaches especializados e atletas em uma plataforma única, 
+           Nós unimos coaches especializados e atletas numa plataforma única, 
             potencializando resultados através de um acompanhamento personalizado 
-            e uma comunidade engajada.
+            e uma comunidade unida.
           </p>
         </div>
       </section>
