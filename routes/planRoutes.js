@@ -169,11 +169,13 @@ router.get('/by-date/:athleteId/:dateYMD', async (req, res) => {
     const [planRows] = await pool.query(`
       SELECT id
         FROM plans
-       WHERE athlete_id      = ?
-         AND week_start_date = ?
-         AND day_of_week     = ?
+       WHERE athlete_id  = ?
+         AND day_of_week = ?
+         /* planos novos  ➜ week_start_date = monday
+           planos antigos ➜ week_start_date IS NULL          */
+         AND (week_start_date = ? OR week_start_date IS NULL)
       LIMIT 1
-    `, [athleteId, monday, ptDay]);
+    `, [athleteId, ptDay, monday]);
 
     if (planRows.length === 0)
       return res.json({ phases: [] });                 // nada nesse dia
