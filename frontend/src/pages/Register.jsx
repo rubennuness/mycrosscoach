@@ -39,7 +39,7 @@ function Register() {
         throw new Error(data.error || 'Falha ao criar conta');
       }
 
-      navigate('/login');
+      navigate(`/verify-email?email=${encodeURIComponent(formData.email)}`);
 
     } catch (err) {
       setServerError(err.message);

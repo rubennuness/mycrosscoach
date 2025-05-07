@@ -10,6 +10,7 @@ import PrivateRoute from './components/PrivateRoute';
 import PlanPage from './pages/PlanPage';
 import Timers from './pages/Timers';
 import CalendarPage from './pages/CalendarPage';
+import VerifyEmail from './pages/VerifyEmail';
 
 function App() {
   return (
@@ -62,7 +63,7 @@ function App() {
             </PrivateRoute>
           }
         />
-
+<Route path="/verify-email" element={<VerifyEmail/>} />
         {/* fallback */}
         <Route path="*" element={<Home />} />
       </Routes>

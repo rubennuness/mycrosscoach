@@ -4,6 +4,20 @@ const router = express.Router();
 const pool = require('../db');  
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
+const crypto     = require('crypto');
+
+/* ---------- transporter ----------
+   SMTP credenciais em variáveis de ambiente
+   (ex.: RAILWAY → Settings → Variables)         */
+const transporter = nodemailer.createTransport({
+  host : process.env.SMTP_HOST,
+  port : +process.env.SMTP_PORT || 587,
+  auth : {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS
+  }
+});
 
 const JWT_SECRET = 'chave-super-secreta'; // Em produção, use variável de ambiente
 
@@ -32,11 +46,23 @@ router.post('/register', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     // Insere no banco (supõe que a tabela "users" tem colunas: name, email, password, role, created_at, updated_at)
-    await pool.query(
-      `INSERT INTO users (name, email, password, role, created_at, updated_at)
-       VALUES (?, ?, ?, ?, NOW(), NOW())`,
-      [name, email, hashedPassword, role]
-    );
+        /* 1) cria código de 6 dígitos */
+    const code = crypto.randomInt(100000,999999).toString();
+
+    /* 2) grava user por confirmar */
+    await pool.query(`
+      INSERT INTO users
+        (name,email,password,role,verify_code,email_verified,created_at,updated_at)
+      VALUES (?,?,?,?,?,0,NOW(),NOW())`,
+      [name,email,hashedPassword,role,code]);
+
+    /* 3) envia e-mail */
+    await transporter.sendMail({
+      from   : 'noreply@mycrosscoach.app',
+      to     : email,
+      subject: 'Código de verificação',
+      text   : `O seu código é: ${code}`
+    });
 
     return res.status(201).json({ message: 'Usuário cadastrado com sucesso' });
   } catch (error) {
@@ -65,6 +91,9 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Credenciais inválidas' });
     }
 
+    if (!user.email_verified)
+      return res.status(403).json({ error:'Confirme o seu e-mail antes de entrar.' });
+
     // Tudo ok – gerar token
     const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, {
       expiresIn: '1h'
@@ -83,6 +112,28 @@ router.post('/login', async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Erro no servidor' });
+  }
+});
+
+router.post('/verify', async (req,res)=>{
+  const { email, code } = req.body;
+  try{
+    const [rows] = await pool.query(
+      'SELECT id,verify_code FROM users WHERE email=?', [email]);
+    if(rows.length===0) return res.status(404).json({error:'Utilizador não encontrado'});
+
+    if(rows[0].verify_code !== code)
+      return res.status(400).json({error:'Código inválido'});
+
+    await pool.query(`
+      UPDATE users
+         SET email_verified=1, verify_code=NULL
+       WHERE id=?`, [rows[0].id]);
+
+    return res.json({ message:'E-mail verificado com sucesso' });
+  }catch(e){
+    console.error(e);
+    res.status(500).json({error:'Erro no servidor'});
   }
 });
 
