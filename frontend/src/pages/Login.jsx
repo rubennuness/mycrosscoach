@@ -48,7 +48,7 @@ function Login() {
 
   return (
     <div className="login-split-container">
-      <BackButton />                                   {/* ⬅️ NOVO */}
+      <BackButton to="/" />                                   
       {/* Esquerda: painel de login */}
       <div className="login-left">
         <div className="login-left-content">

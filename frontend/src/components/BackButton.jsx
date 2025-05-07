@@ -1,16 +1,20 @@
 // src/components/BackButton.jsx
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import "./BackButton.css";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import './BackButton.css';          // (mantém o teu css, se já existir)
 
-function BackButton({ label = "← Voltar" }) {
+function BackButton({ label = 'Voltar', to = null }) {
   const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (to)               // 👉 destino explícito
+      navigate(to, { replace: true });
+    else                  // 👉 comportamento clássico
+      navigate(-1);
+  };
+
   return (
-    <button
-      className="back-arrow"
-      onClick={() => navigate(-1)}
-      aria-label="Voltar"
-    >
+    <button onClick={handleClick} className="back-button">
       {label}
     </button>
   );
