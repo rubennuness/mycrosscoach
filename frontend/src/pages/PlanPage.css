@@ -103,14 +103,25 @@
   display:flex;
   align-items:flex-end;
   gap:12px;
+  margin-bottom:18px;
 }
-.btn-cal-link{
-  font-size:.8rem;
-  padding:4px 10px;
-  background:#2c2c2c;
-  color:#fff;
+
+.cal-btn{
   border:none;
-  border-radius:4px;
+  background:#3498db;
+  padding:6px 10px;
+  border-radius:6px;
   cursor:pointer;
+  display:flex;
+  align-items:center;
+  transition:background .2s;
 }
-.btn-cal-link:hover{ background:#444; }
+
+.cal-btn:hover{ background:#2b7cc3; }
+
+.cal-btn img{
+  width:22px;
+  height:22px;
+  filter:invert(1);   /* deixa o ícone branco */
+}
+
