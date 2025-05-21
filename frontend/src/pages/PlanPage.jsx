@@ -120,7 +120,15 @@ useEffect(() => {
     }}
     style={{width:'180px'}}
   />
-
+{/* novo botão para abrir o calendário do atleta */}
+  <button
+    type="button"
+    className="cal-btn"
+    title="Abrir calendário"
+    onClick={()=>navigate(`/calendar/${athleteId}`)}
+  >
+    <img src={calendarIcon} alt="Calendário" />
+  </button>
 </div>
               <label>Dia da semana:</label>
               <select value={selectedDay}
@@ -191,15 +199,6 @@ useEffect(() => {
       </div>
 
       <div className="planpage-right" />
-      {/* novo botão para abrir o calendário do atleta */}
-  <button
-    type="button"
-    className="cal-btn"
-    title="Abrir calendário"
-    onClick={()=>navigate(`/calendar/${athleteId}`)}
-  >
-    <img src={calendarIcon} alt="Calendário" />
-  </button>
     </div>
   );
 }
