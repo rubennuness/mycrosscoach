@@ -70,7 +70,7 @@ export default function CalendarPage() {
 
   return (
     <div className="calendar-container">
-      <BackButton label="Voltar" />
+      <BackButton />
 
       <h1 className="cal-title">
         {role==='coach' ? 'Calendário do Atleta' : 'Meu Histórico de Treinos'}

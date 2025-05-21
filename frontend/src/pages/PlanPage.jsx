@@ -86,7 +86,7 @@ useEffect(() => {
 
   return (
     <div className="planpage-container">
-      <BackButton />                                   {/* ⬅️ NOVO */}
+      <BackButton />                                 
       <div className="planpage-left">
         <div className="planpage-left-content">
           {/* ►--- título agora mostra o NOME, fallback #id ---◄ */}
@@ -123,7 +123,7 @@ useEffect(() => {
   {/* novo botão para abrir o calendário do atleta */}
   <button
     type="button"
-    className="btn-secondary"
+    className="btn-cal"
     onClick={()=>navigate(`/calendar/${athleteId}`)}
     title="Abrir calendário do atleta"
   >

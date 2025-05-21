@@ -104,11 +104,14 @@
   align-items:flex-end;
   gap:12px;
 }
-.btn-secondary{
-  padding:6px 12px;
-  background:#ececec;
-  border:1px solid #bbb;
+.btn-cal{
+  font-size:0.80rem;        /* ligeiramente mais pequeno  */
+  padding:4px 10px;         /* altura/ largura reduzidas  */
+  background:#3498db;
+  color:#fff;
+  border:none;
   border-radius:4px;
   cursor:pointer;
+  margin-left:6px;          /* afasta-o um pouco do <input> */
 }
-.btn-secondary:hover{ background:#ddd; }
+.btn-cal:hover{ background:#2980b9; }
