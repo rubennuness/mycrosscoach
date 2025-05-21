@@ -1,8 +1,7 @@
 // src/pages/PlanPage.jsx
 import React, { useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import { AddToCalendarButton } from 'add-to-calendar-button-react';
-import 'add-to-calendar-button/assets/css/atcb.css';
+import calendarIcon from '../assets/calendar.png'; 
 import BackButton from "../components/BackButton";
 import Toast from '../components/Toast';
 import './PlanPage.css';
@@ -123,27 +122,15 @@ useEffect(() => {
   />
 
   {/* novo botão para abrir o calendário do atleta */}
-  <AddToCalendarButton
-  name={`Plano – ${athleteName || 'Atleta'}`}
-  description="Treino semanal criado no MyCrossCoach"
-  startDate={weekStart}       /* segunda-feira escolhida */
-  endDate={weekStart}         /* um dia – o próprio evento */
-  options={['Google','Outlook','Apple','Yahoo','ICS']}
-  label="📅 Calendário"
-  timeZone="Europe/Lisbon"
-  styleLight="--btn-background:#3498db;--btn-text:#fff;"
-  styleDark ="--btn-background:#3498db;--btn-text:#fff;"
-/>
-
-{/* (continua a existir o link interno para o calendário detalhado) */}
-<button
-  type="button"
-  className="btn-cal-link"
-  onClick={()=>navigate(`/calendar/${athleteId}`)}
->
-  Ver calendário completo
-</button>
-</div>
+  <button
+      type="button"
+      className="cal-btn"
+      onClick={()=>navigate(`/calendar/${athleteId}`)}
+      title="Abrir calendário"
+    >
+      <img src={calendarIcon} alt="" />
+    </button>
+  </div>
               <label>Dia da semana:</label>
               <select value={selectedDay}
                       onChange={(e) => setSelectedDay(e.target.value)}>
