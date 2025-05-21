@@ -73,7 +73,7 @@ export default function CalendarPage() {
       <BackButton />
 
       <h1 className="cal-title">
-        {role==='coach' ? 'Calendário do Atleta' : 'Meu Histórico de Treinos'}
+        {role==='coach' ? 'Calendário' : 'Calendário'}
       </h1>
 
       {role==='coach' && (
