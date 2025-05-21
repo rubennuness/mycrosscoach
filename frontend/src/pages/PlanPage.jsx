@@ -130,6 +130,7 @@ useEffect(() => {
   >
     <img src={calendarIcon} alt="Calendário" />
   </button>
+</div>
               <label>Dia da semana:</label>
               <select value={selectedDay}
                       onChange={(e) => setSelectedDay(e.target.value)}>
