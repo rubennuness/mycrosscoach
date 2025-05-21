@@ -108,17 +108,14 @@
 
 .cal-btn{
   border:none;
-  background:transparent;    
-  padding:0;
-  cursor:pointer;
+  background:transparent;
   display:flex;
-  float: right
 }
 
 /* micro-animação para feedback */
 .cal-btn img{
-  width:24px;
-  height:24px;
+  width:16px;
+  height:16px;
   transition:transform .15s;
 }
 .cal-btn:hover img{ transform:scale(1.12); }
