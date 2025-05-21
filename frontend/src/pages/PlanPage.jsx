@@ -120,7 +120,6 @@ useEffect(() => {
     }}
     style={{width:'180px'}}
   />
-  <div style={{ display: "flex" }}>
 {/* novo botão para abrir o calendário do atleta */}
   <button
     type="button"
@@ -130,7 +129,6 @@ useEffect(() => {
   >
     <img src={calendarIcon} alt="Calendário" />
   </button>
-  </div>
 </div>
               <label>Dia da semana:</label>
               <select value={selectedDay}
@@ -200,7 +198,6 @@ useEffect(() => {
         </div>
       </div>
 
-      <div className="planpage-right" />
     </div>
   );
 }
