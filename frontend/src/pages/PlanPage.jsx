@@ -102,27 +102,34 @@ useEffect(() => {
             <label style={{display:'block',marginBottom:6}}>
   Escolha a <strong>Semana</strong>:
 </label>
-<input
-  type="date"
-  /*   só aceita segundas porque:
-      – min  = uma segunda-feira
-      – step = 7 dias                                       */
-  min={mondayIso}
-  step="7"
-  value={weekStart}
-  onChange={e => {
-    /* se por acaso o browser deixar escolher outro dia,
-       arredondamos ao Monday dessa semana                 */
-    const d   = new Date(e.target.value);
-    const wd  = d.getDay() || 7;          // 1-Dom … 7-Sáb
-    d.setDate(d.getDate() - wd + 1);      // recua até 2ª-feira
-    const monday = d.toISOString().slice(0,10);
+<div className="week-picker-row">
+  {/* selector que só permite segundas-feiras */}
+  <input
+    type="date"
+    min={mondayIso}
+    step="7"
+    value={weekStart}
+    onChange={e => {
+      const d  = new Date(e.target.value);
+      const wd = d.getDay() || 7;       // 1-Dom … 7-Sáb
+      d.setDate(d.getDate() - wd + 1);  // força para 2ª-feira
+      const monday = d.toISOString().slice(0,10);
+      setWeekStart(monday);
+      setPhases([{title:'',text:''}]);
+    }}
+    style={{width:'180px'}}
+  />
 
-    setWeekStart(monday);                 // guarda segunda-feira
-    setPhases([{ title:'', text:'' }]);   // limpa enquanto carrega
-  }}
-  style={{width:'180px',marginBottom:18}}
-/>
+  {/* novo botão para abrir o calendário do atleta */}
+  <button
+    type="button"
+    className="btn-secondary"
+    onClick={()=>navigate(`/calendar/${athleteId}`)}
+    title="Abrir calendário do atleta"
+  >
+    📅 Calendário
+  </button>
+</div>
               <label>Dia da semana:</label>
               <select value={selectedDay}
                       onChange={(e) => setSelectedDay(e.target.value)}>
@@ -186,14 +193,6 @@ useEffect(() => {
               Guardar Plano
             </button>
           </form>
-          <button
-            style={{
-              marginTop:10
-            }}
-            onClick={() => navigate('/dashboard-coach')}   /* ou navigate(-1) */
-          >
-            ← Voltar
-          </button>
 
           <Toast message={toastMessage} onClose={handleCloseToast} />
         </div>

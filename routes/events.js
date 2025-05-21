@@ -3,8 +3,8 @@ const router  = express.Router();
 const pool    = require('../db');
 const coachMW = require('../middleware/coachAuth');   // já existente no projecto
 
-/* GET /api/events/:athleteId  →  lista todos os eventos */
-router.get('/:athleteId', coachMW, async (req,res)=>{
+/* GET é público (coach ou atleta) */
+router.get('/:athleteId', async (req,res)=>{
   const [rows] = await pool.query(
     'SELECT id, event_date AS date, title, note \
        FROM events WHERE athlete_id = ? ORDER BY event_date',

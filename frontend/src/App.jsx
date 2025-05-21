@@ -65,6 +65,11 @@ function App() {
             </PrivateRoute>
           }
         />
+        +  {/* Calendário – atleta vê o seu, coach vê o do atleta seleccionado */}
+  <Route
+    path="/calendar/:athleteId?"
+    element={<CalendarPage />}
+  />
 <Route path="/verify-email" element={<VerifyEmail/>} />
 <Route path="/metrics" element={<PrivateRoute><MetricsList/></PrivateRoute>} />
 <Route path="/metric/:metricId" element={<PrivateRoute><MetricDetail/></PrivateRoute>} />

@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import { useParams }                  from 'react-router-dom';
 import Calendar                   from 'react-calendar';   // npm i react-calendar
 import { format, isSameDay }     from 'date-fns';
 import BackButton                from '../components/BackButton';
 import './CalendarPage.css';
 
 export default function CalendarPage() {
+  const { athleteId: paramId } = useParams(); // só virá para o coach
 
   const user        = JSON.parse(localStorage.getItem('user')) || {};
-  const athleteId   = user.id;                // sempre existe no lado do atleta / coach
   const role        = user.role;              // 'athlete' ou 'coach'
+  /* se for coach usa o :athleteId da rota; senão usa o próprio id  */
+  const athleteId   = role === 'coach' ? Number(paramId) : user.id;
 
   const [selDate , setSelDate ] = useState(new Date());
   const [plan    , setPlan    ] = useState([]);   // phases do treino
