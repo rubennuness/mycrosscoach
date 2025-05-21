@@ -4,9 +4,9 @@ const mysql = require('mysql2/promise');
 if (process.env.MYSQL_URL) {
   module.exports = mysql.createPool(
     process.env.MYSQL_URL + '?connectionLimit=10&waitForConnections=true'
-  );
+  )
   return;
-}
+}s
 
 /* 2️⃣  Fallback – campos individuais (útil em localhost)      */
 module.exports = mysql.createPool({

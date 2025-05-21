@@ -28,3 +28,14 @@
     left: 15px;
     z-index: 10;            /* assegura que fica sobre o conteúdo */
   }
+
+  .cal-event-list{
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: square inside;
+  color:#f1c40f;               /* amarelo suave no dark-theme */
+}
+.cal-event-list li{
+  margin:4px 0;
+  font-size:0.95rem;
+}

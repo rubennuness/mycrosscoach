@@ -238,7 +238,7 @@ function DashboardAthlete() {
                           <textarea
                             className="comment-box"
                             rows={2}
-                            placeholder="Comentário (opcional)"
+                            placeholder="Comentário"
                             value={phaseComment[key] || ''}
                             onChange={e =>
                               setPhaseComment(p => ({

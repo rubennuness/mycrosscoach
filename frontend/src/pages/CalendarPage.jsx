@@ -1,49 +1,113 @@
-// src/pages/CalendarPage.jsx
-import React, { useState } from 'react';
-import Calendar from 'react-calendar';      // npm i react-calendar
-import { format } from 'date-fns';
-import './CalendarPage.css';                // 👉 cria de forma semelhante às outras
-import BackButton from '../components/BackButton';
+import React, { useEffect, useState } from 'react';
+import Calendar                   from 'react-calendar';   // npm i react-calendar
+import { format, isSameDay }     from 'date-fns';
+import BackButton                from '../components/BackButton';
+import './CalendarPage.css';
 
-function CalendarPage() {
+export default function CalendarPage() {
+
   const user        = JSON.parse(localStorage.getItem('user')) || {};
-  const athleteId   = user.id;
+  const athleteId   = user.id;                // sempre existe no lado do atleta / coach
+  const role        = user.role;              // 'athlete' ou 'coach'
+
   const [selDate , setSelDate ] = useState(new Date());
-  const [plan    , setPlan    ] = useState([]);
+  const [plan    , setPlan    ] = useState([]);   // phases do treino
+  const [events  , setEvents  ] = useState([]);   // eventos desse atleta (todo o mês)
 
-  /* quando o utilizador escolhe um dia -------------------------- */
-  const onChange = async (date) => {
-    setSelDate(date);
-    setPlan([]);                             // limpa enquanto carrega
+  /* 1️⃣  Carrega EVENTOS do atleta ao montar                          */
+  useEffect(()=>{
+    if(!athleteId) return;
+    fetch(`https://mycrosscoach-production.up.railway.app/api/events/${athleteId}`)
+      .then(r=>r.json())
+      .then(setEvents)
+      .catch(console.error);
+  },[athleteId]);
 
-    /* BACK-END: cria rota GET /api/plans/by-date/:athleteId/:yyyy-mm-dd
-       que devolve phases=[]
-       (podes reutilizar week_start_date que tens na BD)           */
-    const ymd = format(date,'yyyy-MM-dd');
-    try {
-      const r  = await fetch(`https://mycrosscoach-production.up.railway.app/api/plans/by-date/${athleteId}/${ymd}`);
-      const d  = await r.json();
-      setPlan(d.phases || []);
-    } catch(e){ console.error(e); }
+  /* 2️⃣  Cada vez que o dia seleccionado muda: carrega o PLANO e filtra eventos do dia */
+  useEffect(()=>{
+    if(!athleteId || !selDate) return;
+
+    (async () => {
+      const ymd = format(selDate,'yyyy-MM-dd');
+
+      // plano
+      const p   = await fetch(`https://mycrosscoach-production.up.railway.app/api/plans/by-date/${athleteId}/${ymd}`)
+                     .then(r=>r.json())
+                     .catch(()=>({phases:[]}));
+      setPlan(p.phases || []);
+
+      // nada extra p/ eventos; já temos tudo no state events[]
+    })();
+  },[athleteId, selDate]);
+
+  /* 3️⃣  Criação de um novo evento (coach apenas)                     */
+  const handleAddEvent = async () => {
+    const title = prompt('Título do evento (ex.: Prova 10 km)');
+    if(!title) return;
+    const note  = prompt('Nota opcional');
+    const date  = format(selDate,'yyyy-MM-dd');
+
+    await fetch(`https://mycrosscoach-production.up.railway.app/api/events/${athleteId}`,{
+      method : 'POST',
+      headers: { 'Content-Type':'application/json',
+                 Authorization:`Bearer ${localStorage.getItem('token')}` },
+      body   : JSON.stringify({title, note, date})
+    });
+
+    // actualiza lista local
+    setEvents(ev => [...ev, {id:Date.now(), title, note, date}]);
+  };
+
+  /* 4️⃣  Render auxiliar para marcar dias com ponto                     */
+  const tileContent = ({date,view})=>{
+    if(view!=='month') return null;
+    const hasEvent = events.some(e=>isSameDay(new Date(e.date),date));
+    return hasEvent ? <span className="cal-dot">•</span> : null;
   };
 
   return (
     <div className="calendar-container">
       <BackButton label="Voltar" />
 
-      <h1 className="cal-title">Meu Histórico de Treinos</h1>
+      <h1 className="cal-title">
+        {role==='coach' ? 'Calendário do Atleta' : 'Meu Histórico de Treinos'}
+      </h1>
+
+      {role==='coach' && (
+        <button className="btn-primary" onClick={handleAddEvent}>
+          + Add Event
+        </button>
+      )}
 
       <Calendar
-        onChange={onChange}
+        onChange={setSelDate}
         value={selDate}
         locale="en-US"
+        tileContent={tileContent}
       />
 
-      <h2 className="cal-day-title">
-        {format(selDate,'MMM dd yyyy')}
-      </h2>
+      <h2 className="cal-day-title">{format(selDate,'MMM dd yyyy')}</h2>
 
-      {plan.length === 0
+      {/* lista de eventos do dia -------------------------------------- */}
+      {events.filter(e=>isSameDay(new Date(e.date),selDate)).length>0 && (
+        <>
+          <h3>Eventos:</h3>
+          <ul className="cal-event-list">
+            {events
+              .filter(e=>isSameDay(new Date(e.date),selDate))
+              .map(e=>(
+               <li key={e.id}>
+                 <strong>{e.title}</strong>
+                 {e.note && <em> – {e.note}</em>}
+               </li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      {/* plano / phases ------------------------------------------------ */}
+      <h3 style={{marginTop:20}}>Plano de Treino:</h3>
+      {plan.length===0
         ? <p>Sem treino registado para este dia.</p>
         : (
           <ul className="cal-phase-list">
@@ -58,5 +122,3 @@ function CalendarPage() {
     </div>
   );
 }
-
-export default CalendarPage;

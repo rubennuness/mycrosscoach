@@ -83,7 +83,7 @@ function DashboardCoach() {
   const handleAthleteClick = (athleteId, athleteName) => {
       // enviamos no “state” da rota
       navigate(`/plan/${athleteId}`, {
-        state: { athleteName }          // ← novo
+        state: { athleteName }        
       });
     };
 
