@@ -2,11 +2,13 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../db'); // sua conexão MySQL
-const jwt = require('jsonwebtoken');
+//const jwt = require('jsonwebtoken');
+const coachAuth = require('../middleware/coachAuth');
+
 
 // Exemplo de middleware que pega userId do token
 // e garante que o user é "coach".
-function coachAuthMiddleware(req, res, next) {
+/*function coachAuthMiddleware(req, res, next) {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
     return res.status(401).json({ error: 'Token não fornecido' });
@@ -23,10 +25,10 @@ function coachAuthMiddleware(req, res, next) {
   } catch (err) {
     return res.status(401).json({ error: 'Token inválido' });
   }
-}
+}*/
 
 // Rota para adicionar um atleta já existente (role=athlete)
-router.post('/athletes', coachAuthMiddleware, async (req, res) => {
+router.post('/athletes', coachAuth, async (req, res) => {
   try {
     const { name, email } = req.body;
     if (!email || !name) {
@@ -71,7 +73,7 @@ router.post('/athletes', coachAuthMiddleware, async (req, res) => {
 });
 
 // Rota GET /api/coach/athletes -> lista os atletas do coach
-router.get('/athletes', coachAuthMiddleware, async (req, res) => {
+router.get('/athletes', coachAuth, async (req, res) => {
   try {
     const coachId = req.userId; // obtido do token
     const [rows] = await pool.query(`

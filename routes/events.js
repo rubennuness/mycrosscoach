@@ -1,7 +1,7 @@
 const express = require('express');
 const router  = express.Router();
 const pool    = require('../db');
-const coachMW = require('./coachAuthMiddleware');   // já existente no projecto
+const coachMW = require('../middleware/coachAuth');   // já existente no projecto
 
 /* GET /api/events/:athleteId  →  lista todos os eventos */
 router.get('/:athleteId', coachMW, async (req,res)=>{
