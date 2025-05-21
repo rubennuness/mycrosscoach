@@ -123,14 +123,13 @@ useEffect(() => {
 
   {/* novo botão para abrir o calendário do atleta */}
   <button
-      type="button"
-      className="cal-btn"
-      onClick={()=>navigate(`/calendar/${athleteId}`)}
-      title="Abrir calendário"
-    >
-      <img src={calendarIcon} alt="" />
-    </button>
-  </div>
+    type="button"
+    className="cal-btn"
+    title="Abrir calendário"
+    onClick={()=>navigate(`/calendar/${athleteId}`)}
+  >
+    <img src={calendarIcon} alt="Calendário" />
+  </button>
               <label>Dia da semana:</label>
               <select value={selectedDay}
                       onChange={(e) => setSelectedDay(e.target.value)}>

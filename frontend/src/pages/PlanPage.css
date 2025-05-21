@@ -102,26 +102,23 @@
 .week-picker-row{
   display:flex;
   align-items:flex-end;
-  gap:12px;
+  gap:24px;              /* era 12 px */
   margin-bottom:18px;
 }
 
 .cal-btn{
   border:none;
-  background:#3498db;
-  padding:6px 10px;
-  border-radius:6px;
+  background:transparent;    
+  padding:0;
   cursor:pointer;
   display:flex;
   align-items:center;
-  transition:background .2s;
 }
 
-.cal-btn:hover{ background:#2b7cc3; }
-
+/* micro-animação para feedback */
 .cal-btn img{
-  width:22px;
-  height:22px;
-  filter:invert(1);   /* deixa o ícone branco */
+  width:24px;
+  height:24px;
+  transition:transform .15s;
 }
-
+.cal-btn:hover img{ transform:scale(1.12); }
