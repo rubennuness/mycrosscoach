@@ -119,3 +119,5 @@
   transition:transform .15s;
 }
 .cal-btn:hover img{ transform:scale(1.12); }
+
+.mini-row{display:flex;gap:8px;margin:6px 0}

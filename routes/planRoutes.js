@@ -47,14 +47,20 @@ router.post('/:athleteId', async (req, res) => {
 
     /* ---------- phases ------------------------------------------------- */
     for (let i = 0; i < phases.length; i++) {
-      const { title, text } = phases[i];
+      const { title, text, sets, reps, percent } = phases[i];
+
       await pool.query(`
-        INSERT INTO plan_phases (plan_id, phase_order, title, phase_text)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO plan_phases
+            (plan_id, phase_order, title, phase_text,
+              sets, reps, percent_1rm)
+        VALUES (?,?,?,?,?,?,?)
       `, [ planId, i + 1,
-           title || `Fase ${i+1}`,
-           text  || '' ]);
-    }
+        title || `Fase ${i+1}`,
+        text  || '',
+        sets  || null,
+        reps  || null,
+        percent || null ]);
+        }
 
     return res.status(201).json({
       plan_id : planId,

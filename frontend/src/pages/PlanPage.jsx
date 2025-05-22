@@ -25,6 +25,16 @@ function PlanPage() {
   const [weekStart, setWeekStart]       = useState(mondayIso);
   const [phases, setPhases]           = useState([{ title: '', text: '' }]);
   const [toastMessage, setToastMessage] = useState('');
+  const [metrics, setMetrics] = useState([]);
+
+
+  useEffect(() => {
+  if (!athleteId) return;
+  fetch(`https://mycrosscoach-production.up.railway.app/api/metrics/${athleteId}`)
+    .then(r => r.json())
+    .then(setMetrics)
+    .catch(() => {});
+  }, [athleteId]);
 
   /* ①  Carrega o nome caso ainda não o tenhamos */
   useEffect(() => {
@@ -85,6 +95,24 @@ useEffect(() => {
 
   const handleCloseToast = () => setToastMessage('');
 
+  const renderTitleField = (phase, idx) => (
+  <div style={{display:'flex',gap:8}}>
+    <input
+      value={phase.title}
+      placeholder="Ex.: Back Squat"
+      onChange={e=>{
+        const a=[...phases]; a[idx].title=e.target.value; setPhases(a);
+      }}
+      list={`dl-ex-${idx}`}
+      style={{flex:1}}
+    />
+    <datalist id={`dl-ex-${idx}`}>
+      {metrics.map(m => <option key={m.name} value={m.name} />)}
+    </datalist>
+  </div>
+);
+
+
   return (
     <div className="planpage-container">
       <BackButton />                                 
@@ -144,28 +172,23 @@ useEffect(() => {
               <h3>Fases do Treino</h3>
               {phases.map((phase, i) => (
                 <div key={i} style={{ marginBottom: 16 }}>
-                  <label>Título da Fase {i + 1}:</label>
-                  <input
-                    type="text"
-                    value={phase.title}
-                    onChange={e => {
-                      const arr = [...phases];
-                      arr[i].title = e.target.value;
-                      setPhases(arr);
-                    }}
-                    style={{ width:'100%', marginBottom:6 }}
-                  />
+                  <label>Título / Exercício {i + 1}:</label>
+                  {renderTitleField(phase, i)}
 
-                  <label>Descrição:</label>
-                  <textarea
-                    rows="3"
-                    value={phase.text}
-                    onChange={e => {
-                      const arr = [...phases];
-                      arr[i].text = e.target.value;
-                      setPhases(arr);
-                    }}
-                  />
+                  <div className="mini-row">
+                    <input type="number" min="0" placeholder="Sets"
+                      value={phase.sets || '' }
+                      onChange={e=>{
+                        const a=[...phases]; a[i].sets=e.target.value; setPhases(a);}}/>
+                    <input type="number" min="0" placeholder="Reps"
+                      value={phase.reps || '' }
+                      onChange={e=>{
+                        const a=[...phases]; a[i].reps=e.target.value; setPhases(a);}}/>
+                    <input type="number" min="0" max="100" placeholder="%1RM"
+                      value={phase.percent || ''}
+                      onChange={e=>{
+                        const a=[...phases]; a[i].percent=e.target.value; setPhases(a);}}/>
+                  </div>
 
                   {/* badge de estado se existir */}
                   {phase.status && phase.status !== 'pending' && (

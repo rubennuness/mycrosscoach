@@ -29,6 +29,14 @@ function DashboardAthlete() {
 
   const user      = JSON.parse(localStorage.getItem('user'));
   const athleteId = user?.id;
+  const [oneRM,setOneRM] = useState({});
+  useEffect(()=>{
+  fetch(`https://mycrosscoach-production.up.railway.app/api/metrics/${athleteId}`)
+    .then(r=>r.json())
+    .then(arr=>{
+      const obj={}; arr.forEach(m=>obj[m.name]=m.max); setOneRM(obj);
+    }).catch(()=>{});
+  },[athleteId]);
 
   /* ▼ 1. CARREGA estrutura da semana (sem progresso) -------------------- */
   useEffect(() => {
@@ -209,10 +217,22 @@ function DashboardAthlete() {
 
                       return (
                         <div key={idx} className="phase-box">
-                          <strong>{ph.title || `Fase ${idx + 1}`}</strong>
-                          <pre style={{ whiteSpace: 'pre-wrap', marginTop: 6 }}>
-                            {ph.text || ph}
-                          </pre>
+                          <strong>{ph.title || `Fase ${idx+1}`}</strong>
+{(ph.sets || ph.reps) && (
+  <span> — {ph.sets || '?'} x {ph.reps || '?'}</span>
+)}
+
+{ph.percent && (
+  <div style={{marginTop:4,fontStyle:'italic'}}>
+    {ph.percent}% { oneRM[ph.title]
+      ? `→ ${Math.round(oneRM[ph.title] * ph.percent / 100)} kg`
+      : '(1RM não definido)' }
+  </div>
+)}
+
+<pre style={{ whiteSpace:'pre-wrap', marginTop:6 }}>
+  {ph.text || ph}
+</pre>
 
                           <div style={{ marginTop: 8 }}>
                             <button
