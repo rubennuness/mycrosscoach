@@ -9,7 +9,7 @@ export default function ForgotPassword(){
   const handleSubmit = async e =>{
     e.preventDefault();
     try{
-      const r = await fetch('/auth/forgot-password',{
+      const r = await fetch('https://mycrosscoach-production.up.railway.app/auth/forgot-password',{
         method :'POST',
         headers:{'Content-Type':'application/json'},
         body   : JSON.stringify({email})

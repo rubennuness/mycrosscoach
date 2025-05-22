@@ -12,7 +12,7 @@ export default function ResetPassword(){
   const handle = async e=>{
     e.preventDefault();
     try{
-      const r = await fetch(`/auth/reset-password/${token}`,{
+      const r = await fetch(`https://mycrosscoach-production.up.railway.app/auth/reset-password/${token}`,{
         method :'POST',
         headers:{'Content-Type':'application/json'},
         body   : JSON.stringify({password:pw})
