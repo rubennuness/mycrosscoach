@@ -12,9 +12,6 @@ function Login() {
   const [stored,    setStored]    = useState(
    JSON.parse(localStorage.getItem('savedCreds') || '[]')
  );
- const updated = stored.filter(c => c.email !== emailAEliminar);
- localStorage.setItem('savedCreds', JSON.stringify(updated));
- setStored(updated);
 
 
  /* devolve a pass guardada para um dado e-mail (ou '') */
