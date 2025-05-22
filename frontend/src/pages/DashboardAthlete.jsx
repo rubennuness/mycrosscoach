@@ -36,7 +36,7 @@ function DashboardAthlete() {
     .then(arr=>{
       const obj={}; arr.forEach(m=>obj[m.name]=m.max); setOneRM(obj);
     }).catch(()=>{});
-  },[athleteId]);
+},[athleteId]);
 
   /* ▼ 1. CARREGA estrutura da semana (sem progresso) -------------------- */
   useEffect(() => {
@@ -214,27 +214,13 @@ function DashboardAthlete() {
                     {phasesArray.map((ph, idx) => {
                       const key  = `${selectedDay}-${idx}`;
                       const stat = phaseStatus[key];
-                      const desc = typeof ph === 'string'
-                 ? ph                            // plano antigo (string simples)
-                 : (ph.text || '');              // plano novo (objecto)
+
                       return (
                         <div key={idx} className="phase-box">
-                          <strong>{ph.title || `Fase ${idx+1}`}</strong>
-{(ph.sets || ph.reps) && (
-  <span> — {ph.sets || '?'} x {ph.reps || '?'}</span>
-)}
-
-{ph.percent && (
-  <div style={{marginTop:4,fontStyle:'italic'}}>
-    {ph.percent}% { oneRM[ph.title]
-      ? `→ ${Math.round(oneRM[ph.title] * ph.percent / 100)} kg`
-      : '(1RM não definido)' }
-  </div>
-)}
-
-<pre style={{ whiteSpace:'pre-wrap', marginTop:6 }}>
-  {desc}
-</pre>
+                          <strong>{ph.title || `Fase ${idx + 1}`}</strong>
+                          <pre style={{ whiteSpace: 'pre-wrap', marginTop: 6 }}>
+                            {ph.text || ph}
+                          </pre>
 
                           <div style={{ marginTop: 8 }}>
                             <button
