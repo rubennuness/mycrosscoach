@@ -54,7 +54,7 @@ function App() {
   path="/timers"
   element={
     <PrivateRoute>
-      <Timers />        {/* qualquer atleta logado */}
+      <Timers />        
     </PrivateRoute>
   }
 />

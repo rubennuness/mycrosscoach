@@ -166,7 +166,7 @@ router.post('/forgot-password', async (req,res)=>{
       [user.id, tokenHash, expires]);
 
     /* 2) envia e-mail */
-    const url = `${process.env.FRONT_URL || 'https://mycrosscoach.app'}/reset-password/${token}`;
+    const url = `${process.env.FRONT_URL || 'https://www.mycrosscoach.app'}/reset-password/${token}`;
     await transporter.sendMail({
       from   :'noreply@mycrosscoach.app',
       to     : email,
