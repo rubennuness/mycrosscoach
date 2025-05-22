@@ -5,12 +5,23 @@ import './Login.css';
 
 function Login() {
   const navigate = useNavigate(); // Hook para navegar programaticamente
-  const [email, setEmail] = useState(
-   localStorage.getItem('savedEmail') || ''
- );
+  const [email,     setEmail]     = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg , setErrorMsg ] = useState('');
   const [remember , setRemember ] = useState(false);
+  const [stored,    setStored]    = useState(
+   JSON.parse(localStorage.getItem('savedCreds') || '[]')
+ );
+ const updated = stored.filter(c => c.email !== emailAEliminar);
+ localStorage.setItem('savedCreds', JSON.stringify(updated));
+ setStored(updated);
+
+
+ /* devolve a pass guardada para um dado e-mail (ou '') */
+ const findPass = em => {
+   const hit = stored.find(c => c.email === em);
+   return hit ? atob(hit.pass) : '';   // ↩︎ descodifica Base-64
+ };
   
   //const API = `${window.location.protocol}//${window.location.hostname}:3000`;
   const API = import.meta.env.VITE_API_URL;
@@ -38,11 +49,16 @@ function Login() {
       localStorage.setItem('user', JSON.stringify(data.user));
       
       /* se o utilizador assinalou “Remember me” guardamos só o e-mail;    */
-    if (remember) {
-      localStorage.setItem('savedEmail', email);
-    } else {
-      localStorage.removeItem('savedEmail');
-    }
+    /* passo 4  · “Remember me” guarda (ou actualiza) credenciais  */
+   if (remember){
+     const prev   = JSON.parse(localStorage.getItem('savedCreds') || '[]');
+     const next   = [
+       ...prev.filter(c => c.email !== email),     // remove duplicados
+       { email, pass: btoa(password) }             // Base-64 não é cifragem!
+     ];
+     localStorage.setItem('savedCreds', JSON.stringify(next));
+     setStored(next);                              // refresca o datalist
+   }
 
       if (data.user.role === 'coach') {
         navigate('/dashboard-coach');
@@ -77,11 +93,20 @@ function Login() {
               <label>Email address</label>
               <input
                 type="email"
+                list="savedEmails"
                 placeholder="example@domain.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => {
+                const em = e.target.value;
+                setEmail(em);
+                /* se já existir nas guardadas → preenche a password */
+                setPassword(findPass(em));
+                }}
                 required
               />
+              <datalist id="savedEmails">
+              {stored.map(c => <option key={c.email} value={c.email} />)}
+              </datalist>
             </div>
 
             <div className="form-group">
