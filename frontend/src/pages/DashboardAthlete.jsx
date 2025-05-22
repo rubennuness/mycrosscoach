@@ -214,7 +214,9 @@ function DashboardAthlete() {
                     {phasesArray.map((ph, idx) => {
                       const key  = `${selectedDay}-${idx}`;
                       const stat = phaseStatus[key];
-
+                      const desc = typeof ph === 'string'
+                 ? ph                            // plano antigo (string simples)
+                 : (ph.text || '');              // plano novo (objecto)
                       return (
                         <div key={idx} className="phase-box">
                           <strong>{ph.title || `Fase ${idx+1}`}</strong>
@@ -231,7 +233,7 @@ function DashboardAthlete() {
 )}
 
 <pre style={{ whiteSpace:'pre-wrap', marginTop:6 }}>
-  {ph.text || ph}
+  {desc}
 </pre>
 
                           <div style={{ marginTop: 8 }}>
