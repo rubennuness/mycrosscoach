@@ -21,12 +21,11 @@ function HamburgerMenu() {
             {role==='athlete' && (
               <>
                               <li onClick={()=>navigate('/timers')}>Timers</li>
-                              <li onClick={()=>navigate('/calendar')}>Calendar</li>
-                              <li onClick={()=>navigate('/metrics')}>Metrics</li>
+                              <li onClick={()=>navigate('/calendar')}>Calendario</li>
+                              <li onClick={()=>navigate('/metrics')}>Metricas</li>
                             </>
               
             )}
-            {/* podes acrescentar mais itens */}
           </ul>
         </div>
       )}

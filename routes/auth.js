@@ -64,7 +64,7 @@ router.post('/register', async (req, res) => {
       text   : `O seu código é: ${code}`
     });
 
-    return res.status(201).json({ message: 'Usuário cadastrado com sucesso' });
+    return res.status(201).json({ message: 'Utilizador registado com sucesso' });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Erro no servidor' });
@@ -136,5 +136,79 @@ router.post('/verify', async (req,res)=>{
     res.status(500).json({error:'Erro no servidor'});
   }
 });
+
+/* ─────────────────────────  Forgot PASSWORD  ───────────────────────── */
+function genToken() {
+  return crypto.randomBytes(32).toString('hex');                 // 64 chars
+}
+function hashTok(t){
+  return crypto.createHash('sha256').update(t).digest('hex');    // 64-hex
+}
+
+/* POST /auth/forgot-password  – envia link por e-mail ------------------- */
+router.post('/forgot-password', async (req,res)=>{
+  try{
+    const { email } = req.body;
+    if(!email) return res.status(400).json({error:'Email é obrigatório'});
+
+    const [[user]] = await pool.query('SELECT id,name FROM users WHERE email=?',[email]);
+    /* resposta genérica para não revelar se existe ou não                 */
+    if(!user) return res.json({message:'Se o email existir enviaremos instruções'});
+
+    /* 1) gera + guarda token (apaga anteriores) */
+    const token     = genToken();
+    const tokenHash = hashTok(token);
+    const expires   = new Date(Date.now()+60*60*1000);           // 1 h
+
+    await pool.query('DELETE FROM password_reset_tokens WHERE user_id=?',[user.id]);
+    await pool.query(
+      'INSERT INTO password_reset_tokens (user_id,token_hash,expires_at) VALUES (?,?,?)',
+      [user.id, tokenHash, expires]);
+
+    /* 2) envia e-mail */
+    const url = `${process.env.FRONT_URL || 'https://mycrosscoach.app'}/reset-password/${token}`;
+    await transporter.sendMail({
+      from   :'noreply@mycrosscoach.app',
+      to     : email,
+      subject: 'Recuperar palavra-passe',
+      html   : `<p>Olá ${user.name || ''},</p>
+                <p>Clique para definir uma nova password (válido 1 hora):<br>
+                <a href="${url}">${url}</a></p>`
+    });
+
+    console.log('[DEV] link de reset:', url);       // útil em desenvolvimento
+    return res.json({message:'Se o email existir enviaremos instruções'});
+  }catch(e){
+    console.error(e);
+    res.status(500).json({error:'Erro no servidor'});
+  }
+});
+
+/* POST /auth/reset-password/:token  – define nova password -------------- */
+router.post('/reset-password/:token', async (req,res)=>{
+  try{
+    const { token }    = req.params;
+    const { password } = req.body;
+    if(!password) return res.status(400).json({error:'Password obrigatória'});
+
+    const [[row]] = await pool.query(
+      `SELECT user_id FROM password_reset_tokens
+        WHERE token_hash=? AND expires_at>NOW()`,
+      [hashTok(token)]);
+
+    if(!row) return res.status(400).json({error:'Token inválido ou expirado'});
+
+    const hashed = await bcrypt.hash(password,10);
+    await pool.query('UPDATE users SET password=? WHERE id=?',[hashed,row.user_id]);
+    await pool.query('DELETE FROM password_reset_tokens WHERE user_id=?',[row.user_id]);
+
+    return res.json({message:'Password atualizada com sucesso'});
+  }catch(e){
+    console.error(e);
+    res.status(500).json({error:'Erro no servidor'});
+  }
+});
+/* ──────────────────────────────────────────────────────────────────────── */
+
 
 module.exports = router;

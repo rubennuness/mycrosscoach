@@ -13,6 +13,8 @@ import CalendarPage from './pages/CalendarPage';
 import VerifyEmail from './pages/VerifyEmail';
 import MetricsList from './pages/MetricsList';
 import MetricDetail from './pages/MetricDetail';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword  from './pages/ResetPassword';
 
 function App() {
   return (
@@ -73,6 +75,8 @@ function App() {
 <Route path="/verify-email" element={<VerifyEmail/>} />
 <Route path="/metrics" element={<PrivateRoute><MetricsList/></PrivateRoute>} />
 <Route path="/metric/:metricId" element={<PrivateRoute><MetricDetail/></PrivateRoute>} />
+<Route path="/forgot-password" element={<ForgotPassword/>}/>
+<Route path="/reset-password/:token" element={<ResetPassword/>}/>
         {/* fallback */}
         <Route path="*" element={<Home />} />
       </Routes>
