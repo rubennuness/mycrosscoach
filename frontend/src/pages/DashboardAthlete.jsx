@@ -233,7 +233,7 @@ function DashboardAthlete() {
 )}
 
 <pre style={{ whiteSpace:'pre-wrap', marginTop:6 }}>
-  {desc}
+  {ph.text || ''}
 </pre>
 
                           <div style={{ marginTop: 8 }}>

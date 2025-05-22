@@ -52,7 +52,7 @@ router.post('/:athleteId', async (req, res) => {
       await pool.query(`
         INSERT INTO plan_phases
             (plan_id, phase_order, title, phase_text,
-              sets, reps, percent_1rm)
+              sets, reps, percent)
         VALUES (?,?,?,?,?,?,?)
       `, [ planId, i + 1,
         title || `Fase ${i+1}`,
@@ -105,6 +105,9 @@ router.get('/day/:athleteId/:dayOfWeek', async (req, res) => {
             COALESCE(ph.title,
                      CONCAT('Fase ',ph.phase_order)) AS title,
             ph.phase_text                     AS text,
+            ph.sets                           AS sets,
+           ph.reps                           AS reps,
+           ph.percent                        AS percent,
             COALESCE(pp.status  ,'pending')   AS status,
             COALESCE(pp.comment ,'')          AS comment
         FROM plan_phases ph
@@ -214,6 +217,9 @@ router.get('/by-date/:athleteId/:dateYMD', async (req, res) => {
           COALESCE(ph.title,
                    CONCAT('Fase ',ph.phase_order)) AS title,
           ph.phase_text                    AS text,
+          ph.sets                          AS sets,
+          ph.reps                          AS reps,
+          ph.percent                       AS percent,
           COALESCE(pp.status ,'pending')   AS status,
           COALESCE(pp.comment,'')          AS comment
       FROM plan_phases ph
