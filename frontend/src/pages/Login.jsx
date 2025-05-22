@@ -5,9 +5,13 @@ import './Login.css';
 
 function Login() {
   const navigate = useNavigate(); // Hook para navegar programaticamente
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(
+   localStorage.getItem('savedEmail') || ''
+ );
   const [password, setPassword] = useState('');
-  const [errorMsg, setErrorMsg] = useState('');
+  const [errorMsg , setErrorMsg ] = useState('');
+  const [remember , setRemember ] = useState(false);
+  
   //const API = `${window.location.protocol}//${window.location.hostname}:3000`;
   const API = import.meta.env.VITE_API_URL;
   const handleLogin = async (e) => {
@@ -32,6 +36,13 @@ function Login() {
       // Salva token e user no localStorage (pode adaptar para context se preferir).
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
+      
+      /* se o utilizador assinalou “Remember me” guardamos só o e-mail;    */
+    if (remember) {
+      localStorage.setItem('savedEmail', email);
+    } else {
+      localStorage.removeItem('savedEmail');
+    }
 
       if (data.user.role === 'coach') {
         navigate('/dashboard-coach');
@@ -86,7 +97,7 @@ function Login() {
 
             <div className="login-options">
               <div>
-                <input type="checkbox" id="rememberMe" />
+                <input type="checkbox" id="rememberMe" checked={remember} onChange={e => setRemember(e.target.checked)} />
                 <label htmlFor="rememberMe">Remember me</label>
               </div>
               <Link to="/forgot-password" className="forgot-link">
