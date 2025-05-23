@@ -225,7 +225,7 @@ function DashboardAthlete() {
 {ph.percent && (
   <div style={{marginTop:4,fontStyle:'Arial'}}>
     {ph.sets || '?'} x {ph.reps || '?'} 
-   ? {ph.percent}% { oneRM[ph.title]
+     {ph.percent}% { oneRM[ph.title]
       ? `→ ${Math.round(oneRM[ph.title] * ph.percent / 100)} kg`
       : '(1RM não definido)' }
   </div>
