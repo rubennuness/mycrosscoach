@@ -45,6 +45,9 @@ app.get('/api/training/week/:athleteId', async (req, res) => {
               ph.id           AS phase_id,       -- ①  devolvemos o id
                ph.title        AS phase_title,    --    e o título
                  ph.phase_text,
+                 ph.sets                          AS sets,
+          ph.reps                          AS reps,
+          ph.percent                       AS percent,
                  ph.phase_order
         FROM plans p
         JOIN plan_phases ph ON ph.plan_id = p.id
@@ -54,7 +57,7 @@ app.get('/api/training/week/:athleteId', async (req, res) => {
 
     // Agrupa
     rows.forEach(row => {
-      plansObj[row.day_of_week].push({id    : row.phase_id, title : row.title, text  : row.phase_text});
+      plansObj[row.day_of_week].push({id    : row.phase_id, title : row.title, text  : row.phase_text, sets : row.sets, reps  : row.reps, percent : row.percent});
     });
 
     return res.json({
