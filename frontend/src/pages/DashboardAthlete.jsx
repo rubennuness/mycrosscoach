@@ -220,14 +220,12 @@ function DashboardAthlete() {
                       return (
                         <div key={idx} className="phase-box">
                           <strong>{ph.title || `Fase ${idx+1}`}</strong>
-
-
 {ph.percent && (
   <div style={{marginTop:4,fontStyle:'Arial'}}>
-    {ph.sets || '?'} x {ph.reps || '?'} 
+    {ph.sets || '?'} x {ph.reps || '?' } 
      {ph.percent}% { oneRM[ph.title]
       ? `→ ${Math.round(oneRM[ph.title] * ph.percent / 100)} kg`
-      : '(1RM não definido)' }
+      : '' }
   </div>
 )}
 
