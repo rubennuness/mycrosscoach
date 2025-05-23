@@ -222,8 +222,7 @@ function DashboardAthlete() {
                           <strong>{ph.title || `Fase ${idx+1}`}</strong>
 {ph.percent && (
   <div style={{marginTop:4,fontStyle:'Arial'}}>
-    {ph.sets || '?'} x {ph.reps || '?' } 
-     {ph.percent}% { oneRM[ph.title]
+    {ph.sets || '?'} x {ph.reps || '?' }  {ph.percent}% { oneRM[ph.title]
       ? `→ ${Math.round(oneRM[ph.title] * ph.percent / 100)} kg`
       : '' }
   </div>
