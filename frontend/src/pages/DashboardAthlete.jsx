@@ -3,6 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import arrowNext from '../assets/left-arrow.png';
 import arrowPrev from '../assets/left-arrow1.png';
+import iconPlan     from '../assets/task.png';
+import iconNotif    from '../assets/notification.png';
+import iconProfile  from '../assets/resume.png';
+import iconNutrition from '../assets/healthy-food.png';
 import { format } from 'date-fns';
 import HamburgerMenu from '../components/HamburgerMenu';
 import './Dashboard.css';
@@ -321,26 +325,26 @@ const shiftWeek = (delta) => {               // delta = ±7 (em dias)
             )}
           </div>
           <nav className="bottom-nav">
-  <button onClick={() => setSelectedDay(null)}>Plan</button>
-
   <button
-    className={selectedDay === 'Notifications' ? 'active' : ''}
-    onClick={() => navigate('/notifications')}
+    className={!selectedDay ? 'active' : ''}
+    onClick={() => setSelectedDay(null)}
   >
+    <img src={iconPlan} alt="" className="nav-icon" />
+    Plan
+  </button>
+
+  <button onClick={() => navigate('/notifications')}>
+    <img src={iconNotif} alt="" className="nav-icon" />
     Notifications
   </button>
 
-  <button
-    className={selectedDay === 'Profile' ? 'active' : ''}
-    onClick={() => navigate('/profile')}
-  >
+  <button onClick={() => navigate('/profile')}>
+    <img src={iconProfile} alt="" className="nav-icon" />
     Profile
   </button>
 
-  <button
-    className={selectedDay === 'Nutrition' ? 'active' : ''}
-    onClick={() => navigate('/nutrition')}
-  >
+  <button onClick={() => navigate('/nutrition')}>
+    <img src={iconNutrition} alt="" className="nav-icon" />
     Nutrition
   </button>
 </nav>
