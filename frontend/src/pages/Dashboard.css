@@ -256,3 +256,43 @@ body {
   cursor:pointer;
 }
 .week-nav button:hover{background:#444;}
+
+/* ────── setas (row logo abaixo do header) ────── */
+.week-arrows-row{
+  display:flex;
+  justify-content:space-between;
+  margin:6px 0 14px;
+}
+.week-arrow{
+  background:none;
+  border:none;
+  font-size:1.8rem;
+  line-height:1;
+  cursor:pointer;
+  color:#3498db;
+}
+.week-arrow:active{ transform:scale(.9); }
+
+/* ────── bottom nav ────── */
+.bottom-nav{
+  position:fixed;              /* colado ao fundo do ecrã */
+  left:0; right:0; bottom:0;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  background:#0e1b23;          /* o mesmo tom escuro que usa */
+  padding:8px 0;
+  border-top:1px solid #1f2d38;
+  z-index:999;
+}
+.bottom-nav button{
+  background:none;
+  border:none;
+  color:#7da6c0;
+  font-size:0.9rem;
+  cursor:pointer;
+}
+.bottom-nav button.active,
+.bottom-nav button:hover{
+  color:#1ec5ff;
+}

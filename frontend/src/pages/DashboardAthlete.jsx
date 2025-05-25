@@ -174,15 +174,10 @@ const shiftWeek = (delta) => {               // delta = ±7 (em dias)
               Logout
             </button>
           </div>
-{/* ───────── NAVIGAÇÃO DE SEMANAS ───────── */}
-<div className="week-nav">
-  <button onClick={() => shiftWeek(-7)} title="Semana anterior">‹</button>
-
-  {/* rótulo - começa na 2.ª-feira da semana corrente */}
-  <span>{format(new Date(weekStart), "'Semana' dd/MM/yyyy")}</span>
-
-  <button onClick={() => shiftWeek(+7)} title="Semana seguinte">›</button>
-</div>
+          <div className="week-arrows-row">
+          <button className="week-arrow" onClick={() => shiftWeek(-7)}>‹</button>
+          <button className="week-arrow" onClick={() => shiftWeek(+7)}>›</button>
+          </div>
           {/* botões dos dias */}
           <div className="days-list">
           {daysOfWeek.map(day => {
@@ -316,6 +311,30 @@ const shiftWeek = (delta) => {               // delta = ±7 (em dias)
               </>
             )}
           </div>
+          <nav className="bottom-nav">
+  <button onClick={() => setSelectedDay(null)}>Plan</button>
+
+  <button
+    className={selectedDay === 'Notifications' ? 'active' : ''}
+    onClick={() => navigate('/notifications')}
+  >
+    Notifications
+  </button>
+
+  <button
+    className={selectedDay === 'Profile' ? 'active' : ''}
+    onClick={() => navigate('/profile')}
+  >
+    Profile
+  </button>
+
+  <button
+    className={selectedDay === 'Nutrition' ? 'active' : ''}
+    onClick={() => navigate('/nutrition')}
+  >
+    Nutrition
+  </button>
+</nav>
         </div>
       </div>
 
