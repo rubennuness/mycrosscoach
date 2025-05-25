@@ -33,10 +33,10 @@ router.get('/view/:metricId', async (req,res)=>{
 
 /* adiciona resultado */
 router.post('/result/:metricId', async (req,res)=>{
-  const {value,date} = req.body;
+  const when = date ? new Date(date) : new Date();
   await pool.query(
     'INSERT INTO metric_results(metric_id,value,result_date) VALUES(?,?,?)',
-    [req.params.metricId, value, date || new Date()]);
+    [req.params.metricId, value, when]);
   res.status(201).json({ok:true});
 });
 

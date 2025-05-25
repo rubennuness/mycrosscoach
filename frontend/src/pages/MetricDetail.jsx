@@ -12,7 +12,7 @@ export default function MetricDetail(){
 
   // carrega nome + resultados
   useEffect(()=>{
-    fetch(`/api/metrics/view/${metricId}`)
+    fetch(`https://mycrosscoach-production.up.railway.app/api/metrics/view/${metricId}`)
       .then(r=>r.json())
       .then(({metric,results})=>{
         setMeta(metric);
