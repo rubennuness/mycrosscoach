@@ -313,6 +313,7 @@ body {
   height: 21px;
   margin-bottom: 2px;   /* folga entre ícone e rótulo */
   pointer-events: none; /* clique só no <button> */
+  font-weight: bold;
 }
 .bottom-nav button.active,
 .bottom-nav button:hover{
