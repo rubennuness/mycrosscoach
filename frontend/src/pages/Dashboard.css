@@ -26,6 +26,7 @@ body {
   justify-content: center;
   align-items: center;
   padding: 20px;
+  padding-bottom: 80px;  
 }
 
 /* Conteúdo interno do lado esquerdo */
@@ -283,6 +284,19 @@ body {
 }
 
 /* ─── bottom-nav com ícones ─────────────────────────── */
+.bottom-nav{
+  position: fixed;             /* fixa ao fundo da janela */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;               /* põe os botões em linha */
+  justify-content: space-around;
+  align-items: center;
+  background: #0e1b23;         /* cor já usada no tema */
+  padding: 10px 0 6px;         /* espaço vertical */
+  border-top: 1px solid #1f2d38;
+  z-index: 999;                /* acima do resto do conteúdo */
+}
 .bottom-nav button{
   background:none;
   border:none;
