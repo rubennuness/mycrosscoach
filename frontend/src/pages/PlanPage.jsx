@@ -188,20 +188,16 @@ useEffect(() => {
                       value={phase.percent || ''}
                       onChange={e=>{
                         const a=[...phases]; a[i].percent=e.target.value; setPhases(a);}}/>
-                    <input type="text" min="0" max="100" placeholder="%"
-                      value={phase.text || ''}
-                      onChange={e=>{
-                        const a=[...phases]; a[i].percent=e.target.value; setPhases(a);}}/>
-                     <textarea
-                    rows="3"
-                    value={phase.text}
-                    onChange={e => {
-                      const arr = [...phases];
-                      arr[i].text = e.target.value;
-                      setPhases(arr);
-                    }}
-                  />
                   </div>
+                  <textarea
+    rows={3}
+    placeholder="Escreva observações ou descrição da fase"
+    value={phase.text || ''}
+    onChange={e=>{
+      const a=[...phases]; a[i].text = e.target.value; setPhases(a);
+    }}
+    style={{ width:'100%', marginTop:6 }}
+  />
 
                   {/* badge de estado se existir */}
                   {phase.status && phase.status !== 'pending' && (
