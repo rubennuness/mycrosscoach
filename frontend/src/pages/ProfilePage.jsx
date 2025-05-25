@@ -1,7 +1,9 @@
 // src/pages/ProfilePage.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import BackButton                from '../components/BackButton';
 import './ProfilePage.css';      // (crie ficheiro ao lado)
+
 
 function ProfilePage() {
   const navigate   = useNavigate();
@@ -9,16 +11,36 @@ function ProfilePage() {
   const [metrics, setMetrics] = useState([]);
 
   /* carrega 1-RM ou outras estatísticas */
-  useEffect(() => {
-    fetch(`https://mycrosscoach-production.up.railway.app/api/metrics/${user.id}`)
-      .then(r => r.json())
-      .then(setMetrics)
-      .catch(() => {});
-  }, [user.id]);
+useEffect(() => {
+  if(!user.id) return;
+
+  fetch(`https://mycrosscoach-production.up.railway.app/api/metrics/${user.id}`)
+    .then(r => r.json())
+    .then(async basicList => {
+      /* para cada métrica que não tem max, procura os resultados
+         e calcula o maior valor */
+      const filled = await Promise.all(
+        basicList.map(async m => {
+          if (m.max != null) return m;        
+          try{
+            const r = await fetch(
+              `https://mycrosscoach-production.up.railway.app/api/metrics/view/${m.id}`);
+            const { results=[] } = await r.json();
+            const best = results.reduce(
+              (acc, cur) => Math.max(acc, cur.value), 0);
+            return { ...m, max: best };
+          }catch{ return { ...m, max: '-' }; }
+        })
+      );
+      setMetrics(filled);
+    })
+    .catch(() => {});
+}, [user.id]);
+
 
   return (
     <div className="profile-wrapper">
-      <button className="back-btn" onClick={() => navigate(-1)}>← Back</button>
+      <BackButton />
 
       <section className="hero">
         <img className="avatar"
@@ -43,7 +65,6 @@ function ProfilePage() {
       </section>
 
       <section className="preferences">
-        <h2>Opções</h2>
         <button onClick={() => navigate('/change-password')}>Alterar Password</button>
         <button onClick={() => navigate('/edit-profile')}>Editar Perfil</button>
         <button onClick={() => navigate('/privacy')}>Definições de Privacidade</button>

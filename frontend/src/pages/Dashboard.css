@@ -298,14 +298,21 @@ body {
   background: none;
   border: none;
   width: 100%;
+  /* ➊  garantem empilhamento vertical (ícone em cima, texto em baixo) */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
+
   color: #7da6c0;
-  font-size: 0.72rem;     /* basta encolher 2 px */
+  font-size: 0.72rem;
+  cursor: pointer;
 }
 .bottom-nav .nav-icon{
   width: 21px;
   height: 21px;
-  margin-bottom: 2px;     /* distância ícone / texto         */
+  margin-bottom: 2px;   /* folga entre ícone e rótulo */
+  pointer-events: none; /* clique só no <button> */
 }
 .bottom-nav button.active,
 .bottom-nav button:hover{
