@@ -1,0 +1,50 @@
+/* layout geral */
+.edit-wrapper{
+  max-width:420px;
+  margin:0 auto;
+  padding:20px 24px 40px;
+  color:#fff;
+}
+
+h1{
+  text-align:center;
+  margin-bottom:24px;
+}
+
+.edit-form{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+/* campos */
+.edit-form label{
+  font-size:.85rem;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  font-weight:600;
+}
+
+.edit-form input,
+.edit-form select{
+  background:#2c2c2c;
+  border:1px solid #444;
+  color:#fff;
+  padding:10px 12px;
+  border-radius:6px;
+  font-size:.9rem;
+}
+
+/* botão Guardar */
+.btn-save{
+  margin-top:12px;
+  background:#1ec5ff;
+  border:none;
+  color:#fff;
+  padding:12px 0;
+  border-radius:6px;
+  font-weight:600;
+  cursor:pointer;
+}
+.btn-save:hover{ background:#17a9e0; }

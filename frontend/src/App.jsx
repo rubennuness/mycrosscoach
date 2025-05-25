@@ -16,6 +16,7 @@ import MetricDetail from './pages/MetricDetail';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword  from './pages/ResetPassword';
 import ProfilePage from './pages/ProfilePage';
+import EditProfile from './pages/EditProfile';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
 
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/edit-profile" element={<EditProfile />} />
 
         {/* Dashboard do atleta */}
         <Route 

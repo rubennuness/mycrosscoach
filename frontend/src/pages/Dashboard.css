@@ -307,6 +307,7 @@ body {
   color: #7da6c0;
   font-size: 0.72rem;
   cursor: pointer;
+  font-weight:600;
 }
 .bottom-nav .nav-icon{
   width: 21px;
