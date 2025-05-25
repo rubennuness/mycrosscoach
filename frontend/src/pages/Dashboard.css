@@ -269,9 +269,17 @@ body {
   font-size:1.8rem;
   line-height:1;
   cursor:pointer;
+  padding:0;
   color:#3498db;
 }
 .week-arrow:active{ transform:scale(.9); }
+.week-arrow img{
+  width:16px;                /* mais pequeno */
+  height:auto;
+}
+.week-arrow:active img{
+  transform:scale(.9);
+}
 
 /* ────── bottom nav ────── */
 .bottom-nav{

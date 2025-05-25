@@ -1,6 +1,8 @@
 // src/pages/DashboardAthlete.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import arrowNext from '../assets/left-arrow.png';
+import arrowPrev from '../assets/left-arrow1.png';
 import { format } from 'date-fns';
 import HamburgerMenu from '../components/HamburgerMenu';
 import './Dashboard.css';
@@ -35,14 +37,16 @@ function DashboardAthlete() {
 
   const user      = JSON.parse(localStorage.getItem('user'));
   const athleteId = user?.id;
-  const [weekStart, setWeekStart] = useState(mondayISO());   // ← agora mutável
+  const [weekStart, setWeekStart] = useState(mondayISO());
+  const weekLabel = `Week ${format(new Date(weekStart), 'MMMM d')}`;
 
 /* helpers p/ avançar / recuar 7 dias ------------------------------- */
 const shiftWeek = (delta) => {               // delta = ±7 (em dias)
   const d = new Date(weekStart);
   d.setDate(d.getDate() + delta);
   setWeekStart(mondayISO(d));                // força para 2.ª feira
-  setSelectedDay(null);                      // limpa dia activo
+  setSelectedDay(null); 
+  setHeaderDate('');                     // limpa dia activo
   setTrainingPlans({});                      // evita “fantasma” da semana ant.
   setPhaseStatus({});
   setPhaseComment({});
@@ -168,16 +172,21 @@ const shiftWeek = (delta) => {               // delta = ±7 (em dias)
             <HamburgerMenu />
             <h2>
               {/* mostra data se já escolheu um dia; senão o texto antigo */}
-              { headerDate || 'Meu Plano de Treino' }
+              { headerDate || weekLabel }
             </h2>
             <button className="logout-button" onClick={handleLogout}>
               Logout
             </button>
           </div>
           <div className="week-arrows-row">
-          <button className="week-arrow" onClick={() => shiftWeek(-7)}>‹</button>
-          <button className="week-arrow" onClick={() => shiftWeek(+7)}>›</button>
-          </div>
+  <button className="week-arrow" onClick={() => shiftWeek(-7)}>
+    <img src={arrowPrev} alt="prev week" />
+  </button>
+
+  <button className="week-arrow" onClick={() => shiftWeek(+7)}>
+    <img src={arrowNext} alt="next week" />
+  </button>
+</div>
           {/* botões dos dias */}
           <div className="days-list">
           {daysOfWeek.map(day => {
