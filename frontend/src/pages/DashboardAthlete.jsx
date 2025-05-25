@@ -55,7 +55,7 @@ function DashboardAthlete() {
         setTrainingPlans(d.plans);        // { 'Segunda': [ … ] , … }
       })
       .catch(console.error);
-  }, [athleteId]);
+  }, [athleteId, weekStart]);
 
   /* ▼ 2. CARREGA progresso quando o dia muda --------------------------- */
   useEffect(() => {
@@ -83,7 +83,7 @@ function DashboardAthlete() {
         setPhaseComment(prev => ({ ...prev, ...newComm }));
       })
       .catch(console.error);
-  }, [athleteId, selectedDay]);
+  }, [athleteId, selectedDay, weekStart]);
   /* -------------------------------------------------------------------- */
 
   /* ---------- restantes hooks e funções já existentes ---------- */
