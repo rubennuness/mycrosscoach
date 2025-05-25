@@ -16,6 +16,12 @@ const dayInitial = {
   'Sábado' : 'S'   // Saturday
 };
 
+const mondayISO = (d = new Date())=>{
+  const wd = d.getDay() || 7;            // 1-Dom … 7-Sáb
+  d.setDate(d.getDate() - wd + 1);       // recua até 2ª
+  return d.toISOString().slice(0,10);    // YYYY-MM-DD
+};
+
 function DashboardAthlete() {
   const navigate                     = useNavigate();
   const [daysOfWeek,   setDaysOfWeek]    = useState([]);
@@ -29,6 +35,7 @@ function DashboardAthlete() {
 
   const user      = JSON.parse(localStorage.getItem('user'));
   const athleteId = user?.id;
+  const [weekStart] = useState(mondayISO());
   const [oneRM,setOneRM] = useState({});
   useEffect(()=>{
   fetch(`https://mycrosscoach-production.up.railway.app/api/metrics/${athleteId}`)
@@ -41,7 +48,7 @@ function DashboardAthlete() {
   /* ▼ 1. CARREGA estrutura da semana (sem progresso) -------------------- */
   useEffect(() => {
     if (!athleteId) return;
-    fetch(`https://mycrosscoach-production.up.railway.app/api/training/week/${athleteId}`)
+    fetch(`https://mycrosscoach-production.up.railway.app/api/training/week/${athleteId}?week=${weekStart}`)
       .then(r => r.json())
       .then(d => {
         setDaysOfWeek(d.daysOfWeek);
@@ -54,7 +61,7 @@ function DashboardAthlete() {
   useEffect(() => {
     if (!athleteId || !selectedDay) return;
 
-    fetch(`https://mycrosscoach-production.up.railway.app/api/plans/day/${athleteId}/${selectedDay}`)
+    fetch(`https://mycrosscoach-production.up.railway.app/api/plans/day/${athleteId}/${selectedDay}?week=${weekStart}`)
       .then(r => r.json())
       .then(data => {
         if (!data.phases) return;
