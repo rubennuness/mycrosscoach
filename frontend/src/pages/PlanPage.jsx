@@ -184,10 +184,23 @@ useEffect(() => {
                       value={phase.reps || '' }
                       onChange={e=>{
                         const a=[...phases]; a[i].reps=e.target.value; setPhases(a);}}/>
-                    <input type="number" min="0" max="100" placeholder="%1RM"
+                    <input type="number" min="0" max="100" placeholder="%"
                       value={phase.percent || ''}
                       onChange={e=>{
                         const a=[...phases]; a[i].percent=e.target.value; setPhases(a);}}/>
+                    <input type="text" min="0" max="100" placeholder="%"
+                      value={phase.text || ''}
+                      onChange={e=>{
+                        const a=[...phases]; a[i].percent=e.target.value; setPhases(a);}}/>
+                     <textarea
+                    rows="3"
+                    value={phase.text}
+                    onChange={e => {
+                      const arr = [...phases];
+                      arr[i].text = e.target.value;
+                      setPhases(arr);
+                    }}
+                  />
                   </div>
 
                   {/* badge de estado se existir */}
