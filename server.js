@@ -33,6 +33,7 @@ app.use('/api/events',eventsRoutes);
 app.get('/api/training/week/:athleteId', async (req, res) => {
   try {
     const { athleteId } = req.params;
+    const weekStart = req.query.week; 
 
     // Dias fixos
     const dayList = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'];
@@ -52,8 +53,11 @@ app.get('/api/training/week/:athleteId', async (req, res) => {
         FROM plans p
         JOIN plan_phases ph ON ph.plan_id = p.id
        WHERE p.athlete_id = ?
+       WHERE p.athlete_id = ?
+         ${weekStart ? 'AND p.week_start_date = ?' : ''}
        ORDER BY p.day_of_week, ph.phase_order
-    `, [athleteId]);
+    `, weekStart ? [athleteId, weekStart] : [athleteId]);
+
 
     // Agrupa
     rows.forEach(row => {
