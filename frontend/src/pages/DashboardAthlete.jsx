@@ -174,7 +174,15 @@ const shiftWeek = (delta) => {               // delta = ±7 (em dias)
               Logout
             </button>
           </div>
+{/* ───────── NAVIGAÇÃO DE SEMANAS ───────── */}
+<div className="week-nav">
+  <button onClick={() => shiftWeek(-7)} title="Semana anterior">‹</button>
 
+  {/* rótulo - começa na 2.ª-feira da semana corrente */}
+  <span>{format(new Date(weekStart), "'Semana' dd/MM/yyyy")}</span>
+
+  <button onClick={() => shiftWeek(+7)} title="Semana seguinte">›</button>
+</div>
           {/* botões dos dias */}
           <div className="days-list">
           {daysOfWeek.map(day => {
@@ -311,16 +319,6 @@ const shiftWeek = (delta) => {               // delta = ±7 (em dias)
         </div>
       </div>
 
-      {/* ─── selector da semana ───────────────────────────────────── */}
-<div className="week-nav">
-  <button onClick={()=>shiftWeek(-7)} title="Semana anterior">‹</button>
-
-  <span>
-    {format(new Date(weekStart), "'Semana' dd/MM/yyyy")}
-  </span>
-
-  <button onClick={()=>shiftWeek(+7)} title="Semana seguinte">›</button>
-</div>
 
       <div className="dashboard-right" />
     </div>
