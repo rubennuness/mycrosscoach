@@ -35,7 +35,18 @@ function DashboardAthlete() {
 
   const user      = JSON.parse(localStorage.getItem('user'));
   const athleteId = user?.id;
-  const [weekStart] = useState(mondayISO());
+  const [weekStart, setWeekStart] = useState(mondayISO());   // ← agora mutável
+
+/* helpers p/ avançar / recuar 7 dias ------------------------------- */
+const shiftWeek = (delta) => {               // delta = ±7 (em dias)
+  const d = new Date(weekStart);
+  d.setDate(d.getDate() + delta);
+  setWeekStart(mondayISO(d));                // força para 2.ª feira
+  setSelectedDay(null);                      // limpa dia activo
+  setTrainingPlans({});                      // evita “fantasma” da semana ant.
+  setPhaseStatus({});
+  setPhaseComment({});
+};
   const [oneRM,setOneRM] = useState({});
   useEffect(()=>{
   fetch(`https://mycrosscoach-production.up.railway.app/api/metrics/${athleteId}`)
@@ -299,6 +310,17 @@ function DashboardAthlete() {
           </div>
         </div>
       </div>
+
+      {/* ─── selector da semana ───────────────────────────────────── */}
+<div className="week-nav">
+  <button onClick={()=>shiftWeek(-7)} title="Semana anterior">‹</button>
+
+  <span>
+    {format(new Date(weekStart), "'Semana' dd/MM/yyyy")}
+  </span>
+
+  <button onClick={()=>shiftWeek(+7)} title="Semana seguinte">›</button>
+</div>
 
       <div className="dashboard-right" />
     </div>

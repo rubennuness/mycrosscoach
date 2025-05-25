@@ -237,3 +237,22 @@ body {
 
 .day-indicator.on  { color:#2ecc71; }  /* verde = tem plano */
 .day-indicator.off { color:#888; }     /* cinza = vazio    */
+
+
+.week-nav{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:18px;
+  font-weight:600;
+}
+
+.week-nav button{
+  background:#2c2c2c;
+  border:1px solid #444;
+  color:#fff;
+  padding:4px 10px;
+  border-radius:4px;
+  cursor:pointer;
+}
+.week-nav button:hover{background:#444;}
