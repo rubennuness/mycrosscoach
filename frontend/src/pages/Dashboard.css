@@ -33,6 +33,7 @@ body {
 .dashboard-left-content {
   max-width: 600px;
   width: 100%;
+  padding-bottom: 90px;
   /* Se quiser, text-align: left ou center */
 }
 
@@ -59,7 +60,6 @@ body {
   padding: 8px 16px;
   border-radius: 4px;
   cursor: pointer;
-  width:30px;
 }
 .logout-button:hover {
   background-color: #c0392b;
@@ -285,36 +285,29 @@ body {
 
 /* ─── bottom-nav com ícones ─────────────────────────── */
 .bottom-nav{
-  position: fixed;             /* fixa ao fundo da janela */
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;               /* põe os botões em linha */
-  justify-content: space-around;
-  align-items: center;
-  background: #0e1b23;         /* cor já usada no tema */
-  padding: 10px 0 6px;         /* espaço vertical */
+  position: fixed;
+  inset: auto 0 0 0;      /* = left:0; right:0; bottom:0; */
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 colunas iguais  */
+  background: #0e1b23;
   border-top: 1px solid #1f2d38;
-  z-index: 999;                /* acima do resto do conteúdo */
+  padding: 6px 0 4px;     /* ligeiramente mais compacto     */
+  z-index: 999;
 }
 .bottom-nav button{
-  background:none;
-  border:none;
-  color:#7da6c0;
-  font-size:0.75rem;
-  cursor:pointer;
-  display:flex;
-  flex-direction:column;   /* ícone por cima do texto */
-  align-items:center;
-  gap:4px;
+  background: none;
+  border: none;
+  width: 100%;
+  justify-content: center;
+  color: #7da6c0;
+  font-size: 0.72rem;     /* basta encolher 2 px */
+}
+.bottom-nav .nav-icon{
+  width: 21px;
+  height: 21px;
+  margin-bottom: 2px;     /* distância ícone / texto         */
 }
 .bottom-nav button.active,
 .bottom-nav button:hover{
   color:#1ec5ff;
-}
-.bottom-nav .nav-icon{
-  width:22px;
-  height:22px;
-  object-fit:contain;
-  pointer-events:none;     /* só o <button> recebe o clique */
 }

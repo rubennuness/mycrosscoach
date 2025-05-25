@@ -1,0 +1,49 @@
+.profile-wrapper{
+  min-height: 100vh;
+  padding: 24px 20px 100px; /* 100px p/ não ficar atrás da bottom-nav */
+  background:#1c1c1c;
+  color:#fff;
+}
+.back-btn{
+  background:none;
+  border:none;
+  color:#1ec5ff;
+  font-size:1rem;
+  margin-bottom:20px;
+  cursor:pointer;
+}
+.hero{
+  text-align:center;
+  margin-bottom:26px;
+}
+.avatar{
+  width:86px;
+  height:86px;
+  border-radius:50%;
+  margin-bottom:12px;
+}
+.email{color:#7da6c0;font-size:0.85rem;}
+
+.metrics ul{
+  list-style:none;
+  padding:0;
+  margin:12px 0 24px;
+}
+.metrics li{
+  display:flex;
+  justify-content:space-between;
+  padding:8px 0;
+  border-bottom:1px solid #2c2c2c;
+}
+.preferences button{
+  display:block;
+  width:100%;
+  background:#2c2c2c;
+  border:1px solid #444;
+  color:#fff;
+  padding:10px;
+  border-radius:4px;
+  margin-bottom:12px;
+  cursor:pointer;
+}
+.preferences button:hover{background:#344;}
