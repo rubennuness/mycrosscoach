@@ -193,7 +193,7 @@ useEffect(()=>{
   return(
     <div className="timers-container">
       <BackButton />                                   {/* ⬅️ NOVO */}
-      <h1>Timers de Treino</h1>
+      <h1>Timers</h1>
 
       {/* tabs */}
       <div className="mode-tabs">

@@ -104,9 +104,13 @@ router.post('/login', async (req, res) => {
       token,
       user: {
         id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role
+        name   : user.name,
+   email  : user.email,
+   role   : user.role,
+   username : user.username,
+   gender   : user.gender,
+   phone    : user.phone,
+   avatar_url: user.avatar_url
       }
     });
   } catch (error) {

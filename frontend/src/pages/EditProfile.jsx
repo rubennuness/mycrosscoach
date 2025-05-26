@@ -14,9 +14,11 @@ export default function EditProfile() {
     username : stored.username || '',
     gender: stored.gender   || '',
     phone : stored.phone    || '',
-    email : stored.email    || ''
+    email : stored.email    || '',
+    avatar_url: stored.avatar_url || ''
   });
 
+  
   /* altera qualquer campo */
   const handle = e =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -39,6 +41,14 @@ export default function EditProfile() {
     }
   };
 
+  /* carrega imagem local e converte para URL-Base64 */
+ const pickAvatar = e =>{
+   const file = e.target.files?.[0];
+   if(!file) return;
+   const reader = new FileReader();
+   reader.onload = ev => setForm(f=>({...f,avatar_url: ev.target.result}));
+   reader.readAsDataURL(file);          /* ← gera data:image/...;base64, */
+ };
   return (
     <div className="edit-wrapper">
       <BackButton />
@@ -97,7 +107,13 @@ export default function EditProfile() {
             required
           />
         </label>
-
+        <label className="avatar-field">
+        Avatar
+        <input type="file" accept="image/*" onChange={pickAvatar}/>
+        </label>
+        {form.avatar_url && (
+        <img className="avatar-preview" src={form.avatar_url} alt="preview"/>
+        )}
         <button className="btn-save">Save</button>
       </form>
     </div>

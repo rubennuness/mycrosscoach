@@ -44,7 +44,8 @@ useEffect(() => {
 
       <section className="hero">
         <img className="avatar"
-             src={`https://ui-avatars.com/api/?name=${user.name}&background=0e1b23&color=fff`}
+             src={user.avatar_url
+           || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=0e1b23&color=fff`}
              alt="avatar"/>
         <h1>{user.name}</h1>
         <p className="email">{user.email}</p>

@@ -10,9 +10,9 @@ router.post('/', async (req, res) => { try { const { nome, email } = req.body; c
 
 router.put('/:id', async (req,res)=>{
   try{
-    const VALID_COLS = ['name','username','gender','phone','email'];
+    const VALID_COLS = ['name','username','gender','phone','email','avatar_url'];
     const { id } = req.params;
-    const { name, username, user, gender, phone, email } = req.body;
+    const { name, username, gender, phone, email, avatar_url } = req.body;
 
     /* constrói SET dinâmico → só altera o que chegar no body */
     const fields = [];
@@ -23,7 +23,8 @@ router.put('/:id', async (req,res)=>{
      username   : username || user,    // o que vier do front
      gender,
      phone,
-     email
+     email,
+     avatar_url
    };
 
     Object.entries(map).forEach(([col,val])=>{
