@@ -10,6 +10,7 @@ router.post('/', async (req, res) => { try { const { nome, email } = req.body; c
 
 router.put('/:id', async (req,res)=>{
   try{
+    const VALID_COLS = ['name','username','gender','phone','email'];
     const { id } = req.params;
     const { name, username, user, gender, phone, email } = req.body;
 
@@ -26,7 +27,7 @@ router.put('/:id', async (req,res)=>{
    };
 
     Object.entries(map).forEach(([col,val])=>{
-      if(val !== undefined){
+      if(val !== undefined && VALID_COLS.includes(col)){
         fields.push(`\`${col}\` = ?`);
         values.push(val);
       }

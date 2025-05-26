@@ -4,9 +4,14 @@ const pool    = require('../db');
 
 /* lista todas as métricas do atleta */
 router.get('/:athleteId', async (req,res)=>{
-  const [rows] = await pool.query(
-    'SELECT id,name FROM metrics WHERE athlete_id = ?',
-    [req.params.athleteId]);
+const [rows] = await pool.query(`
+      SELECT  m.id, m.name,
+              COALESCE(MAX(r.value),0) AS max       -- 👍 traz o 1-RM
+        FROM metrics m
+   LEFT JOIN metric_results r ON r.metric_id = m.id
+       WHERE m.athlete_id = ?
+    GROUP BY m.id, m.name
+  `,[req.params.athleteId]);
   res.json(rows);
 });
 
