@@ -57,9 +57,8 @@ export default function EditProfile() {
 
         <label>
           Username
-          <input
-            name="user"
-            value={form.user}
+          <input name="username"
+         value={form.username}
             onChange={handle}
           />
         </label>
