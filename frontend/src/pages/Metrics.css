@@ -130,3 +130,8 @@
     cursor:pointer;transition:background .2s;
   }
   .picker li:hover{background:#3498db}
+  .picker li.custom{
+  color:#1ec5ff;
+  font-weight:600;
+}
+.picker li.custom:hover{ background:#17354a; }

@@ -191,21 +191,9 @@ router.get('/by-date/:athleteId/:dateYMD', async (req, res) => {
       LIMIT 1
     `, [athleteId, ptDay, monday]);
 
-    /* fallback: se não encontrou, tenta a semana MAIS RECENTE anterior   */
-    if (planRows.length === 0) {
-        [planRows] = await pool.query(`
-          SELECT id
-            FROM plans
-           WHERE athlete_id  = ?
-             AND day_of_week = ?
-             AND week_start_date <= ?
-           ORDER BY week_start_date DESC
-           LIMIT 1
-        `, [athleteId, ptDay, monday]);
-  
-        if (planRows.length === 0)
-          return res.json({ phases: [] });    // continua sem plano
-      }
+    /* se não encontrou exactamente essa semana -> não há treino */
+    if (planRows.length === 0)
+      return res.json({ phases: [] });
 
     const planId = planRows[0].id;
 

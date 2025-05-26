@@ -64,6 +64,10 @@ export default function MetricsList() {
                   {lift}
                 </li>
               ))}
+              <li className="custom" onClick={()=>{
+      const custom = prompt('Nome do exercício');
+      if(custom) createMetric(custom);
+}}></li>
             </ul>
           </div>
         </div>
