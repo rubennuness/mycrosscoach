@@ -10,7 +10,7 @@ router.post('/', async (req, res) => { try { const { nome, email } = req.body; c
 
 router.put('/:id', async (req,res)=>{
   try{
-    const VALID_COLS = ['name','username','gender','phone','email','avatar_url'];
+    const VALID_COLS = ['name','username','gender','phone','avatar_url','email'];
     const { id } = req.params;
     const { name, username, gender, phone, email, avatar_url } = req.body;
 
@@ -20,7 +20,7 @@ router.put('/:id', async (req,res)=>{
     const map = {
      name       : name,                // coluna `name`
      nome       : name,                // compat. com BD antiga
-     username   : username || user,    // o que vier do front
+     username,
      gender,
      phone,
      email,
