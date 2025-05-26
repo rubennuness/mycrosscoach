@@ -11,16 +11,23 @@ router.post('/', async (req, res) => { try { const { nome, email } = req.body; c
 router.put('/:id', async (req,res)=>{
   try{
     const { id } = req.params;
-    const { name, username, gender, phone, email } = req.body;
+    const { name, username, user, gender, phone, email } = req.body;
 
     /* constrói SET dinâmico → só altera o que chegar no body */
     const fields = [];
     const values = [];
-    const map    = { name, username, gender, phone, email };
+    const map = {
+     name       : name,                // coluna `name`
+     nome       : name,                // compat. com BD antiga
+     username   : username || user,    // o que vier do front
+     gender,
+     phone,
+     email
+   };
 
     Object.entries(map).forEach(([col,val])=>{
       if(val !== undefined){
-        fields.push(`${col} = ?`);
+        fields.push(`\`${col}\` = ?`);
         values.push(val);
       }
     });
@@ -29,7 +36,9 @@ router.put('/:id', async (req,res)=>{
 
     values.push(id);                           // WHERE id = ?
     await pool.query(
-      `UPDATE users SET ${fields.join(', ')} WHERE id = ?`,
+      `UPDATE users SET ${fields.join(', ')},
+                        updated_at = NOW()
+       WHERE id = ?`,
       values);
 
     res.json({ message:'Perfil actualizado' });

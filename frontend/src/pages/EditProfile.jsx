@@ -11,7 +11,7 @@ export default function EditProfile() {
   /* estado (pré-preenchido) */
   const [form, setForm] = useState({
     name  : stored.name  || '',
-    user  : stored.username || '',
+    username : stored.username || '',
     gender: stored.gender   || '',
     phone : stored.phone    || '',
     email : stored.email    || ''
