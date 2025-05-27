@@ -12,7 +12,7 @@ router.put('/:id', async (req,res)=>{
   try{
     const VALID_COLS = ['name','username','gender','phone','avatar_url','email'];
     const { id } = req.params;
-    const { name, username, gender, phone, email, avatar_url } = req.body;
+    const { name, username, gender, phone, avatar_url, email } = req.body;
 
     /* constrói SET dinâmico → só altera o que chegar no body */
     const fields = [];
@@ -23,8 +23,8 @@ router.put('/:id', async (req,res)=>{
      username,
      gender,
      phone,
+     avatar_url,
      email,
-     avatar_url
    };
 
     Object.entries(map).forEach(([col,val])=>{

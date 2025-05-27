@@ -14,21 +14,34 @@ function HamburgerMenu() {
         <span/><span/><span/>
       </div>
 
-      {open && (
-        <div className="hamburger-dropdown">
-          <ul onClick={()=>setOpen(false)}>
-            {/* opções comuns … */}
-            {role==='athlete' && (
-              <>
-                              <li onClick={()=>navigate('/timers')}>Timers</li>
-                              <li onClick={()=>navigate('/calendar')}>Calendario</li>
-                              <li onClick={()=>navigate('/metrics')}>Metricas</li>
-                            </>
-              
-            )}
-          </ul>
-        </div>
-      )}
+      {/* side-drawer + overlay */}
+     {open && (
+       <div className="drawer-overlay" onClick={() => setOpen(false)}>
+         <nav
+           className="side-drawer"
+           onClick={e => e.stopPropagation()}  /* impede fecho ao clicar dentro */
+         >
+          <button
+             className="drawer-close"
+             onClick={() => setOpen(false)}
+             aria-label="close"
+           >
+             ×
+           </button>
+
+           <ul>
+             {/* opções comuns */}
+             {role === 'athlete' && (
+               <>
+                 <li onClick={() => navigate('/timers')}>Timers</li>
+                 <li onClick={() => navigate('/calendar')}>Calendário</li>
+                 <li onClick={() => navigate('/metrics')}>Métricas</li>
+               </>
+             )}
+           </ul>
+         </nav>
+       </div>
+     )}
     </div>
   );
 }
