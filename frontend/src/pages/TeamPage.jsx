@@ -9,7 +9,10 @@ export default function TeamPage() {
 
   /* carrega equipas onde sou admin ou membro -------------------- */
   useEffect(() => {
-    fetch('https://mycrosscoach-production.up.railway.app/api/team')
+    fetch(
+    'https://mycrosscoach-production.up.railway.app/api/team',
+    { headers:{ Authorization:`Bearer ${localStorage.getItem('token')}` } }
+  )
       .then(r => r.json()).then(setTeams);
   }, []);
 

@@ -19,6 +19,21 @@ router.get('/', coachMW, async (req,res)=>{
   res.json(rows);
 });
 
+/* listar equipas disponíveis (exclui onde já é membro ou admin) */
+router.get('/available', coachMW, async (req,res)=>{
+  const coachId = req.userId;
+  const [rows] = await pool.query(`
+    SELECT t.id, t.name
+      FROM teams t
+     WHERE t.id NOT IN (
+           SELECT team_id FROM team_members WHERE coach_id = ?
+           UNION
+           SELECT id FROM teams WHERE admin_id = ?
+         )
+  `,[coachId, coachId]);
+  res.json(rows);
+});
+
 /* cria equipa (coach = admin) ------------------------------------ */
 router.post('/', coachMW, async (req,res)=>{
   const {name} = req.body;
