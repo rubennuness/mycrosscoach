@@ -137,15 +137,20 @@
 
 /* 3️⃣  botão “+” mantém-se compacto e não força scroll             */
 .plus-btn{
-  flex:0 0 28px;           /* nunca cresce, nunca encolhe           */
+  flex:0 0 28px;            /* mantém largura/altura fixas           */
   height:28px;
-  background:#3498db;
-  color:#fff;
-  border:none;
-  border-radius:4px;
-  font-size:20px;
-  line-height:24px;
+  background:transparent;   /* ⬅️  sem fundo                         */
+  border:none;              /* tira a moldura                        */
+  color:#3498db;            /* símbolo “+” em azul da marca          */
+  font-size:24px;           /* tamanho visível                       */
+  line-height:26px;         /* centra verticalmente                  */
   padding:0;
+  display:flex;
+  align-items:center;       /* centra horizontal/vertical            */
+  justify-content:center;
   cursor:pointer;
 }
-.plus-btn:hover{background:#2a7ec0;}
+
+.plus-btn:hover{            /* opcional – ligeiro destaque no hover */
+  color:#1d73b5;
+}
