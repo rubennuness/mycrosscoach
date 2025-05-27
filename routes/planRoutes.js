@@ -130,7 +130,7 @@ router.get('/day/:athleteId/:dayOfWeek', async (req,res)=>{
     rows.forEach(r=>{
       if(!map[r.id]){
         map[r.id]={ id:r.id, title:r.title, text:r.text,
-                    sets:r.sets, reps:r.reps, percent:r.percent,
+                    sets:r.sets, reps:r.reps, pLow : r.pLow, pHigh: r.pHigh,
                     status:r.status, comment:r.comment,
                     ranges:[] };
       }
