@@ -65,8 +65,8 @@ app.get('/api/training/week/:athleteId', async (req, res) => {
 
     // Agrupa
     rows.forEach(row => {
-      plansObj[row.day_of_week].push({id    : row.phase_id, title : row.title, text  : row.phase_text, sets : row.sets, reps  : row.reps, pLow : r.pLow,
-       pHigh: r.pHigh});
+      plansObj[row.day_of_week].push({id    : row.phase_id, title : row.title, text  : row.phase_text, sets : row.sets, reps  : row.reps, pLow : row.pLow,
+       pHigh: row.pHigh});
     });
 
     return res.json({
