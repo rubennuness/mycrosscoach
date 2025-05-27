@@ -1,0 +1,93 @@
+/* src/pages/TeamPage.css */
+
+/* ——— layout geral ——— */
+.team-wrapper {
+  min-height: 100vh;
+  background: #1c1c1c;          /* igual ao dashboard */
+  color: #fff;
+  padding: 24px 20px 80px;      /* bottom para não colidir c/ bottom-nav */
+  box-sizing: border-box;
+}
+
+.team-wrapper h1 {
+  margin: 0 0 24px;
+  font-size: 1.8rem;
+  text-align: center;
+  color: #b8c7d1;               /* cinza claro (para não “gritar”) */
+}
+
+/* ——— form “Create team” ——— */
+.team-create {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.team-create input {
+  flex: 1;
+  background: #2c2c2c;
+  border: 1px solid #444;
+  border-radius: 4px;
+  padding: 10px 12px;
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.team-create input::placeholder {
+  color: #777;
+}
+
+.team-create button {
+  background: #2196f3;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 16px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.25s;
+}
+.team-create button:hover {
+  background: #1b7ed0;
+}
+
+/* ——— lista de equipas ——— */
+.team-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.team-list li {
+  background: #2c2c2c;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.95rem;
+}
+
+.team-list li button {
+  background: #3498db;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.25s;
+}
+.team-list li button:hover {
+  background: #2c82bb;
+}
+
+/* estado (admin / pending) */
+.team-list li span {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
