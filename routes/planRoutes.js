@@ -113,7 +113,6 @@ router.get('/day/:athleteId/:dayOfWeek', async (req,res)=>{
         pr.range_order        AS r_order,
         pr.sets               AS r_sets,
         pr.reps               AS r_reps,
-        pr.percent            AS r_percent,
         pr.p_low              AS r_pLow,
         pr.p_high             AS r_pHigh,
         COALESCE(pg.status ,'pending') AS status,
@@ -232,7 +231,8 @@ router.get('/by-date/:athleteId/:dateYMD', async (req, res) => {
           ph.phase_text                    AS text,
           ph.sets                          AS sets,
           ph.reps                          AS reps,
-          ph.percent                       AS percent,
+          ph.p_low              AS p_low,
+          ph.p_high             AS p_high,
           COALESCE(pp.status ,'pending')   AS status,
           COALESCE(pp.comment,'')          AS comment
       FROM plan_phases ph
