@@ -1,237 +1,218 @@
 // src/pages/PlanPage.jsx
 import React, { useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import calendarIcon from '../assets/calendar.png'; 
-import BackButton from "../components/BackButton";
-import Toast from '../components/Toast';
+import calendarIcon from '../assets/calendar.png';
+import BackButton   from '../components/BackButton';
+import Toast        from '../components/Toast';
 import './PlanPage.css';
 
-function PlanPage() {
-  const { athleteId }  = useParams();
-  const navigate       = useNavigate(); 
+export default function PlanPage() {
+  const { athleteId } = useParams();
+  const navigate      = useNavigate();
+  const location      = useLocation();
 
-  /* ---------- ►  NOVO  ◄ ---------- */
-  const location       = useLocation();                 // veio da navegação?
-  const navName        = location.state?.athleteName ?? '';
-  const [athleteName, setAthleteName] = useState(navName);
-  /* --------------------------------- */
+  const navName = location.state?.athleteName ?? '';
+  const [athleteName,setAthleteName] = useState(navName);
 
-  const [selectedDay, setSelectedDay] = useState('Segunda');
-    /* ▼ NOVO  – segunda-feira da semana que estamos a planear */
-  const today      = new Date();                       // ajuda no default
-  const mondayIso  = new Date(today.setDate(
-                     today.getDate() - ((today.getDay()||7) - 1))
-                   ).toISOString().slice(0,10);        // YYYY-MM-DD
-  const [weekStart, setWeekStart]       = useState(mondayIso);
-  const [phases, setPhases]           = useState([{ title: '', text: '' }]);
-  const [toastMessage, setToastMessage] = useState('');
-  const [metrics, setMetrics] = useState([]);
+  /* ───────── estado principal ───────── */
+  const [selectedDay,setSelectedDay] = useState('Segunda');
 
+  const today     = new Date();
+  const mondayIso = new Date(today.setDate(today.getDate() - ((today.getDay()||7) - 1)))
+                     .toISOString().slice(0,10);   // YYYY-MM-DD
+  const [weekStart,setWeekStart]    = useState(mondayIso);
 
-  useEffect(() => {
-  if (!athleteId) return;
-  fetch(`https://mycrosscoach-production.up.railway.app/api/metrics/${athleteId}`)
-    .then(r => r.json())
-    .then(setMetrics)
-    .catch(() => {});
-  }, [athleteId]);
+  const [phases , setPhases ] = useState([{
+    title:'', text:'', sets:'', reps:'', percent:'', ranges:[]
+  }]);
+  const [metrics,setMetrics]       = useState([]);
+  const [toast , setToast ]        = useState('');
 
-  /* ①  Carrega o nome caso ainda não o tenhamos */
-  useEffect(() => {
-    if (athleteName || !athleteId) return;              // já temos → sai
+  /* ───────── auxiliares ───────── */
+  const handleToast = msg => { setToast(msg); setTimeout(()=>setToast(''),5000); };
 
+  /* ───────── efeitos ───────── */
+
+  // carrega métricas (1RM)
+  useEffect(()=>{
+    if(!athleteId) return;
+    fetch(`https://mycrosscoach-production.up.railway.app/api/metrics/${athleteId}`)
+      .then(r=>r.json()).then(setMetrics).catch(()=>{});
+  },[athleteId]);
+
+  // carrega nome do atleta (se vier vazio)
+  useEffect(()=>{
+    if(athleteName || !athleteId) return;
     fetch(`https://mycrosscoach-production.up.railway.app/api/users/${athleteId}`)
-      .then(r => r.ok ? r.json() : { name:'' })
-      .then(data => setAthleteName(data.name ?? ''))
-      .catch(()  => setAthleteName(''));
-  }, [athleteId, athleteName]);
-  /* ------------------------------------------- */
-  /* ②  Carrega as fases sempre que
-      • muda o dia OU
-      • muda a semana OU
-      • muda o atleta                                       */
-useEffect(() => {
-    if (!athleteId || !selectedDay) return;
+      .then(r=>r.ok?r.json():{name:''})
+      .then(d=>setAthleteName(d.name||''));
+  },[athleteId,athleteName]);
 
+  // carrega fases sempre que muda dia / semana / atleta
+  useEffect(()=>{
+    if(!athleteId||!selectedDay) return;
     fetch(`https://mycrosscoach-production.up.railway.app/api/plans/day/${athleteId}/${selectedDay}?week=${weekStart}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.phases) {
-          setPhases(
-            data.phases.length > 0 ? data.phases
-                                   : [{ title: '', text: '' }]
-          );
-        } else {
-          setPhases([{ title: '', text: '' }]);
-        }
+      .then(r=>r.json())
+      .then(d=>{
+        if(d.phases && d.phases.length) setPhases(d.phases);
+        else setPhases([{title:'',text:'',sets:'',reps:'',percent:'',ranges:[]}]);
       })
-      .catch(err => console.error(err));
-  }, [athleteId, selectedDay, weekStart]);
-  /* ------------------------------------------- */
+      .catch(console.error);
+  },[athleteId,selectedDay,weekStart]);
 
-  const handleAddPhase = () =>
-    setPhases([...phases, { title: '', text: '' }]);
+  /* ───────── handlers ───────── */
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const planData = {
-            day_of_week     : selectedDay,
-            week_start_date : weekStart,   /* NOVO */
-            phases
-          };
+  const addPhase   = () =>
+    setPhases(p=>[...p,{title:'',text:'',sets:'',reps:'',percent:'',ranges:[]}]);
 
-    fetch(`https://mycrosscoach-production.up.railway.app/api/plans/${athleteId}`, {
-      method : 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body   : JSON.stringify(planData)
-    })
-      .then(res => {
-        if (!res.ok) throw new Error();
-        return res.json();
-      })
-      .then(()  => setToastMessage('Plano criado/atualizado!'))
-      .catch(() => setToastMessage('Ocorreu um erro ao criar/atualizar o plano.'));
+  const addRange   = idx =>{
+    const a=[...phases];
+    a[idx].ranges.push({sets:'',reps:'',percent:''});
+    setPhases(a);
   };
 
-  const handleCloseToast = () => setToastMessage('');
+  const savePlan   = async e =>{
+    e.preventDefault();
+    const body={
+      day_of_week     : selectedDay,
+      week_start_date : weekStart,
+      phases
+    };
+    try{
+      const r = await fetch(
+        `https://mycrosscoach-production.up.railway.app/api/plans/${athleteId}`,
+        {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+      if(!r.ok) throw new Error();
+      handleToast('Plano criado/atualizado!');
+    }catch{ handleToast('Erro ao gravar'); }
+  };
 
-  const renderTitleField = (phase, idx) => (
-  <div style={{display:'flex',gap:8}}>
-    <input
-      value={phase.title}
-      placeholder="Ex.: Back Squat"
-      onChange={e=>{
-        const a=[...phases]; a[idx].title=e.target.value; setPhases(a);
-      }}
-      list={`dl-ex-${idx}`}
-      style={{flex:1}}
-    />
-    <datalist id={`dl-ex-${idx}`}>
-      {metrics.map(m => <option key={m.name} value={m.name} />)}
-    </datalist>
-  </div>
-);
+  const renderTitle = (ph,idx)=>(
+    <div style={{display:'flex',gap:8}}>
+      <input
+        value={ph.title}
+        placeholder="Ex.: Snatch"
+        onChange={e=>{
+          const a=[...phases]; a[idx].title=e.target.value; setPhases(a);
+        }}
+        list={`dl-ex-${idx}`} style={{flex:1}}
+      />
+      <datalist id={`dl-ex-${idx}`}>
+        {metrics.map(m=><option key={m.name} value={m.name}/>)}
+      </datalist>
+    </div>
+  );
 
-
+  /* ───────── render ───────── */
   return (
     <div className="planpage-container">
-      <BackButton />                                 
+      <BackButton/>
       <div className="planpage-left">
         <div className="planpage-left-content">
-          {/* ►--- título agora mostra o NOME, fallback #id ---◄ */}
-          <h1 style={{ marginBottom: 20 }}>
-            Plano de&nbsp;
-            <span style={{ color:'#3498db' }}>
-              {athleteName || `#${athleteId}`}
+
+          <h1 style={{marginBottom:20}}>
+            Plano de&nbsp;<span style={{color:'#3498db'}}>
+              {athleteName||`#${athleteId}`}
             </span>
           </h1>
 
-          <form onSubmit={handleSubmit} className="plan-form">
-            <div>
-            <label style={{display:'block',marginBottom:6}}>
-  Escolha a <strong>Semana</strong>:
-</label>
-<div className="week-picker-row">
-  {/* selector que só permite segundas-feiras */}
-  <input
-    type="date"
-    min={mondayIso}
-    step="7"
-    value={weekStart}
-    onChange={e => {
-      const d  = new Date(e.target.value);
-      const wd = d.getDay() || 7;       // 1-Dom … 7-Sáb
-      d.setDate(d.getDate() - wd + 1);  // força para 2ª-feira
-      const monday = d.toISOString().slice(0,10);
-      setWeekStart(monday);
-      setPhases([{title:'',text:''}]);
-    }}
-    style={{width:'180px'}}
-  />
-{/* novo botão para abrir o calendário do atleta */}
-  <button
-    type="button"
-    className="cal-btn"
-    title="Abrir calendário"
-    onClick={()=>navigate(`/calendar/${athleteId}`)}
-  >
-    <img src={calendarIcon} alt="Calendário" />
-  </button>
-</div>
-              <label>Dia da semana:</label>
-              <select value={selectedDay}
-                      onChange={(e) => setSelectedDay(e.target.value)}>
-                <option>Segunda</option><option>Terça</option>
-                <option>Quarta</option><option>Quinta</option>
-                <option>Sexta</option><option>Sábado</option>
-                <option>Domingo</option>
-              </select>
-            </div>
-
-            <div>
-              <h3>Fases do Treino</h3>
-              {phases.map((phase, i) => (
-                <div key={i} style={{ marginBottom: 16 }}>
-                  <label>Título / Exercício {i + 1}:</label>
-                  {renderTitleField(phase, i)}
-
-                  <div className="mini-row">
-                    <input type="number" min="0" placeholder="Sets"
-                      value={phase.sets || '' }
-                      onChange={e=>{
-                        const a=[...phases]; a[i].sets=e.target.value; setPhases(a);}}/>
-                    <input type="number" min="0" placeholder="Reps"
-                      value={phase.reps || '' }
-                      onChange={e=>{
-                        const a=[...phases]; a[i].reps=e.target.value; setPhases(a);}}/>
-                    <input type="number" min="0" max="100" placeholder="%"
-                      value={phase.percent || ''}
-                      onChange={e=>{
-                        const a=[...phases]; a[i].percent=e.target.value; setPhases(a);}}/>
-                  </div>
-                  <textarea
-    rows={3}
-    placeholder="Escreva observações ou descrição da fase"
-    value={phase.text || ''}
-    onChange={e=>{
-      const a=[...phases]; a[i].text = e.target.value; setPhases(a);
-    }}
-    style={{ width:'100%', marginTop:6 }}
-  />
-
-                  {/* badge de estado se existir */}
-                  {phase.status && phase.status !== 'pending' && (
-                    <span className={`badge ${phase.status}`}
-                          style={{ marginTop:6 }}>
-                      {phase.status === 'completed' ? 'Concluído' : 'Falhou'}
-                    </span>
-                    )}
-                     {phase.comment && (
-                             <div className="comment-from-athlete" style={{marginTop:6, fontStyle:'italic'}}>
-                               “{phase.comment}”
-                             </div>
-                          )}
-                  
-                </div>
-              ))}
-
-              <button type="button" onClick={handleAddPhase}
-                      style={{ marginRight:10 }}>
-                + Adicionar Fase
+          <form onSubmit={savePlan} className="plan-form">
+            {/* semana + calendário */}
+            <label className="week-label">Semana:</label>
+            <div className="week-picker-row">
+              <input type="date" min={mondayIso} step="7" value={weekStart}
+                     onChange={e=>{
+                       const d=new Date(e.target.value);
+                       const wd=d.getDay()||7; d.setDate(d.getDate()-wd+1);
+                       setWeekStart(d.toISOString().slice(0,10));
+                     }}/>
+              <button type="button" className="cal-btn"
+                      onClick={()=>navigate(`/calendar/${athleteId}`)}>
+                <img src={calendarIcon} alt="cal"/>
               </button>
             </div>
 
-            <button type="submit" style={{ marginTop:10 }}>
-              Guardar Plano
+            {/* dia da semana */}
+            <label>Dia da semana:</label>
+            <select value={selectedDay}
+                    onChange={e=>setSelectedDay(e.target.value)}>
+              {['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo']
+               .map(d=><option key={d}>{d}</option>)}
+            </select>
+
+            {/* fases */}
+            <h3>Fases do treino</h3>
+
+            {phases.map((ph,i)=>(
+              <div key={i} className="phase-card">
+                <label>Exercício {i+1}:</label>
+                {renderTitle(ph,i)}
+
+                {/* bloco principal */}
+                <div className="mini-row">
+                  <input type="number" min="0" placeholder="Sets"
+                         value={ph.sets||''}
+                         onChange={e=>{
+                           const a=[...phases];a[i].sets=e.target.value;setPhases(a);
+                         }}/>
+                  <input type="number" min="0" placeholder="Reps"
+                         value={ph.reps||''}
+                         onChange={e=>{
+                           const a=[...phases];a[i].reps=e.target.value;setPhases(a);
+                         }}/>
+                  <input type="number" min="0" max="100" placeholder="%"
+                         value={ph.percent||''}
+                         onChange={e=>{
+                           const a=[...phases];a[i].percent=e.target.value;setPhases(a);
+                         }}/>
+                </div>
+
+                {/* blocos extra */}
+                {ph.ranges.map((r,j)=>(
+                  <div key={j} className="mini-row sub">
+                    <input type="number" min="0" placeholder="Sets"
+                           value={r.sets||''}
+                           onChange={e=>{
+                             const a=[...phases];a[i].ranges[j].sets=e.target.value;setPhases(a);
+                           }}/>
+                    <input type="number" min="0" placeholder="Reps"
+                           value={r.reps||''}
+                           onChange={e=>{
+                             const a=[...phases];a[i].ranges[j].reps=e.target.value;setPhases(a);
+                           }}/>
+                    <input type="number" min="0" max="100" placeholder="%"
+                           value={r.percent||''}
+                           onChange={e=>{
+                             const a=[...phases];a[i].ranges[j].percent=e.target.value;setPhases(a);
+                           }}/>
+                  </div>
+                ))}
+
+                <button type="button" className="add-range-btn"
+                        onClick={()=>addRange(i)}>
+                  + Add range
+                </button>
+
+                <textarea rows={3} placeholder="Notas"
+                          value={ph.text||''}
+                          onChange={e=>{
+                            const a=[...phases];a[i].text=e.target.value;setPhases(a);
+                          }}/>
+              </div>
+            ))}
+
+            <button type="button" onClick={addPhase} style={{marginRight:10}}>
+              + Add Fase
+            </button>
+
+            <button type="submit" style={{marginTop:10}}>
+              Save Plan
             </button>
           </form>
 
-          <Toast message={toastMessage} onClose={handleCloseToast} />
+          <Toast message={toast} onClose={()=>setToast('')}/>
         </div>
       </div>
-
     </div>
   );
 }
-
-export default PlanPage;

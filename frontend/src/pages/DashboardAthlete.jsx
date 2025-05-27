@@ -263,7 +263,11 @@ const shiftWeek = (delta) => {               // delta = ±7 (em dias)
   
   </div>
 )}
-
+{Array.isArray(ph.ranges) && ph.ranges.map((r,i)=>(
+    <div key={i} style={{marginTop:2,marginLeft:14,fontSize:'.92rem'}}>
+      {r.sets} x {r.reps}  {r.percent}%
+    </div>
+ ))}
 <pre style={{ whiteSpace:'pre-wrap', marginTop:6 }}>
   {desc}
 </pre>

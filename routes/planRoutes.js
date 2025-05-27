@@ -16,115 +16,121 @@ function mondayOfCurrentWeek () {
 
 
 /* POST /api/plans/:athleteId  – cria / sobrescreve plano de um dia */
-router.post('/:athleteId', async (req, res) => {
-  try {
-    const { athleteId }          = req.params;
-    const { day_of_week, phases, week_start_date } = req.body;
+router.post('/:athleteId', async (req,res)=>{
+  try{
+    const {athleteId}=req.params;
+    const {day_of_week,phases,week_start_date}=req.body;
 
-    /* ---------- existe? ------------------------------------------------ */
-    const [existingPlan] = await pool.query(`
-    SELECT id FROM plans
-     WHERE athlete_id      = ?
-       AND day_of_week     = ?
-       AND week_start_date = ?
-    LIMIT 1
-  `, [athleteId, day_of_week, week_start_date]);
+    /* plan row ---------------------------------------------------------- */
+    const monday = week_start_date || mondayOfCurrentWeek();
+
+    const [[plan]] = await pool.query(
+      `SELECT id FROM plans
+        WHERE athlete_id=? AND day_of_week=? AND week_start_date=?`,
+      [athleteId,day_of_week,monday]);
 
     let planId;
-    if (existingPlan.length > 0) {
-      /* --- 1) sobrescreve: limpa phases antigas ----------------------- */
-      planId = existingPlan[0].id;
-      await pool.query('DELETE FROM plan_phases WHERE plan_id = ?', [planId]);
-    } else {
-      /* --- 2) novo: agora inclui week_start_date ---------------------- */
-      const monday = week_start_date || mondayOfCurrentWeek();
-      const [insert] = await pool.query(`
-        INSERT INTO plans (athlete_id, day_of_week, week_start_date)
-        VALUES (?, ?, ?)
-      `, [athleteId, day_of_week, monday]);           // 🔸 NOVO (3.º valor)
-      planId = insert.insertId;
+    if(plan){                         // sobrescreve
+      planId = plan.id;
+      await pool.query('DELETE FROM plan_phases WHERE plan_id=?',[planId]); // ON DELETE CASCADE remove ranges
+    }else{                            // novo
+      const [ins]=await pool.query(
+        'INSERT INTO plans(athlete_id,day_of_week,week_start_date) VALUES(?,?,?)',
+        [athleteId,day_of_week,monday]);
+      planId = ins.insertId;
     }
 
-    /* ---------- phases ------------------------------------------------- */
-    for (let i = 0; i < phases.length; i++) {
-      const { title, text, sets, reps, percent } = phases[i];
+    /* phases + ranges --------------------------------------------------- */
+    for(let i=0;i<phases.length;i++){
+      const p = phases[i];
+      const [insPh] = await pool.query(
+        `INSERT INTO plan_phases
+            (plan_id,phase_order,title,phase_text,sets,reps,percent)
+         VALUES (?,?,?,?,?,?,?)`,
+        [planId,i+1,
+         p.title||`Fase ${i+1}`, p.text||'',
+         p.sets||null, p.reps||null, p.percent||null]);
 
-      await pool.query(`
-        INSERT INTO plan_phases
-            (plan_id, phase_order, title, phase_text,
-              sets, reps, percent)
-        VALUES (?,?,?,?,?,?,?)
-      `, [ planId, i + 1,
-        title || `Fase ${i+1}`,
-        text  || '',
-        sets  || null,
-        reps  || null,
-        percent || null ]);
+      /* sub-blocos (ranges) */
+      if(Array.isArray(p.ranges)&&p.ranges.length){
+        for(let j=0;j<p.ranges.length;j++){
+          const r=p.ranges[j];
+          await pool.query(
+            `INSERT INTO phase_ranges
+                (plan_phase_id,range_order,sets,reps,percent)
+             VALUES (?,?,?,?,?)`,
+            [insPh.insertId,j+1,r.sets||null,r.reps||null,r.percent||null]);
         }
+      }
+    }
 
-    return res.status(201).json({
-      plan_id : planId,
-      message : `Plano salvo para user_id=${athleteId}, dia=${day_of_week}`
-    });
-
-  } catch (err) {
-    console.error('Erro ao criar/atualizar plano:', err);
-    return res.status(500).json({ error: 'Erro ao criar/atualizar plano' });
+    res.status(201).json({plan_id:planId});
+  }catch(e){
+    console.error(e);
+    res.status(500).json({error:'Erro ao criar/actualizar plano'});
   }
 });
 
 // GET /api/plans/day/:athleteId/:dayOfWeek
 // Retorna as phases existentes para um dia específico do atleta
-router.get('/day/:athleteId/:dayOfWeek', async (req, res) => {
-  try {
-    const { athleteId, dayOfWeek } = req.params;
-    const weekStart = req.query.week || null;
+/* ───────────────────────── GET por dia (semana) ───────────────────────── */
+router.get('/day/:athleteId/:dayOfWeek', async (req,res)=>{
+  try{
+    const {athleteId,dayOfWeek}=req.params;
+    const weekStart=req.query.week||mondayOfCurrentWeek();
 
-    // 1) Verifica se existe row em "plans" (athlete_id, day_of_week)
-    const [planRows] = await pool.query(`
-      SELECT id
-        FROM plans
-        WHERE athlete_id=? 
-                 AND day_of_week=?
-                 ${weekStart ? 'AND week_start_date = ?' : ''}
-      LIMIT 1
-      `, weekStart ? [athleteId, dayOfWeek, weekStart]
-                   : [athleteId, dayOfWeek]);
-    if (planRows.length === 0) {
-      // Se não houver plano, devolve phases=[]
-      return res.json({ phases: [] });
-    }
+    /* obtém planId (semana exacta) */
+    const [[plan]] = await pool.query(
+      `SELECT id FROM plans
+        WHERE athlete_id=? AND day_of_week=? AND week_start_date=?`,
+      [athleteId,dayOfWeek,weekStart]);
 
-    const planId = planRows[0].id;
+    if(!plan) return res.json({phases:[]});
 
-    // 2) Buscar phases do plano
-      const [phaseRows] = await pool.query(`
-        SELECT
-            ph.id                             AS id,
-            ph.phase_order,
-            COALESCE(ph.title,
-                     CONCAT('Fase ',ph.phase_order)) AS title,
-            ph.phase_text                     AS text,
-            ph.sets                           AS sets,
-           ph.reps                           AS reps,
-           ph.percent                        AS percent,
-            COALESCE(pp.status  ,'pending')   AS status,
-            COALESCE(pp.comment ,'')          AS comment
-        FROM plan_phases ph
-        LEFT JOIN phase_progress pp
-               ON pp.plan_phase_id = ph.id
-              AND pp.athlete_id    = ?
-        WHERE ph.plan_id = ?
-        ORDER BY ph.phase_order
-      `, [athleteId, planId]);            // NEW (passa athleteId)
+    /* devolve phases + ranges + progresso */
+    const [rows] = await pool.query(`
+      SELECT
+        ph.id, ph.phase_order,
+        COALESCE(ph.title,CONCAT('Fase ',ph.phase_order)) AS title,
+        ph.phase_text         AS text,
+        ph.sets, ph.reps, ph.percent,
+        pr.range_order        AS r_order,
+        pr.sets               AS r_sets,
+        pr.reps               AS r_reps,
+        pr.percent            AS r_percent,
+        COALESCE(pg.status ,'pending') AS status,
+        COALESCE(pg.comment,'')        AS comment
+      FROM plan_phases ph
+      LEFT JOIN phase_ranges   pr ON pr.plan_phase_id = ph.id
+      LEFT JOIN phase_progress pg ON pg.plan_phase_id = ph.id
+                                  AND pg.athlete_id   = ?
+      WHERE ph.plan_id = ?
+      ORDER BY ph.phase_order, pr.range_order`,
+      [athleteId,plan.id]);
 
- const phases = phaseRows;     
-    return res.json({ phases });
-  } catch (err) {
-    console.error('Erro ao carregar plano:', err);
-    return res.status(500).json({ error: 'Erro no servidor' });
+    /* agrupa ranges ---------------------------------------------------- */
+    const map={};
+    rows.forEach(r=>{
+      if(!map[r.id]){
+        map[r.id]={ id:r.id, title:r.title, text:r.text,
+                    sets:r.sets, reps:r.reps, percent:r.percent,
+                    status:r.status, comment:r.comment,
+                    ranges:[] };
+      }
+      if(r.r_order!==null){
+        map[r.id].ranges.push({
+          sets:r.r_sets, reps:r.r_reps, percent:r.r_percent
+        });
+      }
+    });
+
+    res.json({phases:Object.values(map)});
+  }catch(e){
+    console.error(e);
+    res.status(500).json({error:'Erro no servidor'});
   }
 });
+
 
 // GET /api/plans/view/:planId => se quiser ver um plano específico
 router.get('/view/:planId', async (req, res) => {
