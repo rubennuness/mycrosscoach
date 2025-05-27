@@ -38,6 +38,11 @@ function HamburgerMenu() {
                  <li onClick={() => navigate('/metrics')}>Métricas</li>
                </>
              )}
+             {role === 'coach' && (
+            <>
+            <li onClick={() => navigate('/team')}>Team</li>
+            </>
+            )}
            </ul>
          </nav>
        </div>

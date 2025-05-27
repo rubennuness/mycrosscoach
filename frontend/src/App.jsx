@@ -17,6 +17,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword  from './pages/ResetPassword';
 import ProfilePage from './pages/ProfilePage';
 import EditProfile from './pages/EditProfile';
+import TeamPage from './pages/TeamPage';
 
 function App() {
   return (
@@ -80,8 +81,8 @@ function App() {
 <Route path="/metric/:metricId" element={<PrivateRoute><MetricDetail/></PrivateRoute>} />
 <Route path="/forgot-password" element={<ForgotPassword/>}/>
 <Route path="/reset-password/:token" element={<ResetPassword/>}/>
-<Route path="/profile" element={<PrivateRoute><ProfilePage/></PrivateRoute>
-}/>
+<Route path="/profile" element={<PrivateRoute><ProfilePage/></PrivateRoute>}/>
+<Route  path="/team"  element={<PrivateRoute><TeamPage /></PrivateRoute>}/>
         {/* fallback */}
         <Route path="*" element={<Home />} />
       </Routes>

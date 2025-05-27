@@ -8,6 +8,7 @@ const planRoutes = require('./routes/planRoutes');
 const progressRoutes = require('./routes/progress');
 const metricsRoutes = require('./routes/metrics');
 const eventsRoutes= require('./routes/events');
+const teamRoutes = require('./routes/team');
 
 const app = express();
 app.use(cors());
@@ -27,6 +28,8 @@ app.use('/api/progress', progressRoutes);
 app.use('/api/metrics', metricsRoutes);
 
 app.use('/api/events',eventsRoutes);
+
+app.use('/api/team', teamRoutes);
 
 // Rota para o Atleta (ou qualquer um) ver todos os dias do user
 // GET /api/training/week/:athleteId

@@ -40,14 +40,14 @@ export default function MetricsList() {
       setMetrics(m=>[...m, created]);               // UI optimista
       setPickerOn(false);
     }catch(e){
-      alert('Erro ao adicionar métrica');
+      alert('Error while adding metric');
     }
   };
 
   return(
     <div className="metrics-container">
       <BackButton />
-      <h1>Minhas Métricas</h1>
+      <h1>My Metrics</h1>
 
       <button className="btn-primary" onClick={()=>setPickerOn(true)}>
         + Add Metric
@@ -65,9 +65,10 @@ export default function MetricsList() {
                 </li>
               ))}
               <li className="custom" onClick={()=>{
-      const custom = prompt('Nome do exercício');
+              
+      const custom = prompt('Name of exercise');
       if(custom) createMetric(custom);
-}}></li>
+}}>Other</li>
             </ul>
           </div>
         </div>
