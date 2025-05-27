@@ -254,13 +254,10 @@ const shiftWeek = (delta) => {               // delta = ±7 (em dias)
                       return (
                         <div key={idx} className="phase-box">
                           <strong>{ph.title || `Fase ${idx+1}`}</strong>
-{ph.percent && (
-  <div style={{marginTop:4,fontStyle:'Arial'}}>
-    {ph.sets || '?'} x {ph.reps || '?' }  {ph.percent}% { oneRM[ph.title]
-      ? `→ ${Math.round(oneRM[ph.title] * ph.percent / 100)} kg`
-      : '' }
-
-  
+{(ph.pLow || ph.pHigh) && (
+  <div style={{marginTop:4}}>
+    {ph.sets || '?'} x {ph.reps || '?'}&nbsp;
+    {ph.pLow || '?'} % – {ph.pHigh || '?'} %
   </div>
 )}
 {Array.isArray(ph.ranges) && ph.ranges.map((r,i)=>(

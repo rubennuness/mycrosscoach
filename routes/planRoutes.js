@@ -41,30 +41,42 @@ router.post('/:athleteId', async (req,res)=>{
     }
 
     /* phases + ranges --------------------------------------------------- */
-    for(let i=0;i<phases.length;i++){
-      const p = phases[i];
-      const [insPh] = await pool.query(
-        `INSERT INTO plan_phases
-            (plan_id,phase_order,title,phase_text,sets,reps,percent)
-         VALUES (?,?,?,?,?,?,?)`,
-        [planId,i+1,
-         p.title||`Fase ${i+1}`, p.text||'',
-         p.sets||null, p.reps||null, p.percent||null]);
+    for (let i = 0; i < phases.length; i++) {
+  const p = phases[i];
+
+  /* ▼ trocámos “percent” por p_low / p_high */
+  const [insPh] = await pool.query(
+    `INSERT INTO plan_phases
+       (plan_id, phase_order, title, phase_text,
+        sets, reps, p_low, p_high)
+     VALUES (?,?,?,?,?,?,?,?)`,
+    [ planId, i + 1,
+      p.title  || `Fase ${i+1}`,
+      p.text   || '',
+      p.sets   || null,
+      p.reps   || null,
+      p.pLow   || null,
+      p.pHigh  || null ]        //  ← novos campos
+  );
 
       /* sub-blocos (ranges) */
-      if(Array.isArray(p.ranges)&&p.ranges.length){
-        for(let j=0;j<p.ranges.length;j++){
-          const r=p.ranges[j];
-          await pool.query(
-  `INSERT INTO phase_ranges
-      (plan_phase_id,range_order,sets,reps,p_low,p_high)
-   VALUES (?,?,?,?,?,?)`,
-  [insPh.insertId,j+1,
-   r.sets||null,r.reps||null,
-   r.pLow||null,r.pHigh||null]);
-        }
-      }
+      if (Array.isArray(p.ranges) && p.ranges.length) {
+    for (let j = 0; j < p.ranges.length; j++) {
+      const r = p.ranges[j];
+      await pool.query(
+        `INSERT INTO phase_ranges
+           (plan_phase_id, range_order,
+            sets, reps, p_low, p_high)
+         VALUES (?,?,?,?,?,?)`,
+        [ insPh.insertId, j + 1,
+          r.sets  || null,
+          r.reps  || null,
+          r.pLow  || null,
+          r.pHigh || null ]
+      );
     }
+  }
+}
 
     res.status(201).json({plan_id:planId});
   }catch(e){
@@ -99,7 +111,6 @@ router.get('/day/:athleteId/:dayOfWeek', async (req,res)=>{
         pr.range_order        AS r_order,
         pr.sets               AS r_sets,
         pr.reps               AS r_reps,
-        pr.percent            AS r_percent,
         pr.p_low              AS r_pLow,
         pr.p_high             AS r_pHigh,
         COALESCE(pg.status ,'pending') AS status,
