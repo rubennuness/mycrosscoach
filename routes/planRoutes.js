@@ -56,10 +56,12 @@ router.post('/:athleteId', async (req,res)=>{
         for(let j=0;j<p.ranges.length;j++){
           const r=p.ranges[j];
           await pool.query(
-            `INSERT INTO phase_ranges
-                (plan_phase_id,range_order,sets,reps,percent)
-             VALUES (?,?,?,?,?)`,
-            [insPh.insertId,j+1,r.sets||null,r.reps||null,r.percent||null]);
+  `INSERT INTO phase_ranges
+      (plan_phase_id,range_order,sets,reps,p_low,p_high)
+   VALUES (?,?,?,?,?,?)`,
+  [insPh.insertId,j+1,
+   r.sets||null,r.reps||null,
+   r.pLow||null,r.pHigh||null]);
         }
       }
     }
@@ -98,6 +100,8 @@ router.get('/day/:athleteId/:dayOfWeek', async (req,res)=>{
         pr.sets               AS r_sets,
         pr.reps               AS r_reps,
         pr.percent            AS r_percent,
+        pr.p_low              AS r_pLow,
+        pr.p_high             AS r_pHigh,
         COALESCE(pg.status ,'pending') AS status,
         COALESCE(pg.comment,'')        AS comment
       FROM plan_phases ph
@@ -118,9 +122,10 @@ router.get('/day/:athleteId/:dayOfWeek', async (req,res)=>{
                     ranges:[] };
       }
       if(r.r_order!==null){
-        map[r.id].ranges.push({
-          sets:r.r_sets, reps:r.r_reps, percent:r.r_percent
-        });
+  map[r.id].ranges.push({
+    sets:r.r_sets, reps:r.r_reps,
+    pLow:r.r_pLow, pHigh:r.r_pHigh
+  });
       }
     });
 

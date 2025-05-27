@@ -320,3 +320,17 @@ body {
 .bottom-nav button:hover{
   color:#1ec5ff;
 }
+
+.plus-btn{
+  background:#3498db;
+  color:#fff;
+  border:none;
+  width:28px;
+  height:28px;
+  font-size:20px;
+  line-height:24px;
+  padding:0;
+  border-radius:4px;
+  cursor:pointer;
+}
+.plus-btn:hover{background:#2a7ec0;}

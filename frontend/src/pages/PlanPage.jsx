@@ -65,9 +65,9 @@ export default function PlanPage() {
   const addPhase   = () =>
     setPhases(p=>[...p,{title:'',text:'',sets:'',reps:'',percent:'',ranges:[]}]);
 
-  const addRange   = idx =>{
-    const a=[...phases];
-    a[idx].ranges.push({sets:'',reps:'',percent:''});
+  const addRange = i => {
+    const a = [...phases];
+    a[i].ranges.push({ sets:'', reps:'', pLow:'', pHigh:'' });
     setPhases(a);
   };
 
@@ -110,6 +110,7 @@ export default function PlanPage() {
       <div className="planpage-left">
         <div className="planpage-left-content">
 
+          {/* ---------- cabeçalho idêntico ---------- */}
           <h1 style={{marginBottom:20}}>
             Plano de&nbsp;<span style={{color:'#3498db'}}>
               {athleteName||`#${athleteId}`}
@@ -117,30 +118,8 @@ export default function PlanPage() {
           </h1>
 
           <form onSubmit={savePlan} className="plan-form">
-            {/* semana + calendário */}
-            <label className="week-label">Semana:</label>
-            <div className="week-picker-row">
-              <input type="date" min={mondayIso} step="7" value={weekStart}
-                     onChange={e=>{
-                       const d=new Date(e.target.value);
-                       const wd=d.getDay()||7; d.setDate(d.getDate()-wd+1);
-                       setWeekStart(d.toISOString().slice(0,10));
-                     }}/>
-              <button type="button" className="cal-btn"
-                      onClick={()=>navigate(`/calendar/${athleteId}`)}>
-                <img src={calendarIcon} alt="cal"/>
-              </button>
-            </div>
+            {/* ---------- Semana + dia exactamente iguais ---------- */}
 
-            {/* dia da semana */}
-            <label>Dia da semana:</label>
-            <select value={selectedDay}
-                    onChange={e=>setSelectedDay(e.target.value)}>
-              {['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo']
-               .map(d=><option key={d}>{d}</option>)}
-            </select>
-
-            {/* fases */}
             <h3>Fases do treino</h3>
 
             {phases.map((ph,i)=>(
@@ -148,7 +127,7 @@ export default function PlanPage() {
                 <label>Exercício {i+1}:</label>
                 {renderTitle(ph,i)}
 
-                {/* bloco principal */}
+                {/* bloco principal ------------------------------------------------ */}
                 <div className="mini-row">
                   <input type="number" min="0" placeholder="Sets"
                          value={ph.sets||''}
@@ -160,14 +139,23 @@ export default function PlanPage() {
                          onChange={e=>{
                            const a=[...phases];a[i].reps=e.target.value;setPhases(a);
                          }}/>
-                  <input type="number" min="0" max="100" placeholder="%"
-                         value={ph.percent||''}
+                  <input type="number" min="0" max="100" placeholder="% de"
+                         value={ph.pLow||''}
                          onChange={e=>{
-                           const a=[...phases];a[i].percent=e.target.value;setPhases(a);
+                           const a=[...phases];a[i].pLow=e.target.value;setPhases(a);
                          }}/>
+                  <input type="number" min="0" max="100" placeholder="% até"
+                         value={ph.pHigh||''}
+                         onChange={e=>{
+                           const a=[...phases];a[i].pHigh=e.target.value;setPhases(a);
+                         }}/>
+                  {/* botão + */}
+                  <button type="button" className="plus-btn" onClick={()=>addRange(i)}>
+                    +
+                  </button>
                 </div>
 
-                {/* blocos extra */}
+                {/* blocos extra ---------------------------------------------------- */}
                 {ph.ranges.map((r,j)=>(
                   <div key={j} className="mini-row sub">
                     <input type="number" min="0" placeholder="Sets"
@@ -180,18 +168,18 @@ export default function PlanPage() {
                            onChange={e=>{
                              const a=[...phases];a[i].ranges[j].reps=e.target.value;setPhases(a);
                            }}/>
-                    <input type="number" min="0" max="100" placeholder="%"
-                           value={r.percent||''}
+                    <input type="number" min="0" max="100" placeholder="% de"
+                           value={r.pLow||''}
                            onChange={e=>{
-                             const a=[...phases];a[i].ranges[j].percent=e.target.value;setPhases(a);
+                             const a=[...phases];a[i].ranges[j].pLow=e.target.value;setPhases(a);
+                           }}/>
+                    <input type="number" min="0" max="100" placeholder="% até"
+                           value={r.pHigh||''}
+                           onChange={e=>{
+                             const a=[...phases];a[i].ranges[j].pHigh=e.target.value;setPhases(a);
                            }}/>
                   </div>
                 ))}
-
-                <button type="button" className="add-range-btn"
-                        onClick={()=>addRange(i)}>
-                  + Add range
-                </button>
 
                 <textarea rows={3} placeholder="Notas"
                           value={ph.text||''}
