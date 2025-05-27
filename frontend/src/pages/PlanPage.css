@@ -120,4 +120,32 @@
 }
 .cal-btn:hover img{ transform:scale(1.12); }
 
-.mini-row{display:flex;gap:8px;margin:6px 0}
+.mini-row{
+  display:flex;
+  flex-wrap:wrap;          /* ← evita overflow horizontal           */
+  align-items:center;
+  gap:6px;                 /* um pouco mais fechado                 */
+  margin:6px 0;
+}
+
+/* 2️⃣  inputs ocupam um tamanho mínimo simpático
+       e depois encolhem quando o ecrã ficar apertado              */
+.mini-row input{
+  flex:1 1 64px;           /* grow | shrink | basis                 */
+  max-width:80px;          /* nunca passa disto                     */
+}
+
+/* 3️⃣  botão “+” mantém-se compacto e não força scroll             */
+.plus-btn{
+  flex:0 0 28px;           /* nunca cresce, nunca encolhe           */
+  height:28px;
+  background:#3498db;
+  color:#fff;
+  border:none;
+  border-radius:4px;
+  font-size:20px;
+  line-height:24px;
+  padding:0;
+  cursor:pointer;
+}
+.plus-btn:hover{background:#2a7ec0;}
