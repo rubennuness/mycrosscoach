@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BackButton                from '../components/BackButton';
-import './ProfilePage.css';      // (crie ficheiro ao lado)
+import './ProfilePage.css';  
 
 
 function ProfilePage() {
