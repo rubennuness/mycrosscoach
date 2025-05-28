@@ -297,7 +297,7 @@ const getDateForDay = (dayName, mondayStr) => {
 {(ph.pLow || ph.pHigh) && (
   <div style={{marginTop:4}}>
     {ph.sets || '?'} x {ph.reps || '?'}&nbsp;
-    {fmt(r.pLow)}-{fmt(r.pHigh)} %{kg}
+    {fmt(ph.pLow)}–{fmt(ph.pHigh)} %
     {loadTxt && (' ' + loadTxt)}
   </div>
 )}
