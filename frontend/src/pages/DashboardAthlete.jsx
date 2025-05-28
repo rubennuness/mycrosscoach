@@ -297,7 +297,7 @@ const getDateForDay = (dayName, mondayStr) => {
 {(ph.pLow || ph.pHigh) && (
   <div style={{marginTop:4}}>
     {ph.sets || '?'} x {ph.reps || '?'}&nbsp;
-    {fmt(ph.pLow)}–{fmt(ph.pHigh)} %
+    {fmt(ph.pLow)}–{fmt(ph.pHigh)}%
     {loadTxt && (' ' + loadTxt)}
   </div>
 )}
@@ -310,8 +310,8 @@ const getDateForDay = (dayName, mondayStr) => {
           Math.round(rm2 * r.pHigh / 100) : ''} kg`;
    }
    return (
-     <div key={i} style={{marginTop:2,marginLeft:14}}>
-    {r.sets} x {r.reps}  {fmt(r.pLow)}-{fmt(r.pHigh)} %{kg}
+     <div key={i} style={{marginTop:2}}>
+    {r.sets} x {r.reps}  {fmt(r.pLow)}-{fmt(r.pHigh)}%{kg}
      </div>
    );
  })}
