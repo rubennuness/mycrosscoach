@@ -44,6 +44,36 @@ function DashboardAthlete() {
   const [weekStart, setWeekStart] = useState(mondayISO());
   const weekLabel = `Week ${format(new Date(weekStart), 'MMMM d')}`;
 
+  const fmt = n =>
+  (n === null || n === undefined || n === '')
+    ? '?'
+    : (parseFloat(n) % 1 === 0
+        ? parseInt(n, 10).toString()      
+        : parseFloat(n).toFixed(0));      
+
+
+        const token = localStorage.getItem('token');
+
+/* fetch que acrescenta o token e redirecciona se 401 */
+const api = (url, opt = {}) => {
+  const opts = {
+    ...opt,
+    headers: {
+      ...(opt.headers || {}),
+      ...(token ? { Authorization: `Bearer ${token}` } : {})
+    }
+  };
+
+  return fetch(url, opts).then(res => {
+    if (res.status === 401) {          // token expirou
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      navigate('/login');              // redirecciona
+      throw new Error('Unauthorized'); // interrompe resto da promise
+    }
+    return res;
+  });
+};
 /* helpers p/ avançar / recuar 7 dias ------------------------------- */
 const shiftWeek = (delta) => {               // delta = ±7 (em dias)
   const d = new Date(weekStart);
@@ -57,7 +87,7 @@ const shiftWeek = (delta) => {               // delta = ±7 (em dias)
 };
   const [oneRM,setOneRM] = useState({});
   useEffect(()=>{
-  fetch(`https://mycrosscoach-production.up.railway.app/api/metrics/${athleteId}`)
+  api(`https://mycrosscoach-production.up.railway.app/api/metrics/${athleteId}`)
     .then(r=>r.json())
     .then(arr=>{
       const obj={}; arr.forEach(m=>obj[m.name]=m.max); setOneRM(obj);
@@ -67,7 +97,7 @@ const shiftWeek = (delta) => {               // delta = ±7 (em dias)
   /* ▼ 1. CARREGA estrutura da semana (sem progresso) -------------------- */
   useEffect(() => {
     if (!athleteId) return;
-    fetch(`https://mycrosscoach-production.up.railway.app/api/training/week/${athleteId}?week=${weekStart}`)
+    api(`https://mycrosscoach-production.up.railway.app/api/training/week/${athleteId}?week=${weekStart}`)
       .then(r => r.json())
       .then(d => {
         setDaysOfWeek(d.daysOfWeek);
@@ -80,7 +110,7 @@ const shiftWeek = (delta) => {               // delta = ±7 (em dias)
   useEffect(() => {
     if (!athleteId || !selectedDay) return;
 
-    fetch(`https://mycrosscoach-production.up.railway.app/api/plans/day/${athleteId}/${selectedDay}?week=${weekStart}`)
+    api(`https://mycrosscoach-production.up.railway.app/api/plans/day/${athleteId}/${selectedDay}?week=${weekStart}`)
       .then(r => r.json())
       .then(data => {
         if (!data.phases) return;
@@ -134,7 +164,7 @@ const shiftWeek = (delta) => {               // delta = ±7 (em dias)
     const phase = phasesArray[idx];
     if (!phase?.id || !newStatus) return;
 
-    fetch('https://mycrosscoach-production.up.railway.app/api/progress', {
+    api('https://mycrosscoach-production.up.railway.app/api/progress', {
       method : 'POST',
       headers: { 'Content-Type': 'application/json' },
       body   : JSON.stringify({
@@ -267,7 +297,7 @@ const getDateForDay = (dayName, mondayStr) => {
 {(ph.pLow || ph.pHigh) && (
   <div style={{marginTop:4}}>
     {ph.sets || '?'} x {ph.reps || '?'}&nbsp;
-    {ph.pLow || '?'} % – {ph.pHigh || '?'} %
+    {fmt(ph.pLow)} % – {fmt(ph.pHigh)} %
     {loadTxt && (' ' + loadTxt)}
   </div>
 )}
@@ -280,8 +310,8 @@ const getDateForDay = (dayName, mondayStr) => {
           Math.round(rm2 * r.pHigh / 100) : ''} kg`;
    }
    return (
-     <div key={i} style={{marginTop:2,marginLeft:14,fontSize:'.92rem'}}>
-       {r.sets} x {r.reps}  {r.pLow || '?'}-{r.pHigh || '?'} %{kg}
+     <div key={i} style={{marginTop:2,marginLeft:14}}>
+       {r.sets} x {r.reps}  {fmt(r.pLow)}-{fmt(r.pHigh)} %{kg}
      </div>
    );
  })}
@@ -324,7 +354,7 @@ const getDateForDay = (dayName, mondayStr) => {
                             onBlur={() => {
                               const sNow = phaseStatus[key];
                               if (!sNow || !ph?.id) return;
-                              fetch('https://mycrosscoach-production.up.railway.app/api/progress', {
+                              api('https://mycrosscoach-production.up.railway.app/api/progress', {
                                 method : 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body   : JSON.stringify({
