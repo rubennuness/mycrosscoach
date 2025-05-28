@@ -13,6 +13,13 @@ function ProfilePage() {
   /* carrega 1-RM ou outras estatísticas */
 useEffect(() => {
   if(!user.id) return;
+  fetch(`https://mycrosscoach-production.up.railway.app/api/users/${user.id}`)
+   .then(r => r.json())
+   .then(full => {
+     setProfile(full);
+     localStorage.setItem('user', JSON.stringify(full));
+   })
+   .catch(()=>{});
 
   fetch(`https://mycrosscoach-production.up.railway.app/api/metrics/${user.id}`)
     .then(r => r.json())
