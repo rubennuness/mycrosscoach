@@ -28,10 +28,13 @@ router.put('/:id', async (req,res)=>{
    };
 
     Object.entries(map).forEach(([col,val])=>{
-      if(val !== undefined && VALID_COLS.includes(col)){
-        fields.push(`\`${col}\` = ?`);
-        values.push(val);
-      }
+     if (val === undefined || !VALID_COLS.includes(col)) return;
+
+  // strings vazias ⇒ NULL   (evita problemas com ENUM / NOT NULL)
+  if (val === '') return;   
+
+  fields.push(`\`${col}\` = ?`);
+  values.push(v);
     });
     if(fields.length === 0)                    // nada para alterar
       return res.status(400).json({error:'No data to update'});

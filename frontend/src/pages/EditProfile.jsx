@@ -27,11 +27,14 @@ export default function EditProfile() {
   const save = async e => {
     e.preventDefault();
     try{
+        const body = Object.fromEntries(
+  Object.entries(form).filter(([_, v]) => v !== '')
+);
       await fetch(
         `https://mycrosscoach-production.up.railway.app/api/users/${stored.id}`,
         { method : 'PUT',
           headers: { 'Content-Type':'application/json' },
-          body   : JSON.stringify(form) }
+          body   : JSON.stringify(body) }
       );
       /* actualiza cache local e volta atrás */
       localStorage.setItem('user', JSON.stringify({ ...stored, ...form }));
