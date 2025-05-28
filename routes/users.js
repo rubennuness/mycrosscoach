@@ -2,10 +2,15 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db');
 const multer  = require('multer');
+const path    = require('path');
+const fs      = require('fs');
 
+
+const uploadDir = path.join(__dirname, '..', 'uploads'); //  …/app/uploads
+fs.mkdirSync(uploadDir, { recursive: true });            // cria se faltar
 
 const storage = multer.diskStorage({
-  destination : (_, __, cb) => cb(null, 'uploads'),
+  destination : (_, __, cb) => cb(null, uploadDir),
   filename    : (_, file, cb) => {
     // ex.: avatar_123_1675234534534.jpg
     const unique = Date.now() + '_' + Math.round(Math.random()*1e5);
