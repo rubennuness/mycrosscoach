@@ -31,7 +31,7 @@ router.put('/:id', async (req,res)=>{
      if (val === undefined || !VALID_COLS.includes(col)) return;
 
   // strings vazias ⇒ NULL   (evita problemas com ENUM / NOT NULL)
-  if (val === '') return;   
+  const v = val === '' ? null : val;
 
   fields.push(`\`${col}\` = ?`);
   values.push(v);
