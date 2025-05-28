@@ -311,7 +311,7 @@ const getDateForDay = (dayName, mondayStr) => {
    }
    return (
      <div key={i} style={{marginTop:2,marginLeft:14}}>
-       {r.sets} x {r.reps}  {fmt(r.pLow)}-{fmt(r.pHigh)} %{kg}
+    {r.sets} x {r.reps}  {fmt(r.pLow)}-{fmt(r.pHigh)} %{kg}
      </div>
    );
  })}
