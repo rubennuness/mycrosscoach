@@ -1,19 +1,36 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../db');
+const multer  = require('multer');
 
+
+const storage = multer.diskStorage({
+  destination : (_, __, cb) => cb(null, 'uploads'),
+  filename    : (_, file, cb) => {
+    // ex.: avatar_123_1675234534534.jpg
+    const unique = Date.now() + '_' + Math.round(Math.random()*1e5);
+    const ext    = file.originalname.split('.').pop();  // “jpg”, “png”…
+    cb(null, `avatar_${unique}.${ext}`);
+  }
+});
+const upload = multer({ storage });
 // obter lista de todos os utilizadores
 router.get('/', async (req, res) => { try { const [rows] = await pool.query('SELECT * FROM users'); res.json(rows); } catch (error) { res.status(500).json({ error: error.message }); } });
 
 // criar um novo utilizador 
 router.post('/', async (req, res) => { try { const { nome, email } = req.body; const [result] = await pool.query( 'INSERT INTO users (nome, email) VALUES (?, ?)', [nome, email] ); res.json({ id: result.insertId, nome, email }); } catch (error) { res.status(500).json({ error: error.message }); } });
 
-router.put('/:id', async (req,res)=>{
+router.put('/:id', upload.single('avatar'), async (req,res)=>{
   try{
     const VALID_COLS = ['name','username','gender','phone','avatar_url','email'];
     const { id } = req.params;
-    const { name, username, gender, phone, avatar_url, email } = req.body;
+    const { name, username, gender, phone, email } = req.body;
 
+
+    // se veio um ficheiro, gera-se a URL pública
+    const avatar_url = req.file
+      ? `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`
+      : undefined;
     /* constrói SET dinâmico → só altera o que chegar no body */
     const fields = [];
     const values = [];

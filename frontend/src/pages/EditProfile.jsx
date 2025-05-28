@@ -17,6 +17,7 @@ export default function EditProfile() {
     email : stored.email    || '',
     avatar_url: stored.avatar_url || ''
   });
+  const [avatarFile, setAvatarFile] = useState(null);
 
   
   /* altera qualquer campo */
@@ -27,17 +28,23 @@ export default function EditProfile() {
   const save = async e => {
     e.preventDefault();
     try{
-        const body = Object.fromEntries(
-  Object.entries(form).filter(([_, v]) => v !== '')
-);
-      await fetch(
-        `https://mycrosscoach-production.up.railway.app/api/users/${stored.id}`,
-        { method : 'PUT',
-          headers: { 'Content-Type':'application/json' },
-          body   : JSON.stringify(body) }
-      );
+      const fd = new FormData();
+      Object.entries(form).forEach(([k,v]) => fd.append(k,v));
+      if (avatarFile) fd.append('avatar', avatarFile);   // ficheiro mesmo!
+
+      await fetch(`https://mycrosscoach-production.up.railway.app/api/users/${stored.id}`, {
+        method : 'PUT',
+        body   : fd          // **nunca definir Content-Type aqui**
+      });
       /* actualiza cache local e volta atrás */
-      localStorage.setItem('user', JSON.stringify({ ...stored, ...form }));
+      localStorage.setItem(
+        'user',
+        JSON.stringify({
+          ...stored,
+          ...form,
+          ...(avatarFile && { avatar_url: form.avatar_url })
+        })
+      );
       navigate(-1);
     }catch{
       alert('Erro ao guardar');
@@ -48,9 +55,9 @@ export default function EditProfile() {
  const pickAvatar = e =>{
    const file = e.target.files?.[0];
    if(!file) return;
-   const reader = new FileReader();
-   reader.onload = ev => setForm(f=>({...f,avatar_url: ev.target.result}));
-   reader.readAsDataURL(file);          /* ← gera data:image/...;base64, */
+   setAvatarFile(file);
+   // preview imediato
+   setForm(f => ({...f, avatar_url: URL.createObjectURL(file)}));
  };
   return (
     <div className="edit-wrapper">
