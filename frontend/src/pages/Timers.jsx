@@ -158,7 +158,7 @@ useEffect(()=>{
       },1000);
     }
   };
-
+  }
   const resume = () => {
     if (!paused) return;
   
@@ -346,4 +346,4 @@ useEffect(()=>{
       </div>
     </div>
   );
-}}
+}
