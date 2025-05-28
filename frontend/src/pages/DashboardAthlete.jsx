@@ -151,21 +151,17 @@ const shiftWeek = (delta) => {               // delta = ±7 (em dias)
     localStorage.removeItem('user');
     navigate('/login');
   };
-    /* ---------- util: devolve a Date para “Segunda”, “Terça”… ---------- */
-      const getDateForDay = (dayName) => {
-          const map = {
-            'Domingo': 7, 'Segunda': 1, 'Terça': 2,
-            'Quarta' : 3, 'Quinta' : 4, 'Sexta': 5, 'Sábado': 6
-          };
-    const today   = new Date();
-    const todayIdx= today.getDay();            // 0-Dom … 6-Sáb
-    const target  = map[dayName];
-    if (target == null) return today;
-    const diff    = target - todayIdx; // dias até chegar ao alvo
-    const result  = new Date(today);
-    result.setDate(today.getDate() + diff);
-    return result;
-  };
+/* devolve a Date do dia da semana dentro de *weekStart* (segunda-feira ISO) */
+const getDateForDay = (dayName, mondayStr) => {
+  const offset = {                    // distância em dias a partir de segunda
+    'Segunda': 0, 'Terça': 1, 'Quarta': 2,
+    'Quinta' : 3, 'Sexta': 4, 'Sábado': 5, 'Domingo': 6
+  }[dayName];
+  if (offset == null) return new Date(mondayStr);
+  const d = new Date(mondayStr);      // base = semana actualmente seleccionada
+  d.setDate(d.getDate() + offset);
+  return d;
+};
 
   /* ---------- JSX original (inalterado) ---------- */
   return (
@@ -208,7 +204,7 @@ const shiftWeek = (delta) => {               // delta = ±7 (em dias)
       setHeaderDate('');         // limpa data no header
     } else {
       setSelectedDay(day);       // abre
-      const dt = getDateForDay(day);
+      const dt = getDateForDay(day, weekStart);
       setHeaderDate(format(dt, 'MMM dd yyyy'));
     }
           }}
