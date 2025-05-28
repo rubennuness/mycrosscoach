@@ -186,6 +186,25 @@ export default function PlanPage() {
                           onChange={e=>{
                             const a=[...phases];a[i].text=e.target.value;setPhases(a);
                           }}/>
+
+                {/* ▼ feedback do atleta ------------------------- */}
+                {ph.status && ph.status !== 'pending' && (
+                  <span
+                    className={`badge ${ph.status}`}
+                    style={{ marginTop: 6 }}
+                  >
+                    {ph.status === 'completed' ? 'Completed' : 'Missed'}
+                  </span>
+                )}
+
+                {ph.comment && (
+                  <div
+                    className="comment-from-athlete"
+                    style={{ marginTop: 6, fontStyle: 'italic' }}
+                 >
+                    “{ph.comment}”
+                  </div>
+                )}
               </div>
             ))}
 

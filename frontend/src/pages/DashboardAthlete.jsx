@@ -251,20 +251,44 @@ const shiftWeek = (delta) => {               // delta = ±7 (em dias)
                       const desc = typeof ph === 'string'
                  ? ph                            // plano antigo (string simples)
                  : (ph.text || '');              // plano novo (objecto)
+                      /* ► cálculo da(s) carga(s) ------------------- */
+                      const rm   = oneRM[ph.title];
+                      let  loadTxt = '';
+                      if (rm && (ph.pLow || ph.pHigh)) {
+                        const l = Math.round(rm * (ph.pLow || ph.pHigh) / 100);
+                        if (ph.pHigh && ph.pHigh !== ph.pLow) {
+                          const h = Math.round(rm * ph.pHigh / 100);
+                          loadTxt = `→ ${l}-${h} kg`;
+                        } else {
+                          loadTxt = `→ ${l} kg`;
+                        }
+                      }
+
                       return (
+                        
                         <div key={idx} className="phase-box">
                           <strong>{ph.title || `Fase ${idx+1}`}</strong>
 {(ph.pLow || ph.pHigh) && (
   <div style={{marginTop:4}}>
     {ph.sets || '?'} x {ph.reps || '?'}&nbsp;
     {ph.pLow || '?'} % – {ph.pHigh || '?'} %
+    {loadTxt && (' ' + loadTxt)}
   </div>
 )}
-{Array.isArray(ph.ranges) && ph.ranges.map((r,i)=>(
-    <div key={i} style={{marginTop:2,marginLeft:14,fontSize:'.92rem'}}>
-      {r.sets} x {r.reps}  {r.percent}%
-    </div>
- ))}
+{Array.isArray(ph.ranges) && ph.ranges.map((r,i) => {
+   const rm2 = oneRM[ph.title];
+   let  kg   = '';
+   if (rm2 && (r.pLow || r.pHigh)) {
+     const l = Math.round(rm2 * (r.pLow || r.pHigh) / 100);
+     kg = ` → ${l}${r.pHigh && r.pHigh !== r.pLow ? '-'+
+          Math.round(rm2 * r.pHigh / 100) : ''} kg`;
+   }
+   return (
+     <div key={i} style={{marginTop:2,marginLeft:14,fontSize:'.92rem'}}>
+       {r.sets} x {r.reps}  {r.pLow || '?'}-{r.pHigh || '?'} %{kg}
+     </div>
+   );
+ })}
 <pre style={{ whiteSpace:'pre-wrap', marginTop:6 }}>
   {desc}
 </pre>
