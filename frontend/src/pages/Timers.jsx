@@ -60,7 +60,28 @@ useEffect(()=>{
     stop();
     setRunning(true);
     setPaused(false);
-    let secs, left, work=true;
+    let secs, left, work = true;
+
+  /* ──────── 1. Pré-countdown de 10 s ──────── */
+  let prep = 10;
+  setDisplay(`START IN ${prep}`);
+
+  intervalRef.current = setInterval(() => {
+    if (--prep > 0) {
+      setDisplay(`START IN ${prep}`);
+      return;
+    }
+
+    /* terminou o “pré-start” → arranca o modo real */
+    clearInterval(intervalRef.current);
+
+    /* função local helper; contém o código exacto
+       que já tinhas em cada modo (“AMRAP”, “FOR TIME”…). */
+    runWorkout();
+  }, 1000);
+
+  /* ──────── função que contém toda a lógica anterior ──────── */
+  function runWorkout () {
 
     /* ---------- AMRAP ---------- */
     if(mode==='amrap'){
@@ -325,4 +346,4 @@ useEffect(()=>{
       </div>
     </div>
   );
-}
+}}
