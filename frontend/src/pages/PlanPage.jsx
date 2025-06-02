@@ -129,6 +129,22 @@ export default function PlanPage() {
 
                 {/* bloco principal ------------------------------------------------ */}
                 <div className="mini-row">
+                   <select
+    value={ph.title}
+    onChange={e => {
+      const a = [...phases];
+      a[i].title = e.target.value;      // mantém title sincronizado
+      setPhases(a);
+    }}
+    className="exercise-select"
+  >
+    <option value="">Exercício</option>
+    {metrics.map(m => (
+      <option key={m.name} value={m.name}>
+        {m.name}
+      </option>
+    ))}
+  </select>
                   <input type="number" min="0" placeholder="Sets"
                          value={ph.sets||''}
                          onChange={e=>{

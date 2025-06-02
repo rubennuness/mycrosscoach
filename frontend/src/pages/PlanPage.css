@@ -157,3 +157,14 @@
 
 
 .comment-from-athlete { color:#ddd; }
+
+/* select de exercício na mini-row */
+.exercise-select {
+  flex: 1 1 120px;     /* comporta-se como os restantes inputs */
+  max-width: 140px;
+  background: #2c2c2c;
+  border: 1px solid #333;
+  color: #fff;
+  border-radius: 4px;
+  padding: 6px;
+}
