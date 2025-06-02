@@ -48,17 +48,35 @@ export default function PlanPage() {
       .then(d=>setAthleteName(d.name||''));
   },[athleteId,athleteName]);
 
+
+  const fmtPercent = v =>
+  v === null || v === undefined || v === ''
+    ? ''
+    : parseFloat(v).toString();  
   // carrega fases sempre que muda dia / semana / atleta
   useEffect(()=>{
     if(!athleteId||!selectedDay) return;
     fetch(`https://mycrosscoach-production.up.railway.app/api/plans/day/${athleteId}/${selectedDay}?week=${weekStart}`)
       .then(r=>r.json())
       .then(d=>{
-        if(d.phases && d.phases.length) setPhases(d.phases);
+        if(d.phases && d.phases.length) setPhases(
+     d.phases.map(p => ({
+       ...p,
+       pLow : fmtPercent(p.pLow),
+       pHigh: fmtPercent(p.pHigh),
+       ranges: (p.ranges || []).map(r => ({
+         ...r,
+         pLow : fmtPercent(r.pLow),
+         pHigh: fmtPercent(r.pHigh)
+       }))
+     }))
+   );
         else setPhases([{title:'',text:'',sets:'',reps:'',percent:'',ranges:[]}]);
       })
       .catch(console.error);
   },[athleteId,selectedDay,weekStart]);
+
+  
 
   /* ───────── handlers ───────── */
 
@@ -150,9 +168,11 @@ export default function PlanPage() {
                            const a=[...phases];a[i].pHigh=e.target.value;setPhases(a);
                          }}/>
                   {/* botão + */}
-                  <button type="button" className="plus-btn" onClick={()=>addRange(i)}>
-                    +
-                  </button>
+                  {ph.ranges.length === 0 && (
+    <button type="button" className="plus-btn" onClick={() => addRange(i)}>
+      +
+    </button>
+  )}
                 </div>
 
                 {/* blocos extra ---------------------------------------------------- */}
@@ -178,6 +198,15 @@ export default function PlanPage() {
                            onChange={e=>{
                              const a=[...phases];a[i].ranges[j].pHigh=e.target.value;setPhases(a);
                            }}/>
+                           {j === ph.ranges.length - 1 && (
+      <button
+        type="button"
+        className="plus-btn"
+        onClick={() => addRange(i)}
+      >
+        +
+      </button>
+    )}
                   </div>
                 ))}
 
