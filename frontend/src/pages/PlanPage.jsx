@@ -23,9 +23,7 @@ export default function PlanPage() {
   const [weekStart,setWeekStart]    = useState(mondayIso);
 
   const [phases , setPhases ] = useState([{
-    title:'',            
-    exercise:'',        
-    text:'', sets:'', reps:'', percent:'', ranges:[]
+    title:'', text:'', sets:'', reps:'', percent:'', ranges:[]
   }]);
   const [metrics,setMetrics]       = useState([]);
   const [toast , setToast ]        = useState('');
@@ -56,10 +54,7 @@ export default function PlanPage() {
     fetch(`https://mycrosscoach-production.up.railway.app/api/plans/day/${athleteId}/${selectedDay}?week=${weekStart}`)
       .then(r=>r.json())
       .then(d=>{
-        if (d.phases && d.phases.length)
-          setPhases(d.phases.map(p=>({...p,
-            exercise: p.exercise ?? p.title ?? ''   // fallback
-          })));
+        if(d.phases && d.phases.length) setPhases(d.phases);
         else setPhases([{title:'',text:'',sets:'',reps:'',percent:'',ranges:[]}]);
       })
       .catch(console.error);
@@ -68,14 +63,11 @@ export default function PlanPage() {
   /* ───────── handlers ───────── */
 
   const addPhase   = () =>
-    setPhases(p=>[...p,{title:'',exercise:'',text:'',sets:'',reps:'',percent:'',ranges:[]}]);
+    setPhases(p=>[...p,{title:'',text:'',sets:'',reps:'',percent:'',ranges:[]}]);
 
   const addRange = i => {
     const a = [...phases];
-    a[i].ranges.push({            
-   exercise: a[i].exercise || '',
-   sets:'', reps:'', pLow:'', pHigh:''
- });
+    a[i].ranges.push({ sets:'', reps:'', pLow:'', pHigh:'' });
     setPhases(a);
   };
 
@@ -137,20 +129,6 @@ export default function PlanPage() {
 
                 {/* bloco principal ------------------------------------------------ */}
                 <div className="mini-row">
-                   <input
-    className="exercise-input"
-    placeholder="Exercício"
-    value={ph.exercise || ''}
-    onChange={e=>{
-      const a=[...phases];
-      a[i].exercise = e.target.value;
-      setPhases(a);
-    }}
-    list={`dl-ex-${i}-main`}
-  />
-  <datalist id={`dl-ex-${i}-main`}>
-    {metrics.map(m => <option key={m.name} value={m.name}/>)}
-  </datalist>
                   <input type="number" min="0" placeholder="Sets"
                          value={ph.sets||''}
                          onChange={e=>{
@@ -172,32 +150,14 @@ export default function PlanPage() {
                            const a=[...phases];a[i].pHigh=e.target.value;setPhases(a);
                          }}/>
                   {/* botão + */}
-                  {ph.ranges.length === 0 && (
-    <button
-      type="button"
-      className="plus-btn"
-      onClick={()=>addRange(i)}
-    >+</button>
-  )}
+                  <button type="button" className="plus-btn" onClick={()=>addRange(i)}>
+                    +
+                  </button>
                 </div>
 
                 {/* blocos extra ---------------------------------------------------- */}
                 {ph.ranges.map((r,j)=>(
                   <div key={j} className="mini-row sub">
-                    <input
-    className="exercise-input"
-    placeholder="Exercício"
-    value={r.exercise || ''}
-    onChange={e=>{
-      const a=[...phases];
-      a[i].ranges[j].exercise = e.target.value;
-      setPhases(a);
-    }}
-    list={`dl-ex-${i}-${j}`}
-  />
-  <datalist id={`dl-ex-${i}-${j}`}>
-    {metrics.map(m => <option key={m.name} value={m.name}/>)}
-  </datalist>
                     <input type="number" min="0" placeholder="Sets"
                            value={r.sets||''}
                            onChange={e=>{
@@ -218,13 +178,6 @@ export default function PlanPage() {
                            onChange={e=>{
                              const a=[...phases];a[i].ranges[j].pHigh=e.target.value;setPhases(a);
                            }}/>
-                            {j === ph.ranges.length - 1 && (
-    <button
-      type="button"
-      className="plus-btn"
-      onClick={()=>addRange(i)}
-    >+</button>
-  )}
                   </div>
                 ))}
 
