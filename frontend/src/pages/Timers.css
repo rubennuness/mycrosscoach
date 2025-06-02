@@ -60,3 +60,35 @@
   left: 15px;
   z-index: 10;
 }
+
+.ring-wrapper{
+  position:relative; width:240px; height:240px;
+  margin:30px auto;
+}
+.ring{
+  transform:rotate(-90deg);   /* 0 graus = topo */
+}
+.ring-bg{
+  fill:none; stroke:#333; stroke-width:12;
+}
+.ring-progress{
+  fill:none; stroke:#7B6DFF; stroke-width:12;
+  stroke-linecap:round;
+  stroke-dasharray:690;       /* 2π·r */
+  stroke-dashoffset:690;      /* 100 % vazio */
+  transition:stroke-dashoffset 1s linear;
+}
+.ring-center{
+  position:absolute; inset:0;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+}
+.ring-center .label{
+  font-size:.7rem; letter-spacing:1px; color:#bbb;
+}
+.ring-center .time{
+  font-size:3rem; font-weight:700; margin:4px 0;
+}
+.ring-center .sub{
+  font-size:.65rem; letter-spacing:2px; color:#777;
+}

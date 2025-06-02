@@ -27,7 +27,8 @@ export default function Timers(){
   const [tabWork,setTabWork]     = useState(20);
   const [tabRest,setTabRest]     = useState(10);
   const [tabRounds,setTabRounds] = useState(8);
-
+  const [prog, setProg] = useState(1);   // 1 = círculo cheio
+  const totalRef        = useRef(1);     // duração (seg) do bloco actual
   /* sempre que muda o modo, limpa timers pendentes
    (evita contagens “fantasma”)                        */
 useEffect(()=>{
@@ -75,8 +76,6 @@ useEffect(()=>{
     /* terminou o “pré-start” → arranca o modo real */
     clearInterval(intervalRef.current);
 
-    /* função local helper; contém o código exacto
-       que já tinhas em cada modo (“AMRAP”, “FOR TIME”…). */
     runWorkout();
   }, 1000);
 
@@ -86,6 +85,8 @@ useEffect(()=>{
     /* ---------- AMRAP ---------- */
     if(mode==='amrap'){
         secsRef.current = amrapMin * 60;
+        totalRef.current     = secsRef.current; 
+      setProg(1);
       setAmrapCnt(0);                       // reset contador
       setDisplay(`${fmt(amrapMin)}:00`);
       intervalRef.current = setInterval(() => {
@@ -98,8 +99,11 @@ useEffect(()=>{
     /* ---------- FOR TIME ---------- */
     if(mode==='forTime'){
         secsRef.current = 0;
+        totalRef.current = 60;        // enche a cada minuto
+      setProg(0);
       setFtCur(1);
       setDisplay('00:00');
+      setProg( (secsRef.current % 60) / 60 );
       intervalRef.current = setInterval(() => {
           secsRef.current++;
          setDisplay(`${fmt(Math.floor(secsRef.current/60))}:${fmt(secsRef.current%60)}`);
@@ -111,14 +115,18 @@ useEffect(()=>{
       if (mode === 'emom') {
             let seconds   = 60;        // começamos a exibir “60”
             let current   = 1;         // ronda actual
+            totalRef.current = 60;  
             secsRef.current = emomMin * 60;
+              
         
             setRound(current);
+            setProg(1);
             setDisplay('60');
         
             intervalRef.current = setInterval(() => {
                   secsRef.current--;           // ↓ 1 segundo
                   seconds--;              // ↓ 1 segundo
+                  setProg(seconds / 60);  
         
               /* Terminou o minuto --------------------------------- */
               if (seconds < 0) {
@@ -142,7 +150,10 @@ useEffect(()=>{
 
     /* ---------- TABATA ---------- */
     if(mode==='tabata'){
+        totalRef.current = tabWork;   // primeiro bloco = trabalho
         secsRef.current = left = tabWork;
+        
+        setProg(1);
       setRound(1);
       setDisplay(fmt(left));
       intervalRef.current=setInterval(()=>{
@@ -210,6 +221,7 @@ useEffect(()=>{
   };
   useEffect(()=>()=>clearInterval(intervalRef.current),[]);
 
+
   /* ---------- UI ---------- */
   return(
     <div className="timers-container">
@@ -276,6 +288,28 @@ useEffect(()=>{
 
       {/* display */}
       <div className={`timer-display ${paused ? 'paused' : ''}`}></div>
+      <div className="ring-wrapper">
+  <svg className="ring" width="240" height="240">
+    {/* fundo cinza */}
+    <circle
+      className="ring-bg"
+      r="110" cx="120" cy="120"
+    />
+    {/* arco activo (stroke-dashoffset é calculado em runtime) */}
+    <circle
+      className="ring-progress"
+      r="110" cx="120" cy="120"
+      style={{ strokeDashoffset: 690 * (1 - prog) }}   /* 690 ≈ 2π·110 */
+    />
+  </svg>
+
+  {/* texto sobreposto */}
+  <div className="ring-center">
+    <span className="label">REMAINING&nbsp;TIME</span>
+    <span className="time">{display}</span>
+    <span className="sub">MIN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SEC</span>
+  </div>
+</div>
       <div className="timer-display">
         {display}
         {mode==='amrap' && (
