@@ -15,6 +15,10 @@ export default function Timers(){
   const intervalRef              = useRef(null);
   const restRef     = useRef(null);
   const secsRef    = useRef(0); 
+  const isPrep   = display.startsWith('START IN');      // estamos nos 10 s iniciais?
+  const seconds  = isPrep ? display.split(' ').pop()    // "2"
+                        : display;                    // "09:58"
+  const ringLabel = isPrep ? 'GET READY' : 'REMAINING TIME';
 
   /* ---------- inputs ---------- */
   const [amrapMin,setAmrapMin]   = useState(10);
@@ -66,10 +70,12 @@ useEffect(()=>{
   /* ──────── 1. Pré-countdown de 10 s ──────── */
   let prep = 10;
   setDisplay(`START IN ${prep}`);
+  setProg(1);
 
   intervalRef.current = setInterval(() => {
     if (--prep > 0) {
       setDisplay(`START IN ${prep}`);
+      setProg(prep / 10);
       return;
     }
 
@@ -103,9 +109,9 @@ useEffect(()=>{
       setProg(0);
       setFtCur(1);
       setDisplay('00:00');
-      setProg( (secsRef.current % 60) / 60 );
       intervalRef.current = setInterval(() => {
           secsRef.current++;
+          setProg((secsRef.current % 60) / 60);
          setDisplay(`${fmt(Math.floor(secsRef.current/60))}:${fmt(secsRef.current%60)}`);
       },1000);
       return;
@@ -310,6 +316,7 @@ useEffect(()=>{
     <span className="sub">MIN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SEC</span>
   </div>
 </div>
+{!isPrep && (
       <div className="timer-display">
         {display}
         {mode==='amrap' && (
@@ -322,7 +329,7 @@ useEffect(()=>{
         {mode==='emom'  && <span className="round">Min&nbsp;{round}</span>}
         {mode==='tabata'&& <span className="round">Ronda&nbsp;{round}</span>}
       </div>
-
+)}
       {/* botões extra AMRAP / FOR TIME */}
       {mode==='amrap' && running && (
         <button
