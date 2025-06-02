@@ -23,7 +23,9 @@ export default function PlanPage() {
   const [weekStart,setWeekStart]    = useState(mondayIso);
 
   const [phases , setPhases ] = useState([{
-    title:'', text:'', sets:'', reps:'', percent:'', ranges:[]
+    title:'',            
+    exercise:'',        
+    text:'', sets:'', reps:'', percent:'', ranges:[]
   }]);
   const [metrics,setMetrics]       = useState([]);
   const [toast , setToast ]        = useState('');
@@ -54,7 +56,10 @@ export default function PlanPage() {
     fetch(`https://mycrosscoach-production.up.railway.app/api/plans/day/${athleteId}/${selectedDay}?week=${weekStart}`)
       .then(r=>r.json())
       .then(d=>{
-        if(d.phases && d.phases.length) setPhases(d.phases);
+        if (d.phases && d.phases.length)
+          setPhases(d.phases.map(p=>({...p,
+            exercise: p.exercise ?? p.title ?? ''   // fallback
+          })));
         else setPhases([{title:'',text:'',sets:'',reps:'',percent:'',ranges:[]}]);
       })
       .catch(console.error);
@@ -63,7 +68,7 @@ export default function PlanPage() {
   /* ───────── handlers ───────── */
 
   const addPhase   = () =>
-    setPhases(p=>[...p,{title:'',text:'',sets:'',reps:'',percent:'',ranges:[]}]);
+    setPhases(p=>[...p,{title:'',exercise:'',text:'',sets:'',reps:'',percent:'',ranges:[]}]);
 
   const addRange = i => {
     const a = [...phases];
@@ -129,22 +134,22 @@ export default function PlanPage() {
 
                 {/* bloco principal ------------------------------------------------ */}
                 <div className="mini-row">
-                   <select
-    value={ph.title}
-    onChange={e => {
-      const a = [...phases];
-      a[i].title = e.target.value;      // mantém title sincronizado
-      setPhases(a);
-    }}
-    className="exercise-select"
-  >
-    <option value="">Exercício</option>
-    {metrics.map(m => (
-      <option key={m.name} value={m.name}>
-        {m.name}
-      </option>
-    ))}
-  </select>
+                   <input
+  className="exercise-input"
+  placeholder="Exercício"
+  value={ph.exercise || ''}
+  onChange={e=>{
+    const a = [...phases];
+    a[i].exercise = e.target.value;   
+    setPhases(a);
+  }}
+  list={`dl-ex2-${i}`}
+/>
+<datalist id={`dl-ex2-${i}`}>
+  {metrics.map(m => (
+    <option key={m.name} value={m.name}/>
+  ))}
+</datalist>
                   <input type="number" min="0" placeholder="Sets"
                          value={ph.sets||''}
                          onChange={e=>{

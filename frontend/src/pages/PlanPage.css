@@ -159,12 +159,12 @@
 .comment-from-athlete { color:#ddd; }
 
 /* select de exercício na mini-row */
-.exercise-select{
-  flex: 0 0 80px;    /* não cresce, não encolhe, base = 80 px   */
-  max-width: 80px;   /* igual ao .mini-row input                */
-  background: #2c2c2c;
-  border: 1px solid #333;
-  color: #fff;
-  border-radius: 4px;
-  padding: 6px;
+.exercise-input{
+  flex: 0 0 80px;      /* igual aos outros inputs */
+  max-width: 80px;
+  background:#2c2c2c;
+  border:1px solid #333;
+  color:#fff;
+  border-radius:4px;
+  padding:6px;
 }
