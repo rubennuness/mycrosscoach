@@ -139,16 +139,6 @@ export default function PlanPage() {
           <form onSubmit={savePlan} className="plan-form">
 
             <div className="week-picker-row">
-  {/* seta ‹ anterior semana */}
-  <button
-    type="button"
-    className="cal-btn"
-    onClick={() => setWeekStart(
-      format(addWeeks(new Date(weekStart), -1), 'yyyy-MM-dd')
-    )}
-  >
-    ‹
-  </button>
 
   {/* input date – mostra sempre a segunda-feira ISO */}
   <input
@@ -164,17 +154,6 @@ export default function PlanPage() {
       })()
     )}
   />
-
-  {/* seta › próxima semana */}
-  <button
-    type="button"
-    className="cal-btn"
-    onClick={() => setWeekStart(
-      format(addWeeks(new Date(weekStart),  1), 'yyyy-MM-dd')
-    )}
-  >
-    ›
-  </button>
 </div>
             {/* ---------- Semana + dia exactamente iguais ---------- */}
 
