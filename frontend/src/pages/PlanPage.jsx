@@ -28,6 +28,10 @@ export default function PlanPage() {
   }]);
   const [metrics,setMetrics]       = useState([]);
   const [toast , setToast ]        = useState('');
+  const daysPT = [
+  'Segunda', 'Terça', 'Quarta',
+  'Quinta',  'Sexta', 'Sábado', 'Domingo'
+];
 
   /* ───────── auxiliares ───────── */
   const handleToast = msg => { setToast(msg); setTimeout(()=>setToast(''),5000); };
@@ -139,7 +143,7 @@ export default function PlanPage() {
           <form onSubmit={savePlan} className="plan-form">
 
             <div className="week-picker-row">
-
+<label style={{marginTop:16, display:'block'}}>Choose the week:</label>
   {/* input date – mostra sempre a segunda-feira ISO */}
   <input
     type="date"
@@ -155,6 +159,17 @@ export default function PlanPage() {
     )}
   />
 </div>
+
+<label style={{marginTop:16, display:'block'}}>Day of the week:</label>
+<select
+  className="day-select"
+  value={selectedDay}
+  onChange={e => setSelectedDay(e.target.value)}
+>
+  {daysPT.map(d => (
+    <option key={d} value={d}>{d}</option>
+  ))}
+</select>
             {/* ---------- Semana + dia exactamente iguais ---------- */}
 
             <h3>Fases do treino</h3>
