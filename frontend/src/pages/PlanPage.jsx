@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import calendarIcon from '../assets/calendar.png';
+import { format, addWeeks } from 'date-fns';
 import BackButton   from '../components/BackButton';
 import Toast        from '../components/Toast';
 import './PlanPage.css';
@@ -136,6 +137,45 @@ export default function PlanPage() {
           </h1>
 
           <form onSubmit={savePlan} className="plan-form">
+
+            <div className="week-picker-row">
+  {/* seta ‹ anterior semana */}
+  <button
+    type="button"
+    className="cal-btn"
+    onClick={() => setWeekStart(
+      format(addWeeks(new Date(weekStart), -1), 'yyyy-MM-dd')
+    )}
+  >
+    ‹
+  </button>
+
+  {/* input date – mostra sempre a segunda-feira ISO */}
+  <input
+    type="date"
+    value={weekStart}
+    onChange={e => setWeekStart(
+      /* força para segunda-feira da semana escolhida */
+      (() => {
+        const d = new Date(e.target.value);
+        const wd = d.getDay() || 7;
+        d.setDate(d.getDate() - wd + 1);
+        return format(d, 'yyyy-MM-dd');
+      })()
+    )}
+  />
+
+  {/* seta › próxima semana */}
+  <button
+    type="button"
+    className="cal-btn"
+    onClick={() => setWeekStart(
+      format(addWeeks(new Date(weekStart),  1), 'yyyy-MM-dd')
+    )}
+  >
+    ›
+  </button>
+</div>
             {/* ---------- Semana + dia exactamente iguais ---------- */}
 
             <h3>Fases do treino</h3>
