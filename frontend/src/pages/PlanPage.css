@@ -159,8 +159,11 @@
 .comment-from-athlete { color:#ddd; }
 
 .day-select{
-  display:flex;
-  align-items:flex-end;
-  gap:24px;              /* era 12 px */
-  margin-bottom:18px;
+  width: 160px;          /* ⬅️  escolhe o valor que fica melhor, ex.: 160 px */
+  background:#2c2c2c;
+  border:1px solid #333;
+  color:#fff;
+  border-radius:4px;
+  padding:8px;
+  margin-bottom:15px;
 }
