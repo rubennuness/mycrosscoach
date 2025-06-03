@@ -141,9 +141,8 @@ export default function PlanPage() {
           </h1>
 
           <form onSubmit={savePlan} className="plan-form">
-
-            <div className="week-picker-row">
 <label style={{marginTop:16, display:'block'}}>Choose the week:</label>
+            <div className="week-picker-row">
   {/* input date – mostra sempre a segunda-feira ISO */}
   <input
     type="date"
