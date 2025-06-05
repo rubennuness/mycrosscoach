@@ -22,12 +22,15 @@ export default function Timers(){
 
   /* ---------- inputs ---------- */
   const [amrapMin,setAmrapMin]   = useState(10);
-  const [amrapCnt,setAmrapCnt]   = useState(0);      // NOVO – contador
+  const [amrapSets,setAmrapSets] = useState(1);   // ← nº de séries
+  const [amrapRest,setAmrapRest] = useState(30);
+  const [amrapCnt,setAmrapCnt]   = useState(0);
   const [ftRounds,setFtRounds]   = useState(5);      // FOR TIME – nº rondas alvo
   const [ftRest,setFtRest]       = useState(30);     // FOR TIME – descanso (s)
   const [ftCur,setFtCur]         = useState(1);      // ronda actual
 
   const [emomMin,setEmomMin]     = useState(12);
+  const [emomStep,setEmomStep]   = useState(60);
   const [tabWork,setTabWork]     = useState(20);
   const [tabRest,setTabRest]     = useState(10);
   const [tabRounds,setTabRounds] = useState(8);
@@ -89,18 +92,42 @@ useEffect(()=>{
   function runWorkout () {
 
     /* ---------- AMRAP ---------- */
-    if(mode==='amrap'){
-        secsRef.current = amrapMin * 60;
-        totalRef.current     = secsRef.current; 
+    if (mode === 'amrap') {
+  let setsLeft   = amrapSets;
+  let phase      = 'work';          // 'work' | 'rest'
+  secsRef.current = amrapMin * 60;  // contagem inicial
+  totalRef.current = secsRef.current;
+  setProg(1);
+  setAmrapCnt(0);
+  setDisplay(`${fmt(amrapMin)}:00`);
+
+  intervalRef.current = setInterval(() => {
+    secsRef.current--;
+    setDisplay(`${fmt(Math.floor(secsRef.current/60))}:${fmt(secsRef.current%60)}`);
+    setProg(secsRef.current / totalRef.current);
+
+    if (secsRef.current === 0) {
+      if (phase === 'work') {
+        /* terminou um AMRAP */
+        setAmrapCnt(c => c + 1);
+        setsLeft--;
+        if (setsLeft === 0) { stop(); return; }
+        /* passa ao REST */
+        phase            = 'rest';
+        secsRef.current  = amrapRest;
+        totalRef.current = amrapRest;
+        setDisplay(`REST ${amrapRest}s`);
+      } else {
+        /* terminou REST → próximo AMRAP */
+        phase            = 'work';
+        secsRef.current  = amrapMin * 60;
+        totalRef.current = secsRef.current;
+      }
       setProg(1);
-      setAmrapCnt(0);                       // reset contador
-      setDisplay(`${fmt(amrapMin)}:00`);
-      intervalRef.current = setInterval(() => {
-          if (--secsRef.current < 0) { stop(); return; }
-          setDisplay(`${fmt(Math.floor(secsRef.current/60))}:${fmt(secsRef.current%60)}`); 
-      },1000);
-      return;
     }
+  }, 1000);
+  return;
+}
 
     /* ---------- FOR TIME ---------- */
     if(mode==='forTime'){
@@ -118,41 +145,41 @@ useEffect(()=>{
     }
 
     /* ---------- EMOM ---------- */
-      if (mode === 'emom') {
-            let seconds   = 60;        // começamos a exibir “60”
-            let current   = 1;         // ronda actual
-            totalRef.current = 60;  
-            secsRef.current = emomMin * 60;
-              
-        
-            setRound(current);
-            setProg(1);
-            setDisplay('60');
-        
-            intervalRef.current = setInterval(() => {
-                  secsRef.current--;           // ↓ 1 segundo
-                  seconds--;              // ↓ 1 segundo
-                  setProg(seconds / 60);  
-        
-              /* Terminou o minuto --------------------------------- */
-              if (seconds < 0) {
-                current += 1;
-        
-               /* Dica extra: parar no nº de rondas escolhido */
-               if (current > emomMin) {   // emomMin == total de rondas
-              stop();                  // pára o cronómetro
-                  return;
-                }
-        
-                setRound(current);   // actualiza o «Min X»
-                seconds = 60;        // reinicia o contador do minuto
-              }
-        
-              setDisplay(fmt(seconds));
-            }, 1000);
-        
-            return;
-          }
+      /* ---------- EMOM ---------- */
+if (mode === 'emom') {
+  const totalSecs   = emomMin  * 60;   // duração total
+  const step        = emomStep;        // segundos por ronda
+  let   leftInStep  = step;            // contador interno
+  let   elapsed     = 0;               // tempo decorrido
+  let   currentRnd  = 1;
+
+  secsRef.current   = totalSecs;
+  totalRef.current  = step;
+  setRound(currentRnd);
+  setProg(1);
+  setDisplay(fmt(step));
+
+  intervalRef.current = setInterval(() => {
+    secsRef.current--;
+    leftInStep--;
+    elapsed++;
+
+    /* actualiza anel & display */
+    setProg(leftInStep / step);
+    setDisplay(fmt(leftInStep));
+
+    /* fim de uma ronda */
+    if (leftInStep === 0) {
+      currentRnd += 1;
+      if (elapsed >= totalSecs) { stop(); return; }
+      setRound(currentRnd);
+      leftInStep = step;
+      setProg(1);
+    }
+  }, 1000);
+
+  return;
+}
 
     /* ---------- TABATA ---------- */
     if(mode==='tabata'){
@@ -248,10 +275,22 @@ useEffect(()=>{
       {/* configuração */}
       <div className="config">
         {mode==='amrap' && (
-          <label>Minutos:
-            <input type="number" min="1" value={amrapMin}
-                   onChange={e=>setAmrapMin(+e.target.value)}/>
-          </label>
+          <>
+    <label>Séries:
+      <input type="number" min="1" value={amrapSets}
+             onChange={e=>setAmrapSets(+e.target.value)}/>
+    </label>
+
+    <label>Min/AMRAP:
+      <input type="number" min="1" value={amrapMin}
+             onChange={e=>setAmrapMin(+e.target.value)}/>
+    </label>
+
+    <label>Rest entre séries (s):
+      <input type="number" min="0" value={amrapRest}
+             onChange={e=>setAmrapRest(+e.target.value)}/>
+    </label>
+  </>
         )}
 
         {mode==='forTime' && (
@@ -268,10 +307,16 @@ useEffect(()=>{
         )}
 
         {mode==='emom' && (
-          <label>Minutos:
-            <input type="number" min="1" value={emomMin}
-                   onChange={e=>setEmomMin(+e.target.value)}/>
-          </label>
+          <>
+    <label>Total (min):
+      <input type="number" min="1" value={emomMin}
+             onChange={e=>setEmomMin(+e.target.value)}/>
+    </label>
+    <label>Intervalo (s):
+      <input type="number" min="10" value={emomStep}
+             onChange={e=>setEmomStep(+e.target.value)}/>
+    </label>
+  </>
         )}
 
         {mode==='tabata' && (
