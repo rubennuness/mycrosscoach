@@ -92,3 +92,9 @@
 .ring-center .sub{
   font-size:.65rem; letter-spacing:2px; color:#777;
 }
+
+.timer-info{
+  font-size:1rem;
+  margin-top:8px;
+  color:#bbb;
+}

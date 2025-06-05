@@ -370,18 +370,17 @@ if (mode === 'emom') {
   </div>
 </div>
 {!isPrep && (
-      <div className="timer-display">
-        {display}
-        {mode==='amrap' && (
-          <span className="round">Rondas:&nbsp;{amrapCnt}</span>)}
-        {mode==='forTime' && (
-          <span className="round">
-            Ronda&nbsp;{ftCur}/{ftRounds}
-          </span>
-        )}
-        {mode==='emom'  && <span className="round">Min&nbsp;{round}</span>}
-        {mode==='tabata'&& <span className="round">Ronda&nbsp;{round}</span>}
-      </div>
+  <div className="timer-info">
+    {mode==='amrap' && (
+      <span className="round">Rondas:&nbsp;{amrapCnt}</span>)}
+    {mode==='forTime' && (
+      <span className="round">
+        Ronda&nbsp;{ftCur}/{ftRounds}
+      </span>
+    )}
+    {mode==='emom'  && <span className="round">Min&nbsp;{round}</span>}
+    {mode==='tabata'&& <span className="round">Ronda&nbsp;{round}</span>}
+  </div>
 )}
       {/* botões extra AMRAP / FOR TIME */}
       {mode==='amrap' && running && (
@@ -393,7 +392,7 @@ if (mode === 'emom') {
         </button>
       )}
 
-      {mode==='forTime' && running && (
+      {mode==='forTime' && running && !isPrep && (
         <button
           className="btn secondary"
           style={{marginBottom:12}}
