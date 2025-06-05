@@ -364,8 +364,8 @@ if (mode === 'emom') {
 
   {/* texto sobreposto */}
   <div className="ring-center">
-    <span className="label">REMAINING&nbsp;TIME</span>
-    <span className="time">{display}</span>
+    <span className="label">{ringLabel}</span>
+    <span className="time">{isPrep ? seconds : display}</span>
     <span className="sub">MIN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SEC</span>
   </div>
 </div>
