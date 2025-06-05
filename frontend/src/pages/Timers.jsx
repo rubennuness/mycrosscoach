@@ -19,18 +19,25 @@ export default function Timers(){
   const seconds  = isPrep ? display.split(' ').pop()    // "2"
                         : display;                    // "09:58"
   const ringLabel = isPrep ? 'GET READY' : 'REMAINING TIME';
+  const toSec = v =>{
+  if (typeof v === 'number') return v;           // continua a funcionar c/ nº
+  if (!v.includes(':'))      return +v * 60;     // "2" → 120 s (minutos)
+  const [m,s] = v.split(':').map(Number);        // "1:30" → 1 e 30
+  return m*60 + (s||0);
+};
+const fmtMS = s => `${fmt(Math.floor(s/60))}:${fmt(s%60)}`; // 95 → "01:35"
 
   /* ---------- inputs ---------- */
   const [amrapMin,setAmrapMin]   = useState(10);
   const [amrapSets,setAmrapSets] = useState(1);   // ← nº de séries
-  const [amrapRest,setAmrapRest] = useState(30);
+  const [amrapRest,setAmrapRest] = useState('30');
   const [amrapCnt,setAmrapCnt]   = useState(0);
   const [ftRounds,setFtRounds]   = useState(5);      // FOR TIME – nº rondas alvo
   const [ftRest,setFtRest]       = useState(30);     // FOR TIME – descanso (s)
   const [ftCur,setFtCur]         = useState(1);      // ronda actual
 
   const [emomMin,setEmomMin]     = useState(12);
-  const [emomStep,setEmomStep]   = useState(60);
+  const [emomStep,setEmomStep]   = useState('60');
   const [tabWork,setTabWork]     = useState(20);
   const [tabRest,setTabRest]     = useState(10);
   const [tabRounds,setTabRounds] = useState(8);
@@ -114,9 +121,9 @@ useEffect(()=>{
         if (setsLeft === 0) { stop(); return; }
         /* passa ao REST */
         phase            = 'rest';
-        secsRef.current  = amrapRest;
-        totalRef.current = amrapRest;
-        setDisplay(`REST ${amrapRest}s`);
+        secsRef.current  = toSec(amrapRest);
+        totalRef.current = secsRef.current;
+        setDisplay(`REST ${fmtMS(secsRef.current)}`);
       } else {
         /* terminou REST → próximo AMRAP */
         phase            = 'work';
@@ -148,7 +155,7 @@ useEffect(()=>{
       /* ---------- EMOM ---------- */
 if (mode === 'emom') {
   const totalSecs   = emomMin  * 60;   // duração total
-  const step        = emomStep;        // segundos por ronda
+  const step        = toSec(emomStep);       // segundos por ronda
   let   leftInStep  = step;            // contador interno
   let   elapsed     = 0;               // tempo decorrido
   let   currentRnd  = 1;
@@ -157,7 +164,7 @@ if (mode === 'emom') {
   totalRef.current  = step;
   setRound(currentRnd);
   setProg(1);
-  setDisplay(fmt(step));
+  setDisplay(step >= 60 ? fmtMS(step) : fmt(step));
 
   intervalRef.current = setInterval(() => {
     secsRef.current--;
@@ -166,7 +173,8 @@ if (mode === 'emom') {
 
     /* actualiza anel & display */
     setProg(leftInStep / step);
-    setDisplay(fmt(leftInStep));
+    setDisplay(leftInStep >= 60 ? fmtMS(leftInStep) : fmt(leftInStep));
+
 
     /* fim de uma ronda */
     if (leftInStep === 0) {
@@ -231,7 +239,7 @@ if (mode === 'emom') {
         const inMin = secsRef.current % 60;
         if (inMin === 0) setRound(r => r + 1);
         if (secsRef.current < 0) { stop(); return; }
-        setDisplay(fmt(inMin === 0 ? 60 : inMin));
+        setDisplay(inMin === 0 || inMin >= 60 ? fmtMS(inMin || 60) : fmt(inMin));
       }, 1000);
       return;
     }
@@ -286,9 +294,9 @@ if (mode === 'emom') {
              onChange={e=>setAmrapMin(+e.target.value)}/>
     </label>
 
-    <label>Rest entre séries (s):
-      <input type="number" min="0" value={amrapRest}
-             onChange={e=>setAmrapRest(+e.target.value)}/>
+    <label>Rest entre séries (m:s):
+  <input type="text" value={amrapRest}
+         onChange={e=>setAmrapRest(e.target.value)}/>
     </label>
   </>
         )}
@@ -312,9 +320,9 @@ if (mode === 'emom') {
       <input type="number" min="1" value={emomMin}
              onChange={e=>setEmomMin(+e.target.value)}/>
     </label>
-    <label>Intervalo (s):
-      <input type="number" min="10" value={emomStep}
-             onChange={e=>setEmomStep(+e.target.value)}/>
+    <label>Intervalo (m:s):
+  <input type="text" value={emomStep}
+         onChange={e=>setEmomStep(e.target.value)}/>
     </label>
   </>
         )}
