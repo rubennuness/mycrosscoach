@@ -203,19 +203,21 @@ if (mode === 'emom') {
 
     /* ---------- TABATA ---------- */
     if(mode==='tabata'){
-        totalRef.current = tabWork;   // primeiro bloco = trabalho
-        secsRef.current = left = tabWork;
+        const w = toSec(tabWork);
+ const r = toSec(tabRest);
+ totalRef.current = w;
+ secsRef.current  = left = w;
         
         setProg(1);
       setRound(1);
       setDisplay(fmt(left));
       intervalRef.current=setInterval(()=>{
         if (--secsRef.current < 0){
-          if(work){ work=false; left=tabRest; }
+          if(work){ work=false; left=r; }
           else{
             work=true; setRound(r=>r+1);
             if(round>=tabRounds){stop();return;}
-            secsRef.current = work ? tabWork : tabRest;
+            secsRef.current = work ? w : r;
           }
         }
         setDisplay(fmt(secsRef.current));
@@ -261,15 +263,17 @@ if (mode === 'emom') {
 }
   
     if (mode === 'tabata') {
-      let work = true;
+      const w = toSec(tabWork);
+ const r = toSec(tabRest);
+ let work = secsRef.current !== r;
       intervalRef.current = setInterval(() => {
         secsRef.current--;
         if (secsRef.current < 0) {
-          if (work) { work = false; secsRef.current = tabRest; }
+          if(work){ work=false; secsRef.current = r; }
           else {
             work = true; setRound(r => r + 1);
             if (round >= tabRounds) { stop(); return; }
-            secsRef.current = tabWork;
+            secsRef.current = w;
           }
         }
         setDisplay(fmt(secsRef.current));
@@ -323,8 +327,8 @@ if (mode === 'emom') {
               <input type="number" min="1" value={ftRounds}
                      onChange={e=>setFtRounds(+e.target.value)}/>
             </label>
-            <label>Rest entre rondas (s):
-              <input type="number" min="0" value={ftRest}
+            <label>Rest entre rondas (m:s):
+  <input type="text"  value={ftRest}
                      onChange={e=>setFtRest(+e.target.value)}/>
             </label>
           </>
@@ -345,12 +349,12 @@ if (mode === 'emom') {
 
         {mode==='tabata' && (
           <>
-            <label>Work (s):
-              <input type="number" min="1" value={tabWork}
+            <label>Work (m:s):
+  <input type="text" value={tabWork}
                      onChange={e=>setTabWork(+e.target.value)}/>
             </label>
-            <label>Rest (s):
-              <input type="number" min="1" value={tabRest}
+            <label>Rest (m:s):
+  <input type="text"   value={tabRest}
                      onChange={e=>setTabRest(+e.target.value)}/>
             </label>
             <label>Rounds:
@@ -416,7 +420,7 @@ if (mode === 'emom') {
             if(ftCur>=ftRounds){ stop(); return; }
             setFtCur(c=>c+1);
             // descanso
-            let rest = ftRest;
+            let rest = toSec(ftRest);
             stop();                 // pára cronómetro principal
            setResting(true);
 setDisplay(`REST ${rest}s`);
@@ -429,7 +433,7 @@ restRef.current = setInterval(()=>{
     start();              // retoma automático
   }else{
     setDisplay(`REST ${rest}s`);
-    setProg(rest / ftRest);
+    setProg(rest / toSec(ftRest));
   }
 },1000);
           }}>
