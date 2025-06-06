@@ -10,21 +10,30 @@ export default function Timers(){
   const [mode,setMode]           = useState('amrap');
   const [running,setRunning]     = useState(false);
   const [paused ,setPaused ]     = useState(false);
+  const [resting, setResting] = useState(false);   // FOR-TIME em descanso
   const [display,setDisplay]     = useState('00:00');
   const [round,setRound]         = useState(1);
   const intervalRef              = useRef(null);
   const restRef     = useRef(null);
   const secsRef    = useRef(0); 
   const isPrep   = display.startsWith('START IN');      // estamos nos 10 s iniciais?
+  const isRest  = display.startsWith('REST');
   const seconds  = isPrep ? display.split(' ').pop()    // "2"
                         : display;                    // "09:58"
-  const ringLabel = isPrep ? 'GET READY' : 'REMAINING TIME';
+  const ringLabel = isPrep
+  ? 'GET READY'
+  : isRest ? 'REST' : 'REMAINING TIME';
   const toSec = v =>{
   if (typeof v === 'number') return v;           // continua a funcionar c/ nº
   if (!v.includes(':'))      return +v * 60;     // "2" → 120 s (minutos)
   const [m,s] = v.split(':').map(Number);        // "1:30" → 1 e 30
   return m*60 + (s||0);
 };
+const secondsShown = isPrep
+  ? seconds                                   // 10…1
+  : isRest
+      ? display.split(' ')[1].replace('s','') // "REST 27s" ➜ "27"
+      : display;                              // relógio normal
 const fmtMS = s => `${fmt(Math.floor(s/60))}:${fmt(s%60)}`; // 95 → "01:35"
 
   /* ---------- inputs ---------- */
@@ -45,6 +54,8 @@ const fmtMS = s => `${fmt(Math.floor(s/60))}:${fmt(s%60)}`; // 95 → "01:35"
   const totalRef        = useRef(1);     // duração (seg) do bloco actual
   /* sempre que muda o modo, limpa timers pendentes
    (evita contagens “fantasma”)                        */
+
+   
 useEffect(()=>{
     stop();
     setDisplay('00:00');
@@ -59,6 +70,7 @@ useEffect(()=>{
       intervalRef.current = restRef.current = null;
       setRunning(false);
       setPaused(false);
+      setResting(false);
     };
 
 
@@ -68,7 +80,7 @@ useEffect(()=>{
         clearInterval(restRef.current);
         intervalRef.current = restRef.current = null;
         setPaused(true);
-        setRunning(true);      // continua “running”, mas flag de pausa = true
+        setRunning(false);      // continua “running”, mas flag de pausa = true
       };
 
   const start=()=>{
@@ -234,15 +246,19 @@ if (mode === 'emom') {
     }
   
     if (mode === 'emom') {
-      intervalRef.current = setInterval(() => {
-        secsRef.current--;
-        const inMin = secsRef.current % 60;
-        if (inMin === 0) setRound(r => r + 1);
-        if (secsRef.current < 0) { stop(); return; }
-        setDisplay(inMin === 0 || inMin >= 60 ? fmtMS(inMin || 60) : fmt(inMin));
-      }, 1000);
-      return;
-    }
+  const step = toSec(emomStep);                 // 30, 45, 90, …
+  intervalRef.current = setInterval(() => {
+    secsRef.current--;
+    if (secsRef.current < 0){ stop(); return; }
+
+    const leftInStep = secsRef.current % step || step;
+    if (leftInStep === step) setRound(r => r + 1);
+
+    setProg(leftInStep / step);
+    setDisplay(leftInStep >= 60 ? fmtMS(leftInStep) : fmt(leftInStep));
+  }, 1000);
+  return;
+}
   
     if (mode === 'tabata') {
       let work = true;
@@ -365,7 +381,7 @@ if (mode === 'emom') {
   {/* texto sobreposto */}
   <div className="ring-center">
     <span className="label">{ringLabel}</span>
-    <span className="time">{isPrep ? seconds : display}</span>
+    <span className="time">{secondsShown}</span>
     <span className="sub">MIN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SEC</span>
   </div>
 </div>
@@ -392,7 +408,7 @@ if (mode === 'emom') {
         </button>
       )}
 
-      {mode==='forTime' && running && !isPrep && (
+      {mode==='forTime' && running && !isPrep && !resting && (
         <button
           className="btn secondary"
           style={{marginBottom:12}}
@@ -402,16 +418,20 @@ if (mode === 'emom') {
             // descanso
             let rest = ftRest;
             stop();                 // pára cronómetro principal
-            setDisplay(`REST ${rest}s`);
-            clearInterval(restRef.current);
-            restRef.current = setInterval(()=>{
-              if(--rest<0){
-                stop();  
-                start();            // retoma
-              }else{
-                setDisplay(`REST ${rest}s`);
-              }
-            },1000);
+           setResting(true);
+setDisplay(`REST ${rest}s`);
+setProg(1);
+clearInterval(restRef.current);
+restRef.current = setInterval(()=>{
+  if(--rest < 0){
+    clearInterval(restRef.current);
+    setResting(false);
+    start();              // retoma automático
+  }else{
+    setDisplay(`REST ${rest}s`);
+    setProg(rest / ftRest);
+  }
+},1000);
           }}>
           Concluir Ronda
         </button>
@@ -419,7 +439,7 @@ if (mode === 'emom') {
 
       {/* controlo principal */}
       <div className="controls">
-        {!running && !paused && (          /* totalmente parado  */
+        {!running && !paused && !resting && (          /* totalmente parado  */
     <button className="btn" onClick={start}>Start</button>
   )}
 
