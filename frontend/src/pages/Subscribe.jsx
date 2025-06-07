@@ -9,22 +9,22 @@ function Subscribe() {
     <div className="subscribe-container">
       <BackButton />                                   {/* ⬅️ NOVO */}
       <div className="subscribe-content">
-        <h1>Assinatura Mensal</h1>
+        <h1>Subscrição Mensal</h1>
         <p>
-          Receba acompanhamento personalizado do seu coach, além de recursos exclusivos para otimizar 
-          seu treino e compartilhar seu progresso com a comunidade do seu coach.
+          Recebe acompanhamento personalizado do teu treinador, além de recursos exclusivos para otimizar 
+          o teu treino e compartilhar o progresso com outros atletas.
         </p>
 
         <div className="benefits-list">
-          <h2>O que você ganha com a Assinatura:</h2>
+          <h2>O que ganhas com a Assinatura:</h2>
           <ul>
-            <li><strong>Registrar Alimentação:</strong> Insira diretamente as recomendações da sua nutricionista, 
-              facilitando o acompanhamento pelo coach e mantendo tudo em um só lugar.</li>
-            <li><strong>Partilhar Exercícios:</strong> Compartilhe seus treinos e receba feedback de outras pessoas 
-              orientadas pelo mesmo coach, formando uma rede de motivação.</li>
-            <li><strong>Check-ins semanais:</strong> Tenha sessões de feedback direto com o seu coach para 
+            <li><strong>Registar Alimentação:</strong> Insira diretamente as recomendações da sua nutricionista, 
+              facilitando o acompanhamento pelo treinador e mantendo tudo num só lugar.</li>
+            <li><strong>Partilhar Exercícios:</strong> Partilha os teus treinos e recebe feedback de outras pessoas 
+              orientadas pelo mesmo treinador, formando uma rede de motivação.</li>
+            <li><strong>Check-ins semanais:</strong> Tem sessões de feedback direto com o teu treinador para 
               ajustes no treino ou na rotina alimentar.</li>
-            <li><strong>Suporte prioritário:</strong> Respostas rápidas às suas dúvidas e orientações 
+            <li><strong>Suporte prioritário:</strong> Respostas rápidas às tuas dúvidas e orientações 
               personalizadas para atingir melhores resultados.</li>
           </ul>
         </div>
@@ -34,7 +34,7 @@ function Subscribe() {
           <p className="price-note">Cancele quando quiser, sem burocracias.</p>
         </div>
 
-        <button className="btn-subscribe">Assinar Agora</button>
+        <button className="btn-subscribe">Subscrever Agora</button>
         <BackButton />
       </div>
     </div>

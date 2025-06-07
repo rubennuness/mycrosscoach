@@ -11,7 +11,7 @@ function Home() {
         <div className="hero-content">
           <h1 className="hero-title">Melhora a tua Performance com MyCrossCoach</h1>
           <p className="hero-subtitle">
-            Tem acesso a acompanhamento especializado do teu coach e 
+            Tem acesso a acompanhamento especializado do teu Treinador e 
             partilha as tuas rotinas com atletas que têm o mesmo treinador.
           </p>
           <div className="hero-buttons">
@@ -34,7 +34,7 @@ function Home() {
           <div className="feature-card free-feature">
             <h3>Acompanhamento Básico</h3>
             <p>
-              Interaje com o teu coach e regista informações essenciais do teu treino
+              Interaje com o teu Treinador e regista informações essenciais do teu treino
               para teres um panorama geral do teu desenvolvimento.
             </p>
             <p className="badge-free">Grátis</p>
@@ -87,7 +87,7 @@ function Home() {
         <div className="about-content">
           <h2>Sobre o MyCrossCoach</h2>
           <p>
-           Nós unimos coaches especializados e atletas numa plataforma única, 
+           Nós unimos Treinadores especializados e Atletas numa plataforma única, 
             potencializando resultados através de um acompanhamento personalizado 
             e uma comunidade unida.
           </p>
