@@ -78,7 +78,7 @@ function Home() {
             Tem acesso completo às funcionalidades Premium e um acompanhamento ainda 
             mais personalizado do teu coach.
           </p>
-          <Link to="/subscribe" className="premium-button">Assinar Agora</Link>
+          <Link to="/subscribe" className="premium-button">Subscrever Agora</Link>
         </div>
       </section>
 

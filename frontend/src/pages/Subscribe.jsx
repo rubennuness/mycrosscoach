@@ -16,7 +16,7 @@ function Subscribe() {
         </p>
 
         <div className="benefits-list">
-          <h2>O que ganhas com a Assinatura:</h2>
+          <h2>O que ganhas com a Subscrição:</h2>
           <ul>
             <li><strong>Registar Alimentação:</strong> Insira diretamente as recomendações da sua nutricionista, 
               facilitando o acompanhamento pelo treinador e mantendo tudo num só lugar.</li>
