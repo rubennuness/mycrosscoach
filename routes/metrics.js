@@ -38,11 +38,28 @@ router.get('/view/:metricId', async (req,res)=>{
 
 /* adiciona resultado */
 router.post('/result/:metricId', async (req,res)=>{
-  const when = date ? new Date(date) : new Date();
-  await pool.query(
-    'INSERT INTO metric_results(metric_id,value,result_date) VALUES(?,?,?)',
-    [req.params.metricId, value, when]);
-  res.status(201).json({ok:true});
+  try {
+    /* 1️⃣  lê dados do body */
+    const { value, date } = req.body;    // ← agora existem
+    if (value == null || isNaN(value))
+      return res.status(400).json({ error: 'value required' });
+
+    /* 2️⃣  normaliza data (opcional) */
+    const when = date ? new Date(date) : new Date();
+
+    /* 3️⃣  grava */
+    await pool.query(
+      `INSERT INTO metric_results (metric_id, value, result_date)
+       VALUES (?, ?, ?)`,
+      [ req.params.metricId,
+        Number(value),                // garante numérico
+        when ]);
+
+    res.status(201).json({ ok: true });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'server error' });
+  }
 });
 
 module.exports = router;
