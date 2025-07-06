@@ -16,6 +16,7 @@ export default function Timers(){
   const intervalRef              = useRef(null);
   const restRef     = useRef(null);
   const secsRef    = useRef(0); 
+  const prepLeftRef = useRef(0);
   const isPrep   = display.startsWith('START IN');      // estamos nos 10 s iniciais?
   const isRest  = display.startsWith('REST');
   const seconds  = isPrep ? display.split(' ').pop()    // "2"
@@ -96,6 +97,7 @@ useEffect(()=>{
 
   intervalRef.current = setInterval(() => {
     if (--prep > 0) {
+      prepLeftRef.current = prep;
       setDisplay(`START IN ${prep}`);
       setProg(prep / 10);
       return;
@@ -109,7 +111,24 @@ useEffect(()=>{
 
   /* ──────── função que contém toda a lógica anterior ──────── */
   function runWorkout () {
-
+    /* ───── reata o countdown “START IN …” ───── */
+  if (display.startsWith('START IN')) {
+    let prep = prepLeftRef.current || 10;
+    setProg(prep / 10);
+    intervalRef.current = setInterval(() => {
+      if (--prep > 0) {
+        prepLeftRef.current = prep;
+        setDisplay(`START IN ${prep}`);
+        setProg(prep / 10);
+      } else {
+        clearInterval(intervalRef.current);
+        /* passa para o modo real exactamente
+           como aconteceu em start() */
+        start();                  // reutiliza a função já existente
+      }
+    }, 1000);
+    return;                       // ← não deixa cair nos outros blocos
+  }
     /* ---------- AMRAP ---------- */
     if (mode === 'amrap') {
   let setsLeft   = amrapSets;
@@ -229,6 +248,7 @@ if (mode === 'emom') {
     if (!paused) return;
   
     setPaused(false);
+    setRunning(true);
   
     /* recria o setInterval só com o tempo que ainda falta (secsRef.current) */
     if (mode === 'amrap') {
