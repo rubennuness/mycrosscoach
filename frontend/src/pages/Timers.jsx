@@ -17,6 +17,7 @@ export default function Timers(){
   const restRef     = useRef(null);
   const secsRef    = useRef(0); 
   const prepLeftRef = useRef(0);
+  const runWorkoutRef = useRef(()=>{});
   const isPrep   = display.startsWith('START IN');      // estamos nos 10 s iniciais?
   const isRest  = display.startsWith('REST');
   const seconds  = isPrep ? display.split(' ').pop()    // "2"
@@ -81,7 +82,7 @@ useEffect(()=>{
         clearInterval(restRef.current);
         intervalRef.current = restRef.current = null;
         setPaused(true);
-        setRunning(false);      // continua “running”, mas flag de pausa = true
+        //setRunning(false);      // continua “running”, mas flag de pausa = true
       };
 
   const start=()=>{
@@ -111,24 +112,7 @@ useEffect(()=>{
 
   /* ──────── função que contém toda a lógica anterior ──────── */
   function runWorkout () {
-    /* ───── reata o countdown “START IN …” ───── */
-  if (display.startsWith('START IN')) {
-    let prep = prepLeftRef.current || 10;
-    setProg(prep / 10);
-    intervalRef.current = setInterval(() => {
-      if (--prep > 0) {
-        prepLeftRef.current = prep;
-        setDisplay(`START IN ${prep}`);
-        setProg(prep / 10);
-      } else {
-        clearInterval(intervalRef.current);
-        /* passa para o modo real exactamente
-           como aconteceu em start() */
-        start();                  // reutiliza a função já existente
-      }
-    }, 1000);
-    return;                       // ← não deixa cair nos outros blocos
-  }
+  
     /* ---------- AMRAP ---------- */
     if (mode === 'amrap') {
   let setsLeft   = amrapSets;
@@ -243,13 +227,30 @@ if (mode === 'emom') {
       },1000);
     }
   };
+  runWorkoutRef.current = runWorkout;
   }
   const resume = () => {
     if (!paused) return;
   
     setPaused(false);
     setRunning(true);
-  
+    if (display.startsWith('START IN')) {
+   let prep = prepLeftRef.current || 10;
+   setProg(prep / 10);
+
+   intervalRef.current = setInterval(() => {
+     if (--prep > 0) {
+       prepLeftRef.current = prep;
+       setDisplay(`START IN ${prep}`);
+       setProg(prep / 10);
+     } else {
+       clearInterval(intervalRef.current);
+       runWorkoutRef.current();      // entra no treino sem reiniciar tudo
+     }
+   }, 1000);
+
+   return;                           // sai antes dos restantes blocos
+ }
     /* recria o setInterval só com o tempo que ainda falta (secsRef.current) */
     if (mode === 'amrap') {
       intervalRef.current = setInterval(() => {
