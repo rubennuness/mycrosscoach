@@ -12,6 +12,9 @@ export default function PlanPage() {
   const navigate      = useNavigate();
   const location      = useLocation();
 
+  const user  = JSON.parse(localStorage.getItem('user')) || {};
+  const role  = user.role;
+
   const navName = location.state?.athleteName ?? '';
   const [athleteName,setAthleteName] = useState(navName);
 
@@ -139,6 +142,18 @@ export default function PlanPage() {
               {athleteName||`#${athleteId}`}
             </span>
           </h1>
+          {/* botão “ver calendário” – só para o coach */}
+          {role === 'coach' && (
+            <button
+              type="button"
+              className="cal-btn"
+              style={{marginBottom:24}}
+              onClick={()=>navigate(`/calendar/${athleteId}`)}
+            >
+              <img src={calendarIcon} alt="Calendário" />
+              &nbsp;Calendário
+            </button>
+          )}
 
           <form onSubmit={savePlan} className="plan-form">
 <label style={{marginTop:16, display:'block'}}>Choose the week:</label>

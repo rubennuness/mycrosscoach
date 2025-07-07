@@ -167,3 +167,17 @@
   padding:8px;
   margin-bottom:15px;
 }
+
+.cal-btn{
+  border:none;
+  background:#3498db;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 12px;
+  border-radius:4px;
+  cursor:pointer;
+}
+.cal-btn img{ width:18px; height:18px; }
+.cal-btn:hover{ background:#1d73b5; }
