@@ -39,7 +39,7 @@ export default function CalendarPage() {
                      .catch(()=>({phases:[]}));
       setPlan(p.phases || []);
 
-      // nada extra p/ eventos; já temos tudo no state events[]
+      
     })();
   },[athleteId, selDate]);
 
@@ -76,11 +76,14 @@ export default function CalendarPage() {
         {role==='coach' ? 'Calendário' : 'Calendário'}
       </h1>
 
-      {role==='coach' && (
-        <button className="btn-primary" onClick={handleAddEvent}>
-          + Add Event
-        </button>
-      )}
+      {(
+     role === 'coach' ||                 // coach vê sempre
+     (role === 'athlete' && athleteId === user.id)  // atleta no seu próprio cal
+  ) && (
+    <button className="btn-primary" onClick={handleAddEvent}>
+      + Add Event
+    </button>
+)}
 
       <Calendar
         onChange={setSelDate}
