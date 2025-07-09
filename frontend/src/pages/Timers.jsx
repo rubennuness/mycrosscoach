@@ -86,10 +86,14 @@ useEffect(()=>{
         //setRunning(false);      // continua “running”, mas flag de pausa = true
       };
 
-  const start=()=>{
+  const start = (skipPrep = false) => {
     stop();
     setRunning(true);
     setPaused(false);
+    if (skipPrep) {
+      runWorkout();          // usa a mesma função
+      return;
+    }
     let secs, left, work = true;
 
   /* ──────── 1. Pré-countdown de 10 s ──────── */
@@ -451,7 +455,7 @@ restRef.current = setInterval(()=>{
   if(--rest < 0){
     clearInterval(restRef.current);
     setResting(false);
-    start();              // retoma automático
+    start(true);
   }else{
     setDisplay(`REST ${asClock(rest)}`);
     setProg(rest / toSec(ftRest));
