@@ -454,7 +454,7 @@ restRef.current = setInterval(()=>{
     setResting(false);
     start();              // retoma automático
   }else{
-    etDisplay(`REST ${asClock(rest)}`);
+    setDisplay(`REST ${asClock(rest)}`);
     setProg(rest / toSec(ftRest));
   }
 },1000);
