@@ -469,7 +469,7 @@ restRef.current = setInterval(()=>{
       {/* controlo principal */}
       <div className="controls">
         {!running && !paused && !resting && (          /* totalmente parado  */
-    <button className="btn" onClick={start}>Start</button>
+    <button className="btn" onClick={() => start()}>Start</button>
   )}
 
   {running && !paused && (           /* a contar → mostra Pause + Stop */
