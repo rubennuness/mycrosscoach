@@ -336,8 +336,8 @@ if (mode === 'emom') {
     </label>
 
     <label>Rest entre séries (m:s):
-  <input type="text" value={amrapRest}
-         onChange={e=>setAmrapRest(e.target.value)}/>
+  <input type="text"  value={amrapRest}
+        onChange={e=>setAmrapRest(e.target.value.replace(/[^0-9:]/g,''))}/>
     </label>
   </>
         )}
@@ -349,8 +349,8 @@ if (mode === 'emom') {
                      onChange={e=>setFtRounds(+e.target.value)}/>
             </label>
             <label>Rest entre rondas (m:s):
-  <input type="text"  value={ftRest}
-                     onChange={e=>setFtRest(+e.target.value)}/>
+          <input type="text"  value={ftRest}
+        onChange={e=>setFtRest(e.target.value.replace(/[^0-9:]/g,''))}/>
             </label>
           </>
         )}
@@ -371,12 +371,12 @@ if (mode === 'emom') {
         {mode==='tabata' && (
           <>
             <label>Work (m:s):
-  <input type="text" value={tabWork}
-                     onChange={e=>setTabWork(+e.target.value)}/>
+            <input type="text"  value={tabWork}
+        onChange={e=>setTabWork(e.target.value.replace(/[^0-9:]/g,''))}/>
             </label>
             <label>Rest (m:s):
-  <input type="text"   value={tabRest}
-                     onChange={e=>setTabRest(+e.target.value)}/>
+            <input type="text"  value={tabRest}
+        onChange={e=>setTabRest(e.target.value.replace(/[^0-9:]/g,''))}/>
             </label>
             <label>Rounds:
               <input type="number" min="1" value={tabRounds}
