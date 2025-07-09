@@ -157,7 +157,6 @@ useEffect(()=>{
         secsRef.current = 0;
         totalRef.current = 60;        // enche a cada minuto
       setProg(0);
-      setFtCur(1);
       setDisplay('00:00');
       intervalRef.current = setInterval(() => {
           secsRef.current++;
