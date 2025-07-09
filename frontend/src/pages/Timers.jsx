@@ -37,6 +37,7 @@ const secondsShown = isPrep
       ? display.split(' ')[1].replace('s','') // "REST 27s" ➜ "27"
       : display;                              // relógio normal
 const fmtMS = s => `${fmt(Math.floor(s/60))}:${fmt(s%60)}`; // 95 → "01:35"
+const asClock = s => s >= 60 ? fmtMS(s) : fmt(s);
 
   /* ---------- inputs ---------- */
   const [amrapMin,setAmrapMin]   = useState(10);
@@ -213,7 +214,7 @@ if (mode === 'emom') {
         
         setProg(1);
       setRound(1);
-      setDisplay(fmt(left));
+      setDisplay(asClock(left)); 
       intervalRef.current=setInterval(()=>{
         if (--secsRef.current < 0){
           if(work){ work=false; left=r; }
@@ -223,7 +224,7 @@ if (mode === 'emom') {
             secsRef.current = work ? w : r;
           }
         }
-        setDisplay(fmt(secsRef.current));
+        setDisplay(asClock(secsRef.current));
       },1000);
     }
   };
@@ -444,7 +445,7 @@ if (mode === 'emom') {
             let rest = toSec(ftRest);
             stop();                 // pára cronómetro principal
            setResting(true);
-setDisplay(`REST ${rest}s`);
+setDisplay(`REST ${asClock(rest)}`);
 setProg(1);
 clearInterval(restRef.current);
 restRef.current = setInterval(()=>{
@@ -453,7 +454,7 @@ restRef.current = setInterval(()=>{
     setResting(false);
     start();              // retoma automático
   }else{
-    setDisplay(`REST ${rest}s`);
+    etDisplay(`REST ${asClock(rest)}`);
     setProg(rest / toSec(ftRest));
   }
 },1000);
