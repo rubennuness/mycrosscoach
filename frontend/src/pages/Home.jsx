@@ -44,7 +44,7 @@ function Home() {
           <div className="feature-card free-feature">
             <h3>Comunidade Geral</h3>
             <p>
-              Participa em discussões públicas com outros atletas, troca dicas 
+              Participa em discussões com outros atletas, troca dicas 
               e encontra motivação em grupo.
             </p>
             <p className="badge-free">Grátis</p>
