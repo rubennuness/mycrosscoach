@@ -13,6 +13,7 @@ function DashboardCoach() {
   const [newAthleteName, setNewAthleteName] = useState('');
   const [newAthleteEmail, setNewAthleteEmail] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [busyId, setBusyId] = useState(null);
 
   // 1) No “useEffect”, chamamos GET /api/coach/athletes ao montar a página:
   useEffect(() => {
@@ -87,6 +88,26 @@ function DashboardCoach() {
       });
     };
 
+
+  const handleRemoveAthlete = (athleteId) => {
+  if (!window.confirm('Remover este atleta da sua lista?')) return;
+
+  const token = localStorage.getItem('token');
+  setBusyId(athleteId);
+
+  fetch(`https://mycrosscoach-production.up.railway.app/api/coach/athletes/${athleteId}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` }
+  })
+    .then(res => {
+      if (!res.ok) throw new Error('Erro ao remover');
+      // filtra da lista local
+      setAthletes(ath => ath.filter(a => a.id !== athleteId));
+    })
+    .catch(() => alert('Não foi possível remover o atleta.'))
+    .finally(() => setBusyId(null));
+};
+
   return (
     <div className="dashboard-split-container">
       <div className="dashboard-left">
@@ -131,13 +152,19 @@ function DashboardCoach() {
           <p className="athlete-list-title">Lista de atletas:</p>
           <ul className="athlete-list">
             {athletes.map((ath) => (
-              <li
-                key={ath.id}
-                className="athlete-item"
-                onClick={() => handleAthleteClick(ath.id, ath.name)}
-              >
-                {ath.name} - {ath.email}
-              </li>
+              <li key={ath.id} className="athlete-item">
+  <span onClick={() => handleAthleteClick(ath.id, ath.name)}>
+    {ath.name} – {ath.email}
+  </span>
+
+  <button
+    className="remove-btn"
+    disabled={busyId === ath.id}
+    onClick={() => handleRemoveAthlete(ath.id)}
+  >
+    ✕
+  </button>
+</li>
             ))}
           </ul>
         </div>

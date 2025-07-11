@@ -35,7 +35,7 @@ router.post('/athletes', coachAuth, async (req, res) => {
       return res.status(400).json({ error: 'Faltam dados (name e email).' });
     }
 
-    // 1. Verificar se existe user com esse email e role=athlete
+    
     const [rows] = await pool.query(
       'SELECT id, name, email, role FROM users WHERE email = ? AND role="athlete"',
       [email]
@@ -45,7 +45,7 @@ router.post('/athletes', coachAuth, async (req, res) => {
     }
     const athleteUser = rows[0];
 
-    // 2. Tenta inserir na tabela coach_athletes
+    
     try {
       await pool.query(
         'INSERT INTO coach_athletes (coach_id, athlete_id) VALUES (?, ?)',
@@ -83,6 +83,27 @@ router.get('/athletes', coachAuth, async (req, res) => {
        WHERE ca.coach_id = ?
     `, [coachId]);
     return res.json(rows);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Erro no servidor' });
+  }
+});
+
+router.delete('/athletes/:athleteId', coachAuth, async (req, res) => {
+  try {
+    const coachId   = req.userId;
+    const athleteId = Number(req.params.athleteId);
+
+    // apaga a relação (não apaga o utilizador!)
+    const [result] = await pool.query(
+      'DELETE FROM coach_athletes WHERE coach_id=? AND athlete_id=?',
+      [coachId, athleteId]
+    );
+
+    if (result.affectedRows === 0)
+      return res.status(404).json({ error: 'Atleta não encontrado na sua lista.' });
+
+    return res.sendStatus(204);              // OK, sem body
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: 'Erro no servidor' });
