@@ -109,7 +109,7 @@
   }
   
 
-..remove-btn{
+.remove-btn{
   display:flex;               /* permite usar flex‑centering */
   align-items:center;
   justify-content:center;
