@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-const JWT_SECRET = 'chave-super-secreta'; // Em produção, use variável de ambiente
+const JWT_SECRET = 'chave-super-secreta'; 
 
 // Rota de registo (/register) – já existe no teu código
 router.post('/register', async (req, res) => {
@@ -180,7 +180,7 @@ router.post('/forgot-password', async (req,res)=>{
                 <a href="${url}">${url}</a></p>`
     });
 
-    console.log('[DEV] link de reset:', url);       // útil em desenvolvimento
+    console.log('[PRD] link de reset:', url);       
     return res.json({message:'Se o email existir enviaremos instruções'});
   }catch(e){
     console.error(e);

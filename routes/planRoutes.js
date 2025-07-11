@@ -44,7 +44,7 @@ router.post('/:athleteId', async (req,res)=>{
     for (let i = 0; i < phases.length; i++) {
   const p = phases[i];
 
-  /* ▼ trocámos “percent” por p_low / p_high */
+
   const [insPh] = await pool.query(
     `INSERT INTO plan_phases
        (plan_id, phase_order, title, phase_text,
@@ -56,7 +56,7 @@ router.post('/:athleteId', async (req,res)=>{
       p.sets   || null,
       p.reps   || null,
       p.pLow   || null,
-      p.pHigh  || null ]        //  ← novos campos
+      p.pHigh  || null ]        
   );
 
       /* sub-blocos (ranges) */

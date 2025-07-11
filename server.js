@@ -52,8 +52,8 @@ app.get('/api/training/week/:athleteId', async (req, res) => {
     // Seleciona unindo plan + phases
     const [rows] = await pool.query(`
     SELECT p.day_of_week,
-              ph.id           AS phase_id,       -- ①  devolvemos o id
-               ph.title        AS phase_title,    --    e o título
+              ph.id           AS phase_id,       
+               ph.title        AS phase_title,   
                  ph.phase_text,
                  ph.sets                          AS sets,
           ph.reps                          AS reps,

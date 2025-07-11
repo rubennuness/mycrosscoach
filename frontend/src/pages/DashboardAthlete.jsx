@@ -101,7 +101,7 @@ const shiftWeek = (delta) => {               // delta = ±7 (em dias)
       .then(r => r.json())
       .then(d => {
         setDaysOfWeek(d.daysOfWeek);
-        setTrainingPlans(d.plans);        // { 'Segunda': [ … ] , … }
+        setTrainingPlans(d.plans);        
       })
       .catch(console.error);
   }, [athleteId, weekStart]);

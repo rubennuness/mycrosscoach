@@ -18,9 +18,9 @@ router.post('/', async (req,res)=>{
            VALUES (?,?,?,?)
       ON DUPLICATE KEY UPDATE
             status   = VALUES(status),
-            comment  = VALUES(comment),       /* COMMENT */
+            comment  = VALUES(comment),      
             updated_at = CURRENT_TIMESTAMP
-    `,[athlete_id,plan_phase_id,status,comment || null]);               /* COMMENT */
+    `,[athlete_id,plan_phase_id,status,comment || null]);               
 
     return res.json({ok:true});
   }catch(e){
