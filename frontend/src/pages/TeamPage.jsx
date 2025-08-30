@@ -7,7 +7,7 @@ export default function TeamPage() {
   const [teams , setTeams ] = useState([]);
   const [name  , setName  ] = useState('');
 
-  /* carrega equipas onde sou admin ou membro -------------------- */
+  /* carrega equipas onde sou admin ou membros -------------------- */
   useEffect(() => {
     fetch(
     'https://mycrosscoach-production.up.railway.app/api/team',
