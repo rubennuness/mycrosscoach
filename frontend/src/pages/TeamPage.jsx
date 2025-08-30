@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import BackButton from '../components/BackButton';
-import 'src/pages/TeamPage.css';       
+import './TeamPage.css';       
 
 export default function TeamPage() {
   const user     = JSON.parse(localStorage.getItem('user'));  // coach
