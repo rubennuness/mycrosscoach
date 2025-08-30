@@ -34,6 +34,22 @@ function DashboardCoach() {
       .catch((err) => console.error(err));
   }, []); // array vazio => executa uma vez ao montar
 
+  // Presence heartbeat (every 60s)
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user?.id) return;
+    const tick = () => {
+      fetch('https://mycrosscoach-production.up.railway.app/api/users/presence', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: user.id })
+      }).catch(() => {});
+    };
+    tick();
+    const id = setInterval(tick, 60000);
+    return () => clearInterval(id);
+  }, []);
+
   // Carrega avatar/lastSeen (se disponível), status de hoje e titulo do plano
   const loadExtras = async (list) => {
     try{
@@ -79,8 +95,7 @@ function DashboardCoach() {
         const presenceActive = lastSeen ? (Date.now() - new Date(lastSeen).getTime() < 5*60*1000) : false;
 
         // Plan title – local placeholder until backend supports it
-        const planTitles = JSON.parse(localStorage.getItem('planTitles') || '{}');
-        const planTitle  = planTitles[a.id] || '';
+        const planTitle  = a.plan_title || '';
 
         return [a.id, { avatarUrl, lastSeen, todayStatus, presenceActive, planTitle }];
       }));
@@ -170,15 +185,19 @@ function DashboardCoach() {
       });
   };
 
-  const handleEditPlanTitle = (athleteId) => {
+  const handleEditPlanTitle = async (athleteId) => {
     const current = extrasById[athleteId]?.planTitle || '';
     const title = window.prompt('Set current plan title for this athlete:', current || '');
     if (title === null) return;
-    const next = { ...extrasById, [athleteId]: { ...extrasById[athleteId], planTitle: title } };
-    setExtrasById(next);
-    const planTitles = JSON.parse(localStorage.getItem('planTitles') || '{}');
-    planTitles[athleteId] = title;
-    localStorage.setItem('planTitles', JSON.stringify(planTitles));
+    try{
+      const token = localStorage.getItem('token');
+      await fetch(`https://mycrosscoach-production.up.railway.app/api/coach/athletes/${athleteId}/plan-title`,{
+        method:'POST',
+        headers:{ 'Content-Type':'application/json', ...(token?{Authorization:`Bearer ${token}`}:{}) },
+        body: JSON.stringify({ title })
+      });
+    }catch(_){/* ignore */}
+    setExtrasById(prev => ({ ...prev, [athleteId]: { ...prev[athleteId], planTitle: title } }));
   };
 
   return (
@@ -252,7 +271,6 @@ function DashboardCoach() {
                       )}
                       <div className="name-email">
                         <div className="name-line">{ath.name}</div>
-                        <div className="sub-line">{ath.email}</div>
                       </div>
                     </div>
                   </div>

@@ -17,6 +17,23 @@ app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Ensure auxiliary tables/columns exist (idempotent)
+(async () => {
+  try {
+    await pool.query(`CREATE TABLE IF NOT EXISTS coach_athlete_meta (
+      coach_id    INT NOT NULL,
+      athlete_id  INT NOT NULL,
+      plan_title  VARCHAR(255) NULL,
+      PRIMARY KEY (coach_id, athlete_id)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4`);
+
+    // Presence column on users
+    await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS last_seen DATETIME NULL`);
+  } catch (e) {
+    console.warn('Startup DDL skipped:', e.message);
+  }
+})();
+
 // Rotas de autenticação
 app.use('/auth', authRoutes);
 

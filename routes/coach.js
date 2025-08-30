@@ -4,6 +4,25 @@ const router = express.Router();
 const pool = require('../db'); // sua conexão MySQL
 //const jwt = require('jsonwebtoken');
 const coachAuth = require('../middleware/coachAuth');
+// Define/atualiza título do plano por atleta (por coach)
+router.post('/athletes/:athleteId/plan-title', coachAuth, async (req,res)=>{
+  try{
+    const coachId   = req.userId;
+    const athleteId = Number(req.params.athleteId);
+    const { title } = req.body;
+    await pool.query(
+      `INSERT INTO coach_athlete_meta (coach_id,athlete_id,plan_title)
+         VALUES (?,?,?)
+       ON DUPLICATE KEY UPDATE plan_title=VALUES(plan_title)`,
+      [coachId, athleteId, title || null]
+    );
+    res.json({ message:'Plan title updated' });
+  }catch(err){
+    console.error(err);
+    res.status(500).json({error:'Erro no servidor'});
+  }
+});
+
 
 
 // Exemplo de middleware que pega userId do token
@@ -59,11 +78,19 @@ router.post('/athletes', coachAuth, async (req, res) => {
       throw err;
     }
 
+    // inicia meta row (caso queira preencher título depois)
+    await pool.query(
+      'INSERT IGNORE INTO coach_athlete_meta (coach_id,athlete_id,plan_title) VALUES (?,?,NULL)',
+      [req.userId, athleteUser.id]
+    );
+
     // 3. Retorna dados do atleta
     return res.status(201).json({
       id: athleteUser.id,
       name: athleteUser.name || name,
-      email: athleteUser.email
+      email: athleteUser.email,
+      avatar_url: athleteUser.avatar_url || null,
+      plan_title: null
     });
 
   } catch (err) {
@@ -77,9 +104,12 @@ router.get('/athletes', coachAuth, async (req, res) => {
   try {
     const coachId = req.userId; // obtido do token
     const [rows] = await pool.query(`
-      SELECT u.id, u.name, u.email
+      SELECT u.id, u.name, u.email, u.avatar_url,
+             cam.plan_title
         FROM coach_athletes ca
         JOIN users u ON u.id = ca.athlete_id
+        LEFT JOIN coach_athlete_meta cam
+               ON cam.coach_id = ca.coach_id AND cam.athlete_id = ca.athlete_id
        WHERE ca.coach_id = ?
     `, [coachId]);
     return res.json(rows);

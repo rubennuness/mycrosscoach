@@ -27,7 +27,7 @@ router.post('/', async (req, res) => { try { const { nome, email } = req.body; c
 
 router.put('/:id', upload.single('avatar'), async (req,res)=>{
   try{
-    const VALID_COLS = ['name','username','gender','phone','avatar_url','email'];
+    const VALID_COLS = ['name','username','gender','phone','avatar_url','email','last_seen'];
     const { id } = req.params;
     const { name, username, gender, phone, email } = req.body;
 
@@ -47,6 +47,7 @@ router.put('/:id', upload.single('avatar'), async (req,res)=>{
      phone,
      avatar_url,
      email,
+     last_seen : req.body.last_seen,
    };
 
     Object.entries(map).forEach(([col,val])=>{
@@ -77,4 +78,19 @@ router.put('/:id', upload.single('avatar'), async (req,res)=>{
 
 
 module.exports = router;
+/*
+  Lightweight presence ping:
+  Clients can POST /api/users/presence with their user_id. We stamp last_seen.
+*/
+router.post('/presence', async (req,res)=>{
+  try{
+    const { user_id } = req.body;
+    if(!user_id) return res.status(400).json({error:'user_id required'});
+    await pool.query('UPDATE users SET last_seen=NOW() WHERE id=?',[user_id]);
+    res.json({ ok:true });
+  }catch(e){
+    console.error(e);
+    res.status(500).json({error:'Erro no servidor'});
+  }
+});
 

@@ -153,35 +153,35 @@
 }
 
 /* Activity header and table */
-.activity-header{ display:flex; align-items:center; justify-content:space-between; margin:20px 0 10px; }
-.activity-header h3{ font-size:1.4rem; }
-.legend{ display:flex; align-items:center; gap:12px; color:#666; }
+.activity-header{ display:flex; align-items:center; justify-content:space-between; margin:20px 0 10px; color:#b8c7d1; }
+.activity-header h3{ font-size:1.4rem; color:#b8c7d1; }
+.legend{ display:flex; align-items:center; gap:12px; color:#b8c7d1; }
 .legend-dot{ display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px; }
 .legend .active{ background:#2ecc71; }
 .legend .inactive{ background:#e74c3c; }
 
-.activity-table{ width:100%; background:#fff; border:1px solid #eee; border-radius:8px; overflow:hidden; }
-.activity-head{ display:grid; grid-template-columns: 2fr 2fr 2fr 1fr 80px; gap:0; background:#f7f8fa; color:#555; padding:14px 16px; font-weight:600; }
-.activity-row{ display:grid; grid-template-columns: 2fr 2fr 2fr 1fr 80px; align-items:center; padding:14px 16px; border-top:1px solid #f0f1f3; }
+.activity-table{ width:100%; background:#2c2c2c; border:1px solid #333; border-radius:8px; overflow:hidden; }
+.activity-head{ display:grid; grid-template-columns: 2fr 2fr 2fr 1fr 80px; gap:0; background:#1f1f1f; color:#b8c7d1; padding:14px 16px; font-weight:600; }
+.activity-row{ display:grid; grid-template-columns: 2fr 2fr 2fr 1fr 80px; align-items:center; padding:14px 16px; border-top:1px solid #333; color:#fff; }
 .col{ display:flex; align-items:center; }
 
 .athlete-cell{ display:flex; align-items:center; gap:12px; cursor:pointer; }
 .avatar{ width:44px; height:44px; border-radius:50%; object-fit:cover; }
-.avatar.placeholder{ display:flex; align-items:center; justify-content:center; background:#dfe6e9; color:#2c3e50; font-weight:700; }
-.name-email .name-line{ font-weight:700; }
-.name-email .sub-line{ font-size:.85rem; color:#7f8c8d; }
+.avatar.placeholder{ display:flex; align-items:center; justify-content:center; background:#3a3a3a; color:#fff; font-weight:700; }
+.name-email .name-line{ font-weight:700; color:#fff; }
+.name-email .sub-line{ display:none; }
 
 .badge{ padding:6px 10px; border-radius:999px; font-size:.9rem; font-weight:600; }
-.badge-completed{ background:#eafaf1; color:#27ae60; }
-.badge-active{ background:#eaf2ff; color:#2e86de; }
-.badge-not-started{ background:#fff6e6; color:#f39c12; }
-.badge-no-workout{ background:#f4f6f7; color:#7f8c8d; }
+.badge-completed{ background:#244b33; color:#2ecc71; }
+.badge-active{ background:#1a2a3a; color:#1ec5ff; }
+.badge-not-started{ background:#3a2f1a; color:#f39c12; }
+.badge-no-workout{ background:#3a3a3a; color:#bdbdbd; }
 
 .plan-cell{ display:flex; align-items:center; gap:8px; }
 .plan-title{ font-weight:600; }
-.plan-edit{ border:none; background:#f0f1f3; border-radius:4px; padding:4px 6px; cursor:pointer; }
-.plan-edit:hover{ background:#e2e5ea; }
+.plan-edit{ border:none; background:#3a3a3a; color:#fff; border-radius:4px; padding:4px 6px; cursor:pointer; }
+.plan-edit:hover{ background:#444; }
 
 .presence{ font-weight:700; }
-.presence.on{ color:#27ae60; }
+.presence.on{ color:#2ecc71; }
 .presence.off{ color:#e74c3c; }
