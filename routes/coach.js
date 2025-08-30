@@ -4,6 +4,51 @@ const router = express.Router();
 const pool = require('../db'); // sua conexão MySQL
 //const jwt = require('jsonwebtoken');
 const coachAuth = require('../middleware/coachAuth');
+// Plan Templates CRUD
+router.get('/templates', coachAuth, async (req,res)=>{
+  try{
+    const coachId = req.userId;
+    const [rows] = await pool.query(
+      `SELECT id, title, description, created_at
+         FROM plan_templates
+        WHERE coach_id=?
+        ORDER BY created_at DESC`, [coachId]);
+    res.json(rows);
+  }catch(e){ console.error(e); res.status(500).json({error:'Erro no servidor'}); }
+});
+
+router.post('/templates', coachAuth, async (req,res)=>{
+  try{
+    const coachId = req.userId;
+    const { title, description } = req.body;
+    if(!title) return res.status(400).json({error:'title obrigatório'});
+    const [ins] = await pool.query(
+      `INSERT INTO plan_templates (coach_id,title,description,created_at)
+       VALUES (?,?,?,NOW())`, [coachId, title, description||null]);
+    res.status(201).json({ id: ins.insertId, title, description: description||null });
+  }catch(e){ console.error(e); res.status(500).json({error:'Erro no servidor'}); }
+});
+
+router.put('/templates/:id', coachAuth, async (req,res)=>{
+  try{
+    const coachId = req.userId;
+    const { id } = req.params;
+    const { title, description } = req.body;
+    await pool.query(
+      `UPDATE plan_templates SET title=?, description=?
+        WHERE id=? AND coach_id=?`, [title||null, description||null, id, coachId]);
+    res.json({ message:'Template atualizado' });
+  }catch(e){ console.error(e); res.status(500).json({error:'Erro no servidor'}); }
+});
+
+router.delete('/templates/:id', coachAuth, async (req,res)=>{
+  try{
+    const coachId = req.userId;
+    const { id } = req.params;
+    await pool.query(`DELETE FROM plan_templates WHERE id=? AND coach_id=?`, [id, coachId]);
+    res.sendStatus(204);
+  }catch(e){ console.error(e); res.status(500).json({error:'Erro no servidor'}); }
+});
 // Define/atualiza título do plano por atleta (por coach)
 router.post('/athletes/:athleteId/plan-title', coachAuth, async (req,res)=>{
   try{

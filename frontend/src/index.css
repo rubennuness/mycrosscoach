@@ -7,6 +7,17 @@
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
 
+  /* Theme tokens */
+  --bg-dark: #1c1c1c;
+  --card-bg: #2c2c2c;
+  --card-border: #333;
+  --muted: #b8c7d1;
+  --accent: #3498db;
+  --accent-strong: #2980b9;
+  --danger: #e74c3c;
+  --success: #2ecc71;
+  --info: #1ec5ff;
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

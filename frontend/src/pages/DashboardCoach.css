@@ -52,7 +52,7 @@
   
   /* Botão “Add Athlete” */
 .add-athlete-btn{
-  background:#3498db;
+  background:var(--accent);
   color:#fff;
   border:none;
 
@@ -68,7 +68,7 @@
   text-align:center;
   transition:background .2s;
 }
-.add-athlete-btn:hover{ background:#2980b9; }
+.add-athlete-btn:hover{ background:var(--accent-strong); }
   
   /* Form de adicionar */
   .add-athlete-form {
@@ -160,9 +160,9 @@
 .legend .active{ background:#2ecc71; }
 .legend .inactive{ background:#e74c3c; }
 
-.activity-table{ width:100%; background:#2c2c2c; border:1px solid #333; border-radius:8px; overflow:hidden; }
-.activity-head{ display:grid; grid-template-columns: 2fr 2fr 2fr 1fr 80px; gap:0; background:#1f1f1f; color:#b8c7d1; padding:14px 16px; font-weight:600; }
-.activity-row{ display:grid; grid-template-columns: 2fr 2fr 2fr 1fr 80px; align-items:center; padding:14px 16px; border-top:1px solid #333; color:#fff; }
+.activity-table{ width:100%; background:var(--card-bg); border:1px solid var(--card-border); border-radius:8px; overflow:hidden; }
+.activity-head{ display:grid; grid-template-columns: 2fr 2fr 2fr 1fr 80px; gap:0; background:#1f1f1f; color:var(--muted); padding:14px 16px; font-weight:600; }
+.activity-row{ display:grid; grid-template-columns: 2fr 2fr 2fr 1fr 80px; align-items:center; padding:14px 16px; border-top:1px solid var(--card-border); color:#fff; }
 .col{ display:flex; align-items:center; }
 
 .athlete-cell{ display:flex; align-items:center; gap:12px; cursor:pointer; }

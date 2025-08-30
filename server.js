@@ -29,6 +29,16 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
     // Presence column on users
     await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS last_seen DATETIME NULL`);
+
+    // Plan templates table
+    await pool.query(`CREATE TABLE IF NOT EXISTS plan_templates (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      coach_id INT NOT NULL,
+      title VARCHAR(255) NOT NULL,
+      description TEXT NULL,
+      created_at DATETIME NOT NULL,
+      INDEX (coach_id)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4`);
   } catch (e) {
     console.warn('Startup DDL skipped:', e.message);
   }
@@ -52,6 +62,23 @@ app.use('/api/events',eventsRoutes);
 app.use('/api/team', teamRoutes);
 
 app.use('/api/users', userRoutes);
+
+// Simple SSE presence stream for coaches
+app.get('/api/presence/stream', (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.flushHeaders();
+
+  const interval = setInterval(async () => {
+    try{
+      const [rows] = await pool.query('SELECT id,last_seen FROM users');
+      res.write(`data: ${JSON.stringify(rows)}\n\n`);
+    }catch(e){ /* ignore */ }
+  }, 10000);
+
+  req.on('close', () => clearInterval(interval));
+});
 
 // Rota para o Atleta (ou qualquer um) ver todos os dias do user
 // GET /api/training/week/:athleteId

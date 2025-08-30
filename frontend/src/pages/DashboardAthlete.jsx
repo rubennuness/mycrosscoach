@@ -94,6 +94,21 @@ const shiftWeek = (delta) => {               // delta = ±7 (em dias)
     }).catch(()=>{});
   },[athleteId]);
 
+  // Presence heartbeat (every 45s for athlete app)
+  useEffect(() => {
+    if (!athleteId) return;
+    const tick = () => {
+      fetch('https://mycrosscoach-production.up.railway.app/api/users/presence', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: athleteId })
+      }).catch(() => {});
+    };
+    tick();
+    const id = setInterval(tick, 45000);
+    return () => clearInterval(id);
+  }, [athleteId]);
+
   /* ▼ 1. CARREGA estrutura da semana (sem progresso) -------------------- */
   useEffect(() => {
     if (!athleteId) return;
