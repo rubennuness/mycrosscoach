@@ -114,17 +114,17 @@
   align-items:center;
   justify-content:center;
   width:32px; height:32px;    /* quadrado → X fica no centro */
-  font-size:1.3rem;           /* tamanho confortável do X    */
+  font-size:1.1rem;           /* icon size */
   line-height:1;              /* impede deslocamento vertical*/
-  background:#e74c3c;
-  color:#fff;
+  background:#f0f1f3;         /* neutral background */
+  color:#2c3e50;
   border:none;
   border-radius:6px;
   cursor:pointer;
   transition:background .2s;
 }
 .remove-btn:hover:not(:disabled){
-  background:#c44134;
+  background:#e2e5ea;
 }
 
 /* Confirmação de remoção */
@@ -151,3 +151,37 @@
   background:#e74c3c;
   color:#fff;
 }
+
+/* Activity header and table */
+.activity-header{ display:flex; align-items:center; justify-content:space-between; margin:20px 0 10px; }
+.activity-header h3{ font-size:1.4rem; }
+.legend{ display:flex; align-items:center; gap:12px; color:#666; }
+.legend-dot{ display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px; }
+.legend .active{ background:#2ecc71; }
+.legend .inactive{ background:#e74c3c; }
+
+.activity-table{ width:100%; background:#fff; border:1px solid #eee; border-radius:8px; overflow:hidden; }
+.activity-head{ display:grid; grid-template-columns: 2fr 2fr 2fr 1fr 80px; gap:0; background:#f7f8fa; color:#555; padding:14px 16px; font-weight:600; }
+.activity-row{ display:grid; grid-template-columns: 2fr 2fr 2fr 1fr 80px; align-items:center; padding:14px 16px; border-top:1px solid #f0f1f3; }
+.col{ display:flex; align-items:center; }
+
+.athlete-cell{ display:flex; align-items:center; gap:12px; cursor:pointer; }
+.avatar{ width:44px; height:44px; border-radius:50%; object-fit:cover; }
+.avatar.placeholder{ display:flex; align-items:center; justify-content:center; background:#dfe6e9; color:#2c3e50; font-weight:700; }
+.name-email .name-line{ font-weight:700; }
+.name-email .sub-line{ font-size:.85rem; color:#7f8c8d; }
+
+.badge{ padding:6px 10px; border-radius:999px; font-size:.9rem; font-weight:600; }
+.badge-completed{ background:#eafaf1; color:#27ae60; }
+.badge-active{ background:#eaf2ff; color:#2e86de; }
+.badge-not-started{ background:#fff6e6; color:#f39c12; }
+.badge-no-workout{ background:#f4f6f7; color:#7f8c8d; }
+
+.plan-cell{ display:flex; align-items:center; gap:8px; }
+.plan-title{ font-weight:600; }
+.plan-edit{ border:none; background:#f0f1f3; border-radius:4px; padding:4px 6px; cursor:pointer; }
+.plan-edit:hover{ background:#e2e5ea; }
+
+.presence{ font-weight:700; }
+.presence.on{ color:#27ae60; }
+.presence.off{ color:#e74c3c; }
