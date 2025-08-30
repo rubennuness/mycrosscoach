@@ -14,6 +14,7 @@ function DashboardCoach() {
   const [newAthleteEmail, setNewAthleteEmail] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [busyId, setBusyId] = useState(null);
+  const [confirmId, setConfirmId] = useState(null);
 
   // 1) No “useEffect”, chamamos GET /api/coach/athletes ao montar a página:
   useEffect(() => {
@@ -88,25 +89,25 @@ function DashboardCoach() {
       });
     };
 
-
   const handleRemoveAthlete = (athleteId) => {
-  if (!window.confirm('Remover este atleta da sua lista?')) return;
+    const token = localStorage.getItem('token');
+    setBusyId(athleteId);
 
-  const token = localStorage.getItem('token');
-  setBusyId(athleteId);
-
-  fetch(`https://mycrosscoach-production.up.railway.app/api/coach/athletes/${athleteId}`, {
-    method: 'DELETE',
-    headers: { Authorization: `Bearer ${token}` }
-  })
-    .then(res => {
-      if (!res.ok) throw new Error('Erro ao remover');
-      // filtra da lista local
-      setAthletes(ath => ath.filter(a => a.id !== athleteId));
+    fetch(`https://mycrosscoach-production.up.railway.app/api/coach/athletes/${athleteId}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` }
     })
-    .catch(() => alert('Não foi possível remover o atleta.'))
-    .finally(() => setBusyId(null));
-};
+      .then(res => {
+        if (!res.ok) throw new Error('Erro ao remover');
+        // filtra da lista local
+        setAthletes(ath => ath.filter(a => a.id !== athleteId));
+      })
+      .catch(() => alert('Não foi possível remover o atleta.'))
+      .finally(() => {
+        setBusyId(null);
+        setConfirmId(null);
+      });
+  };
 
   return (
     <div className="dashboard-split-container">
@@ -160,10 +161,29 @@ function DashboardCoach() {
   <button
     className="remove-btn"
     disabled={busyId === ath.id}
-    onClick={() => handleRemoveAthlete(ath.id)}
+    onClick={() => setConfirmId(ath.id)}
   >
-    ✕
+    🗑️
   </button>
+  {confirmId === ath.id && (
+    <div className="confirm-box">
+      <span className="confirm-message">Remover este atleta?</span>
+      <button
+        className="confirm-btn confirm-cancel"
+        onClick={() => setConfirmId(null)}
+        disabled={busyId === ath.id}
+      >
+        Cancelar
+      </button>
+      <button
+        className="confirm-btn confirm-remove"
+        onClick={() => handleRemoveAthlete(ath.id)}
+        disabled={busyId === ath.id}
+      >
+        Remover
+      </button>
+    </div>
+  )}
 </li>
             ))}
           </ul>
