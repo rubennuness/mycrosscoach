@@ -200,6 +200,13 @@ function DashboardCoach() {
     setExtrasById(prev => ({ ...prev, [athleteId]: { ...prev[athleteId], planTitle: title } }));
   };
 
+  const handleAvatarError = (athleteId) => {
+    setExtrasById(prev => ({
+      ...prev,
+      [athleteId]: { ...prev[athleteId], avatarUrl: null }
+    }));
+  };
+
   return (
     <div className="dashboard-split-container">
       <div className="dashboard-left">
@@ -265,7 +272,7 @@ function DashboardCoach() {
                   <div className="col name">
                     <div className="athlete-cell" onClick={() => handleAthleteClick(ath.id, ath.name)}>
                       {extra.avatarUrl ? (
-                        <img className="avatar" src={extra.avatarUrl} alt={ath.name} />
+                        <img className="avatar" src={extra.avatarUrl} alt="" onError={() => handleAvatarError(ath.id)} />
                       ) : (
                         <div className="avatar placeholder">{(ath.name||'?').charAt(0)}</div>
                       )}

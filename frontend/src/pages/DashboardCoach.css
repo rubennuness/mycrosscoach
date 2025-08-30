@@ -116,15 +116,15 @@
   width:32px; height:32px;    /* quadrado → X fica no centro */
   font-size:1.1rem;           /* icon size */
   line-height:1;              /* impede deslocamento vertical*/
-  background:#f0f1f3;         /* neutral background */
-  color:#2c3e50;
+  background:#2c2c2c;         /* match dark card */
+  color:#fff;
   border:none;
   border-radius:6px;
   cursor:pointer;
   transition:background .2s;
 }
 .remove-btn:hover:not(:disabled){
-  background:#e2e5ea;
+  background:#3a3a3a;
 }
 
 /* Confirmação de remoção */
